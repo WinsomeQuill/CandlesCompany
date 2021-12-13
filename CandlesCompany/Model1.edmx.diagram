@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="50fe614796ab408a872c392f9fa0e8da" Name="Diagram1">
+        <EntityTypeShape EntityType="candlesModel.Candles" Width="1.5" PointX="3" PointY="1.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="candlesModel.Candles_Order" Width="1.5" PointX="5.25" PointY="1.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="candlesModel.Candles_Sale_Percent" Width="1.5" PointX="3" PointY="5.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="candlesModel.Order_Status" Width="1.5" PointX="5.25" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="candlesModel.Orders" Width="1.5" PointX="7.5" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="candlesModel.Roles" Width="1.5" PointX="3" PointY="9.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="candlesModel.sysdiagrams" Width="1.5" PointX="7.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="candlesModel.Type_Candle" Width="1.5" PointX="0.75" PointY="1.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="candlesModel.Users" Width="1.5" PointX="5.25" PointY="9.125" IsExpanded="true" />
+        <AssociationConnector Association="candlesModel.FK_Candles_Order_Candles" ManuallyRouted="false" />
+        <AssociationConnector Association="candlesModel.FK_Candles_Type_Candle" ManuallyRouted="false" />
+        <AssociationConnector Association="candlesModel.FK_Candles_Order_Candles_Sale_Percent" ManuallyRouted="false" />
+        <AssociationConnector Association="candlesModel.FK_Orders_Candles_Order" ManuallyRouted="false" />
+        <AssociationConnector Association="candlesModel.FK_Orders_Order_Status" ManuallyRouted="false" />
+        <AssociationConnector Association="candlesModel.FK_Orders_Users1" ManuallyRouted="false" />
+        <AssociationConnector Association="candlesModel.FK_Users_Roles" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
