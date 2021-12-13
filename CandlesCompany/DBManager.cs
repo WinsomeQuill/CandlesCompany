@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CandlesCompany.Cache;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,6 @@ namespace CandlesCompany
     public static class DBManager
     {
         public static candlesEntities db { get; set; } = new candlesEntities();
-
         public static bool Join(string email, string pass)
         {
             int user = (from p in db.Users
@@ -43,6 +43,15 @@ namespace CandlesCompany
             db.Users.Add(user);
             db.SaveChanges();
             return true;
+        }
+        public static object UserInfo(string email)
+        {
+            List<object> users = new List<object>();
+             var parts = db.Users
+                .Where(x => x.Email == email)
+                .Select(x => new { x.Id, x.Last_Name, x.First_Name, x.Middle_Name, x.Phone, x.Email, x.Roles.Priority }).ToList();
+            users.AddRange(parts);
+            return users.FirstOrDefault();
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CandlesCompany.Cache;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -26,6 +27,8 @@ namespace CandlesCompany
             {
                 CatalogInit();
             });
+
+            TextBlockProfileName.Text = $"{UserCache.LastName} {UserCache.FirstName} {UserCache.MiddleName}";
         }
 
         private async void CatalogInit()

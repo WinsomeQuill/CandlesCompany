@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CandlesCompany.Cache;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -40,6 +41,16 @@ namespace CandlesCompany
                 MessageBox.Show("Error");
                 return;
             }
+
+            object item = DBManager.UserInfo(email);
+            var dictionary = Utils.Utils.ToDictionary<string>(item);
+            UserCache.Id = Convert.ToInt32(dictionary["Id"]);
+            UserCache.FirstName = dictionary["First_Name"];
+            UserCache.LastName = dictionary["Last_Name"];
+            UserCache.MiddleName = dictionary["Middle_Name"];
+            UserCache.Phone = dictionary["Phone"];
+            UserCache.Email = dictionary["Email"];
+            UserCache.Priority = Convert.ToInt32(dictionary["Priority"]);
 
             new MainWindow().Show();
             Close();
