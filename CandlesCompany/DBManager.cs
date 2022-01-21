@@ -20,9 +20,9 @@ namespace CandlesCompany
         }
         public static bool ExistUser(string email)
         {
-            int user = (from p in db.Users
-                        where p.Email == email
-                        select p.Id).FirstOrDefault();
+            int user = db.Users
+                .Where(x => x.Email == email)
+                .Select(x => x.Id).FirstOrDefault();
             return user != 0;
         }
         public static bool Registration(string email, string pass, string first_name, string last_name, string middle_name = null)

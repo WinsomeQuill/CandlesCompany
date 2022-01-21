@@ -1,0 +1,100 @@
+﻿<Window x:Class="CandlesCompany.ItemAddWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:local="clr-namespace:CandlesCompany"
+        mc:Ignorable="d"
+        Title="Candles Company | Item Add"
+        Height="450"
+        Width="600"
+        ResizeMode="CanMinimize">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="360"/>
+            <ColumnDefinition Width="240"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="90"/>
+            <RowDefinition Height="90"/>
+            <RowDefinition Height="90"/>
+            <RowDefinition Height="180"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock
+            Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+            Text="Добавить товар"
+            Grid.Column="0"
+            Grid.Row="0"
+            Grid.ColumnSpan="2"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"/>
+
+        <TextBox x:Name="TextBoxItemAddName"
+            materialDesign:HintAssist.Hint="Название товара"
+            materialDesign:TextFieldAssist.TextBoxViewMargin="1 0 1 0"
+            materialDesign:HintAssist.FloatingScale="0.50"
+            Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+            FontSize="20"
+            Grid.Column="0"
+            Grid.Row="1"
+            Margin="10,10,10,10"
+            Cursor="IBeam"/>
+
+        <ComboBox x:Name="ComboBoxItemAddType"
+                  materialDesign:HintAssist.Hint="Тип товара"
+                  materialDesign:HintAssist.HintOpacity=".50"
+                  FontSize="20"
+                  HorizontalAlignment="Center"
+                  VerticalContentAlignment="Center"
+                  Width="310"
+                  Height="50"
+                  IsEditable="True"
+                  Grid.Row="2" Margin="0,20,0,20"/>
+
+        <TextBox x:Name="TextBoxItemAddPrice"
+            materialDesign:HintAssist.Hint="Цена"
+            materialDesign:TextFieldAssist.TextBoxViewMargin="1 0 1 0"
+            materialDesign:HintAssist.FloatingScale="0.50"
+            Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+            FontSize="20"
+            Grid.Column="0"
+            Grid.Row="3"
+            Margin="10,10,10,10"
+            Cursor="IBeam"/>
+
+        <TextBox x:Name="TextBoxSupportDescription"
+                Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                VerticalAlignment="Center"
+                Height="160"
+                AcceptsReturn="True"
+                TextWrapping="Wrap"
+                VerticalScrollBarVisibility="Auto"
+                materialDesign:HintAssist.Hint="Описание"
+                Margin="10,0,25,0"
+                Grid.Row="1"
+                Grid.RowSpan="2"
+                Grid.Column="1"/>
+
+        <TextBox x:Name="TextBoxItemAddCount"
+            materialDesign:HintAssist.Hint="Количество"
+            materialDesign:TextFieldAssist.TextBoxViewMargin="1 0 1 0"
+            materialDesign:HintAssist.FloatingScale="0.50"
+            Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+            FontSize="20"
+            Grid.Column="1"
+            Grid.Row="3"
+            Margin="10,10,20,10"
+            Cursor="IBeam"/>
+
+        <Button x:Name="ButtonItemAddSave"
+                Content="Добавить"
+                Grid.Column="0"
+                Grid.Row="4"
+                Grid.ColumnSpan="2"
+                Margin="190,29,190,119"/>
+
+    </Grid>
+</Window>

@@ -28,7 +28,9 @@ namespace CandlesCompany
                 CatalogInit();
             });
 
-            TextBlockProfileName.Text = $"{UserCache.LastName} {UserCache.FirstName} {UserCache.MiddleName}";
+            TextBlockProfileName.Text = $"ФИО: {UserCache.LastName} {UserCache.FirstName} {UserCache.MiddleName}";
+            TextBlockProfilePhone.Text = $"Телефон: {UserCache.Phone}";
+            TextBlockProfileEmail.Text = $"Эл. почта: {UserCache.Email}";
         }
 
         private async void CatalogInit()
@@ -40,6 +42,31 @@ namespace CandlesCompany
                     ListViewCatalog.Items.Add(new ListItem(candle.Name, candle.Description, $"Price: {candle.Price} руб. | Count: {candle.Count}"));
                 });
             });
+        }
+
+        private void ButtonManagementAddEmployee_Click(object sender, RoutedEventArgs e)
+        {
+            new EmployeeAddWindow().ShowDialog();
+        }
+
+        private void ButtonManagementAddItem_Click(object sender, RoutedEventArgs e)
+        {
+            new ItemAddWindow().ShowDialog();
+        }
+
+        private void ButtonManagementRemoveEmployee_Click(object sender, RoutedEventArgs e)
+        {
+            new EmployeeRemoveWindow().ShowDialog();
+        }
+
+        private void ButtonManagementChangeItem_Click(object sender, RoutedEventArgs e)
+        {
+            new ItemChangeWindow().ShowDialog();
+        }
+
+        private void ButtonManagementRemoveItem_Click(object sender, RoutedEventArgs e)
+        {
+            new ItemRemoveWindow().ShowDialog();
         }
     }
 }

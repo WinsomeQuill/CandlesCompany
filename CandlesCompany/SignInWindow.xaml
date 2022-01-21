@@ -24,14 +24,14 @@
 
         <TextBlock
             Style="{StaticResource MaterialDesignHeadline5TextBlock}"
-            Text="Authorization"
+            Text="Авторизация"
             Grid.Column="0"
             Grid.Row="0"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"/>
 
         <TextBox x:Name="TextBoxSignInEmail"
-            materialDesign:HintAssist.Hint="Your Email"
+            materialDesign:HintAssist.Hint="Ваша почта"
             materialDesign:TextFieldAssist.TextBoxViewMargin="1 0 1 0"
             materialDesign:HintAssist.FloatingScale="0.50"
             Style="{StaticResource MaterialDesignFloatingHintTextBox}"
@@ -43,10 +43,10 @@
 
         <PasswordBox x:Name="PasswordBoxSignIn"
             Style="{StaticResource MaterialDesignFloatingHintPasswordBox}"
-            materialDesign:HintAssist.Hint="Your Password"
+            materialDesign:HintAssist.Hint="Ваш пароль"
             materialDesign:TextFieldAssist.HasClearButton="True"
             materialDesign:TextFieldAssist.TextBoxViewMargin="1 0 1 0"
-            materialDesign:HintAssist.HelperText="At least 8 characters"
+            materialDesign:HintAssist.HelperText="Минимум 8 символов"
             FontSize="20"
             Grid.Column="0"
             Grid.Row="2"
@@ -59,7 +59,7 @@
             MinWidth="90"
             MaxWidth="200"
             ToolTip="Resource name: MaterialDesignRaisedLightButton"
-            Content="_Join"
+            Content="_Войти"
             IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
             Grid.Column="0"
             Grid.Row="3" Click="ButtonSignInJoin_Click"/>
@@ -70,7 +70,7 @@
             MinWidth="170"
             MaxWidth="240"
             ToolTip="Resource name: MaterialDesignRaisedLightButton"
-            Content="_You not registered?"
+            Content="_Зарегистрироваться"
             IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
             Grid.Column="0"
             Grid.Row="4"

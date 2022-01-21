@@ -1,0 +1,56 @@
+﻿<Window x:Class="CandlesCompany.EmployeeAddWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:local="clr-namespace:CandlesCompany"
+        mc:Ignorable="d"
+        Title="Candles Company | Employee Add"
+        Height="400"
+        Width="450"
+        ResizeMode="CanMinimize">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="73"/>
+            <RowDefinition Height="90"/>
+            <RowDefinition Height="90"/>
+            <RowDefinition Height="130"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock
+            Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+            Text="Добавить сотрудника"
+            Grid.Column="0"
+            Grid.Row="0"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"/>
+
+        <TextBox x:Name="TextBoxEmployeeAddEmail"
+            materialDesign:HintAssist.Hint="Email / ID Account"
+            materialDesign:TextFieldAssist.TextBoxViewMargin="1 0 1 0"
+            materialDesign:HintAssist.FloatingScale="0.50"
+            Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+            FontSize="20"
+            Grid.Column="0"
+            Grid.Row="1"
+            Margin="10"
+            Cursor="IBeam"/>
+
+        <ComboBox x:Name="ComboBoxEmployeeAddRole"
+                  materialDesign:HintAssist.Hint="Роль сотрудника"
+                  materialDesign:HintAssist.HintOpacity=".50"
+                  FontSize="20"
+                  HorizontalAlignment="Center"
+                  VerticalContentAlignment="Center"
+                  Width="400"
+                  Height="50"
+                  IsEditable="True"
+                  Grid.Row="2"/>
+
+        <Button x:Name="ButtonEmployeeAdd"
+                Grid.Row="3"
+                Content="Добавить"
+                Margin="30,0,30,0"/>
+    </Grid>
+</Window>

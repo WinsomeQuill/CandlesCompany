@@ -5,7 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CandlesCompany" xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Candle Company"
+        MinHeight="400"
+        Height="450"
+        MaxHeight="900"
+        MinWidth="750"
+        Width="800"
+        MaxWidth="1200">
     <Grid>
         <TabControl
             Style="{StaticResource MaterialDesignNavigatilRailTabControl}"
@@ -21,7 +27,7 @@
                             Height="24"
                             HorizontalAlignment="Center" />
                         <TextBlock
-                            Text="Profile"
+                            Text="Профиль"
                             HorizontalAlignment="Center" />
                     </StackPanel>
                 </TabItem.Header>
@@ -49,7 +55,7 @@
                         Grid.Column="0"
                         Grid.Row="1"/>
 
-                    <TextBlock
+                    <TextBlock x:Name="TextBlockProfileEmail"
                         Style="{StaticResource MaterialDesignHeadline5TextBlock}"
                         Text="Email: alexmaroni329@gmail.com"
                         HorizontalAlignment="Center"
@@ -57,7 +63,7 @@
                         Grid.Column="0"
                         Grid.Row="2"/>
 
-                    <TextBlock
+                    <TextBlock x:Name="TextBlockProfilePhone"
                         Style="{StaticResource MaterialDesignHeadline5TextBlock}"
                         Text="Phone: Null ? +79136484657"
                         HorizontalAlignment="Center"
@@ -77,12 +83,12 @@
                             Height="24"
                             HorizontalAlignment="Center" />
                         <TextBlock
-                            Text="Orders"
+                            Text="Заказы"
                             HorizontalAlignment="Center" />
                     </StackPanel>
                 </TabItem.Header>
                 <Grid>
-                    
+
                 </Grid>
             </TabItem>
             <TabItem>
@@ -96,7 +102,7 @@
                             Height="24"
                             HorizontalAlignment="Center" />
                         <TextBlock
-                            Text="Catalog"
+                            Text="Каталог"
                             HorizontalAlignment="Center" />
                     </StackPanel>
                 </TabItem.Header>
@@ -116,11 +122,121 @@
                             Height="24"
                             HorizontalAlignment="Center" />
                         <TextBlock 
-                            Text="Support"
+                            Text="Помощь"
                             HorizontalAlignment="Center" />
                     </StackPanel>
                 </TabItem.Header>
                 <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="60"/>
+                        <RowDefinition Height="40*"/>
+                        <RowDefinition Height="108*"/>
+                        <RowDefinition Height="60"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock
+                        Style="{StaticResource MaterialDesignHeadline4TextBlock}"
+                        Text="Помощь"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"/>
+
+                    <TextBox
+                        materialDesign:HintAssist.Hint="Заголовок проблемы / вопроса"
+                        Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                        VerticalAlignment="Center"
+                        Margin="30,0,30,0"
+                        Grid.Row="1"/>
+
+                    <TextBox x:Name="TextBoxSupportDescription"
+                        Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                        VerticalAlignment="Top"
+                        Height="100"
+                        AcceptsReturn="True"
+                        TextWrapping="Wrap"
+                        VerticalScrollBarVisibility="Auto"
+                        materialDesign:HintAssist.Hint="Подробное описание проблемы или вопроса"
+                        Margin="30,0,30,0"
+                        Grid.Row="2"/>
+
+                </Grid>
+            </TabItem>
+
+            <TabItem>
+                <TabItem.Header>
+                    <StackPanel
+                        Height="auto"
+                        Width="auto">
+                        <materialDesign:PackIcon
+                            Kind="AccountLock"
+                            Width="24"
+                            Height="24"
+                            HorizontalAlignment="Center" />
+                        <TextBlock 
+                            Text="Админ"
+                            HorizontalAlignment="Center" />
+                    </StackPanel>
+                </TabItem.Header>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="242*"/>
+                        <ColumnDefinition Width="242*"/>
+                        <ColumnDefinition Width="242*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="60"/>
+                        <RowDefinition Height="85*"/>
+                        <RowDefinition Height="114*"/>
+                        <RowDefinition Height="116*"/>
+                        <RowDefinition Height="60"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock
+                        Style="{StaticResource MaterialDesignHeadline4TextBlock}"
+                        Text="Управление сотрудниками"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="3"/>
+
+                    <Button x:Name="ButtonManagementAddEmployee"
+                            Content="_Добавить сотрудника"
+                            Grid.Column="0"
+                            Grid.Row="1"
+                            Margin="30,0,30,0" Click="ButtonManagementAddEmployee_Click"/>
+
+                    <Button x:Name="ButtonManagementRemoveEmployee"
+                            Content="_Удалить сотрудника"
+                            Grid.Column="2"
+                            Grid.Row="1"
+                            Margin="30,0,30,0" Cursor="Hand" Click="ButtonManagementRemoveEmployee_Click"/>
+
+                    <TextBlock
+                        Style="{StaticResource MaterialDesignHeadline4TextBlock}"
+                        Text="Управление каталогом"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Grid.Row="2"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="3"/>
+
+                    <Button x:Name="ButtonManagementAddItem"
+                            Content="_Добавить товар"
+                            Grid.Column="0"
+                            Grid.Row="3"
+                            Margin="30,0,30,0" Click="ButtonManagementAddItem_Click"/>
+
+                    <Button x:Name="ButtonManagementChangeItem"
+                            Content="_Изменить товар"
+                            Grid.Column="1"
+                            Grid.Row="3"
+                            Margin="30,0,30,0" Click="ButtonManagementChangeItem_Click"/>
+
+                    <Button x:Name="ButtonManagementRemoveItem"
+                            Content="_Удалить товар"
+                            Grid.Column="2"
+                            Grid.Row="3"
+                            Margin="30,0,30,0" Click="ButtonManagementRemoveItem_Click"/>
 
                 </Grid>
             </TabItem>

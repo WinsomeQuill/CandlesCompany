@@ -27,12 +27,12 @@
 
         <TextBlock
             Style="{StaticResource MaterialDesignHeadline5TextBlock}"
-            Text="Registration"
+            Text="Регистрация"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"/>
 
         <TextBox x:Name="TextBoxSignUpEmail"
-            materialDesign:HintAssist.Hint="Your Email"
+            materialDesign:HintAssist.Hint="Ваша почта"
             materialDesign:TextFieldAssist.TextBoxViewMargin="1 0 1 0"
             materialDesign:HintAssist.FloatingScale="0.50"
             Style="{StaticResource MaterialDesignFloatingHintTextBox}"
@@ -44,10 +44,10 @@
 
         <PasswordBox x:Name="PasswordBoxSignUp"
             Style="{StaticResource MaterialDesignFloatingHintPasswordBox}"
-            materialDesign:HintAssist.Hint="Your Password"
+            materialDesign:HintAssist.Hint="Ваш пароль"
             materialDesign:TextFieldAssist.HasClearButton="True"
             materialDesign:TextFieldAssist.TextBoxViewMargin="1 0 1 0"
-            materialDesign:HintAssist.HelperText="At least 8 characters"
+            materialDesign:HintAssist.HelperText="Минимум 8 символов"
             FontSize="20"
             Grid.Column="0"
             Grid.Row="2"
@@ -55,7 +55,7 @@
             Cursor="IBeam"/>
 
         <TextBox x:Name="TextBoxSignUpFirstName"
-            materialDesign:HintAssist.Hint="Your First Name"
+            materialDesign:HintAssist.Hint="Ваше имя"
             materialDesign:TextFieldAssist.TextBoxViewMargin="1 0 1 0"
             materialDesign:HintAssist.FloatingScale="0.50"
             Style="{StaticResource MaterialDesignFloatingHintTextBox}"
@@ -66,7 +66,7 @@
             Cursor="IBeam"/>
         
         <TextBox x:Name="TextBoxSignUpLastName"
-            materialDesign:HintAssist.Hint="Your Last Name"
+            materialDesign:HintAssist.Hint="Ваша фамилия"
             materialDesign:TextFieldAssist.TextBoxViewMargin="1 0 1 0"
             materialDesign:HintAssist.FloatingScale="0.50"
             Style="{StaticResource MaterialDesignFloatingHintTextBox}"
@@ -77,7 +77,7 @@
             Cursor="IBeam"/>
         
         <TextBox x:Name="TextBoxSignUpMiddleName"
-            materialDesign:HintAssist.Hint="Your Middle Name"
+            materialDesign:HintAssist.Hint="Ваше отчество"
             materialDesign:TextFieldAssist.TextBoxViewMargin="1 0 1 0"
             materialDesign:HintAssist.FloatingScale="0.50"
             Style="{StaticResource MaterialDesignFloatingHintTextBox}"
@@ -89,11 +89,11 @@
 
         <Button x:Name="ButtonSignUpRegister"
             Style="{StaticResource MaterialDesignRaisedButton}"
-            Width="90"
+            Width="200"
             MinWidth="70"
             MaxWidth="200"
             ToolTip="Resource name: MaterialDesignRaisedLightButton"
-            Content="_Register"
+            Content="_Зарегистрироваться"
             IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
             Grid.Column="0"
             Grid.Row="6"
@@ -101,11 +101,11 @@
 
         <Button x:Name="ButtonSignUpAlreadyRegistered"
             Style="{StaticResource MaterialDesignRaisedButton}"
-            Width="190"
+            Width="210"
             MinWidth="180"
             MaxWidth="240"
             ToolTip="Resource name: MaterialDesignRaisedLightButton"
-            Content="_You already registered?"
+            Content="_Уже зарегистрированы?"
             IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
             Grid.Column="0"
             Grid.Row="7"
