@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -34,24 +35,36 @@ namespace CandlesCompany
 
         private void ButtonSignInJoin_Click(object sender, RoutedEventArgs e)
         {
+            Dictionary<string, string> cache = null;
             string email = TextBoxSignInEmail.Text;
             string pass = PasswordBoxSignIn.Password;
-            if (!DBManager.Join(email, pass))
-            {
-                MessageBox.Show("Error");
-                return;
-            }
 
-            object item = DBManager.UserInfo(email);
-            var dictionary = Utils.Utils.ToDictionary<string>(item);
-            UserCache._id = Convert.ToInt32(dictionary["Id"]);
-            UserCache._first_name = dictionary["First_Name"];
-            UserCache._last_name = dictionary["Last_Name"];
-            UserCache._middle_name = dictionary["Middle_Name"];
-            UserCache._phone = dictionary["Phone"];
-            UserCache._email = dictionary["Email"];
-            UserCache._priority = Convert.ToInt32(dictionary["Priority"]);
-            UserCache._role_name = dictionary["Name"];
+            Thread thr = new Thread(delegate ()
+            {
+                if (!DBManager.Join(email, pass))
+                {
+                    MessageBox.Show("Неверный логин или пароль!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                object item = DBManager.UserInfo(email);
+                cache = Utils.Utils.ToDictionary<string>(item);   
+            });
+
+            thr.Start();
+            thr.Join();
+
+            if(cache == null) { return; }
+
+            
+            UserCache._id = Convert.ToInt32(cache["Id"]);
+            UserCache._first_name = cache["First_Name"];
+            UserCache._last_name = cache["Last_Name"];
+            UserCache._middle_name = cache["Middle_Name"];
+            UserCache._phone = cache["Phone"];
+            UserCache._email = cache["Email"];
+            UserCache._priority = Convert.ToInt32(cache["Priority"]);
+            UserCache._role_name = cache["Name"];
 
             new MainWindow().Show();
             Close();
