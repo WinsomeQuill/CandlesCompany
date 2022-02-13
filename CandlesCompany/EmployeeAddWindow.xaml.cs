@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -22,6 +23,21 @@ namespace CandlesCompany
         public EmployeeAddWindow()
         {
             InitializeComponent();
+            DBManager.GetRoles().ForEach(role =>
+            {
+                ComboBoxEmployeeAddRole.Items.Add(role);
+            });
+        }
+
+        private void ButtonEmployeeAdd_Click(object sender, RoutedEventArgs e)
+        {
+            string email_or_id = TextBoxEmployeeAddEmail.Text;
+            Regex regex = new Regex(@"^[0-9]+$"); // is ID?
+            if(regex.IsMatch(email_or_id))
+            {
+                int id = Convert.ToInt32(email_or_id);
+
+            }
         }
     }
 }

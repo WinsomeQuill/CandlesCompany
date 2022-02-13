@@ -23,50 +23,56 @@ namespace CandlesCompany
         public MainWindow()
         {
             InitializeComponent();
-            Task.Run(() =>
-            {
-                CatalogInit();
-            });
+            CatalogInit();
 
-            TextBlockProfileName.Text = $"ФИО: {UserCache.LastName} {UserCache.FirstName} {UserCache.MiddleName}";
-            TextBlockProfilePhone.Text = $"Телефон: {UserCache.Phone}";
-            TextBlockProfileEmail.Text = $"Эл. почта: {UserCache.Email}";
+            TextBlockProfileName.Text = $"ФИО: {UserCache._last_name} {UserCache._first_name} {UserCache._middle_name}";
+            TextBlockProfilePhone.Text = $"Телефон: {UserCache._phone}";
+            TextBlockProfileEmail.Text = $"Эл. почта: {UserCache._email}";
+            TextBlockProfileRole.Text = $"Должность: {UserCache._role_name}";
         }
 
-        private async void CatalogInit()
+        private void CatalogInit()
         {
-            await Dispatcher.InvokeAsync(() =>
+            Task.Run(async () =>
             {
-                DBManager.db.Candles.ToList().ForEach(candle =>
+                await Dispatcher.InvokeAsync(() =>
                 {
-                    ListViewCatalog.Items.Add(new ListItem(candle.Name, candle.Description, $"Price: {candle.Price} руб. | Count: {candle.Count}"));
+                    DBManager.db.Candles.ToList().ForEach(candle =>
+                    {
+                        ListViewCatalog.Items.Add(new ListItem(candle.Name, candle.Description, $"Цена: {candle.Price} руб. | Количество: {candle.Count}"));
+                    });
                 });
             });
         }
 
         private void ButtonManagementAddEmployee_Click(object sender, RoutedEventArgs e)
         {
-            new EmployeeAddWindow().ShowDialog();
+            new EmployeeAddWindow().Show();
         }
 
         private void ButtonManagementAddItem_Click(object sender, RoutedEventArgs e)
         {
-            new ItemAddWindow().ShowDialog();
+            new ItemAddWindow().Show();
         }
 
         private void ButtonManagementRemoveEmployee_Click(object sender, RoutedEventArgs e)
         {
-            new EmployeeRemoveWindow().ShowDialog();
+            new EmployeeRemoveWindow().Show();
         }
 
         private void ButtonManagementChangeItem_Click(object sender, RoutedEventArgs e)
         {
-            new ItemChangeWindow().ShowDialog();
+            new ItemChangeWindow().Show();
         }
 
         private void ButtonManagementRemoveItem_Click(object sender, RoutedEventArgs e)
         {
-            new ItemRemoveWindow().ShowDialog();
+            new ItemRemoveWindow().Show();
+        }
+
+        private void ButtonManagementChangeEmployee_Click(object sender, RoutedEventArgs e)
+        {
+            new EmployeeChangeWindow().Show();
         }
     }
 }

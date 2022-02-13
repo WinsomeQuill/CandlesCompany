@@ -44,13 +44,14 @@ namespace CandlesCompany
 
             object item = DBManager.UserInfo(email);
             var dictionary = Utils.Utils.ToDictionary<string>(item);
-            UserCache.Id = Convert.ToInt32(dictionary["Id"]);
-            UserCache.FirstName = dictionary["First_Name"];
-            UserCache.LastName = dictionary["Last_Name"];
-            UserCache.MiddleName = dictionary["Middle_Name"];
-            UserCache.Phone = dictionary["Phone"];
-            UserCache.Email = dictionary["Email"];
-            UserCache.Priority = Convert.ToInt32(dictionary["Priority"]);
+            UserCache._id = Convert.ToInt32(dictionary["Id"]);
+            UserCache._first_name = dictionary["First_Name"];
+            UserCache._last_name = dictionary["Last_Name"];
+            UserCache._middle_name = dictionary["Middle_Name"];
+            UserCache._phone = dictionary["Phone"];
+            UserCache._email = dictionary["Email"];
+            UserCache._priority = Convert.ToInt32(dictionary["Priority"]);
+            UserCache._role_name = dictionary["Name"];
 
             new MainWindow().Show();
             Close();

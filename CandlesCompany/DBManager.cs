@@ -13,9 +13,10 @@ namespace CandlesCompany
         public static candlesEntities db { get; set; } = new candlesEntities();
         public static bool Join(string email, string pass)
         {
-            int user = (from p in db.Users
-                        where p.Email == email && p.Password == pass
-                        select p.Id).FirstOrDefault();
+            int user = db.Users
+                .Where(x => x.Email == email && x.Password == pass)
+                .Select(x => x.Id).FirstOrDefault();
+
             return user != 0;
         }
         public static bool ExistUser(string email)
@@ -46,12 +47,37 @@ namespace CandlesCompany
         }
         public static object UserInfo(string email)
         {
-            List<object> users = new List<object>();
              var parts = db.Users
                 .Where(x => x.Email == email)
-                .Select(x => new { x.Id, x.Last_Name, x.First_Name, x.Middle_Name, x.Phone, x.Email, x.Roles.Priority }).ToList();
-            users.AddRange(parts);
-            return users.FirstOrDefault();
+                .Select(x => new { x.Id, x.Last_Name, x.First_Name, x.Middle_Name, x.Phone, x.Email, x.Roles.Priority, x.Roles.Name }).ToList();
+            return parts.FirstOrDefault();
+        }
+        public static object UserInfo(int id)
+        {
+            var parts = db.Users
+               .Where(x => x.Id == id)
+               .Select(x => new { x.Id, x.Last_Name, x.First_Name, x.Middle_Name, x.Phone, x.Email, x.Roles.Priority, x.Roles.Name }).ToList();
+            return parts.FirstOrDefault();
+        }
+        public static List<string> GetRoles()
+        {
+            return db.Roles.Where(x => x.Id != 1).Select(x => x.Name).ToList();
+        }
+        public static void ChangeRoleById(int id, string role)
+        {
+            Users user = db.Users.SingleOrDefault(x => x.Id == id);
+            user.Id_Role = db.Roles.Where(x => x.Name == role).Select(x => x.Id).FirstOrDefault();
+            db.SaveChanges();
+        }
+        public static void ChangeRoleById(string email, string role)
+        {
+            Users user = db.Users.SingleOrDefault(x => x.Email == email);
+            user.Id_Role = db.Roles.Where(x => x.Name == role).Select(x => x.Id).FirstOrDefault();
+            db.SaveChanges();
+        }
+        public static List<Users> GetEmployees()
+        {
+            return db.Users.Where(x => x.Id_Role != 1 && x.Id_Role != 6).Select(x => x).ToList();
         }
     }
 }

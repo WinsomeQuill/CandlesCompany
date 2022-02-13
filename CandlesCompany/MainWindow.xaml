@@ -34,25 +34,23 @@
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="60"/>
+                        <RowDefinition Height="52*"/>
+                        <RowDefinition Height="52*"/>
+                        <RowDefinition Height="52*"/>
                         <RowDefinition Height="55*"/>
-                        <RowDefinition Height="55*"/>
-                        <RowDefinition Height="55*"/>
-                        <RowDefinition Height="234*"/>
+                        <RowDefinition Height="186*"/>
                     </Grid.RowDefinitions>
                     <TextBlock
                         Style="{StaticResource MaterialDesignHeadline5TextBlock}"
                         Text="Inforamtion"
                         HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        Grid.Column="0"
-                        Grid.Row="0"/>
+                        VerticalAlignment="Center"/>
 
                     <TextBlock x:Name="TextBlockProfileName"
                         Style="{StaticResource MaterialDesignHeadline5TextBlock}"
                         Text="%Last_Name% %First_Name% %Middle_Name%"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
-                        Grid.Column="0"
                         Grid.Row="1"/>
 
                     <TextBlock x:Name="TextBlockProfileEmail"
@@ -60,7 +58,6 @@
                         Text="Email: alexmaroni329@gmail.com"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
-                        Grid.Column="0"
                         Grid.Row="2"/>
 
                     <TextBlock x:Name="TextBlockProfilePhone"
@@ -68,8 +65,14 @@
                         Text="Phone: Null ? +79136484657"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
-                        Grid.Column="0"
                         Grid.Row="3"/>
+
+                    <TextBlock x:Name="TextBlockProfileRole"
+                        Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+                        Text="Role: %Name%"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Grid.Row="4"/>
                 </Grid>
             </TabItem>
             <TabItem>
@@ -203,13 +206,23 @@
                             Content="_Добавить сотрудника"
                             Grid.Column="0"
                             Grid.Row="1"
-                            Margin="30,0,30,0" Click="ButtonManagementAddEmployee_Click"/>
+                            Margin="30,0,30,0"
+                            Click="ButtonManagementAddEmployee_Click"/>
+
+                    <Button x:Name="ButtonManagementChangeEmployee"
+                            Content="_Изменить сотрудника"
+                            Grid.Column="1"
+                            Grid.Row="1"
+                            Margin="30,0,30,0"
+                            Click="ButtonManagementChangeEmployee_Click"/>
 
                     <Button x:Name="ButtonManagementRemoveEmployee"
                             Content="_Удалить сотрудника"
                             Grid.Column="2"
                             Grid.Row="1"
-                            Margin="30,0,30,0" Cursor="Hand" Click="ButtonManagementRemoveEmployee_Click"/>
+                            Margin="30,0,30,0"
+                            Cursor="Hand"
+                            Click="ButtonManagementRemoveEmployee_Click"/>
 
                     <TextBlock
                         Style="{StaticResource MaterialDesignHeadline4TextBlock}"

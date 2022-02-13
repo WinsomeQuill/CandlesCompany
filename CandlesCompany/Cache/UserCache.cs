@@ -8,12 +8,13 @@ namespace CandlesCompany.Cache
 {
     public static class UserCache
     {
-        public static int Id { get; set; }
-        public static string LastName { get; set; }
-        public static string FirstName { get; set; }
-        public static string MiddleName { get; set; }
-        public static string Phone { get; set; }
-        public static string Email { get; set; }
-        public static int Priority { get; set; }
+        public static int _id { get; set; }
+        public static string _last_name { get; set; }
+        public static string _first_name { get; set; }
+        public static string _middle_name { get; set; }
+        public static string _phone { get; set; }
+        public static string _email { get; set; }
+        public static int _priority { get; set; }
+        public static string _role_name { get; set; }
     }
 }
