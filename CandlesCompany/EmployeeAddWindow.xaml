@@ -26,19 +26,19 @@
             HorizontalAlignment="Center"
             VerticalAlignment="Center"/>
 
-        <TextBox x:Name="TextBoxEmployeeAddEmail"
-            materialDesign:HintAssist.Hint="Email / ID Account"
-            materialDesign:TextFieldAssist.TextBoxViewMargin="1 0 1 0"
-            materialDesign:HintAssist.FloatingScale="0.50"
-            Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-            FontSize="20"
-            Grid.Column="0"
-            Grid.Row="1"
-            Margin="10"
-            Cursor="IBeam"/>
+        <ComboBox x:Name="ComboBoxEmployeeAdd"
+                  materialDesign:HintAssist.Hint="Выберите пользователя"
+                  materialDesign:HintAssist.HintOpacity=".50"
+                  FontSize="20"
+                  HorizontalAlignment="Center"
+                  VerticalContentAlignment="Center"
+                  Width="400"
+                  Height="50"
+                  IsEditable="True"
+                  Grid.Row="1"/>
 
         <ComboBox x:Name="ComboBoxEmployeeAddRole"
-                  materialDesign:HintAssist.Hint="Роль сотрудника"
+                  materialDesign:HintAssist.Hint="Должность"
                   materialDesign:HintAssist.HintOpacity=".50"
                   FontSize="20"
                   HorizontalAlignment="Center"
@@ -52,6 +52,7 @@
                 Grid.Row="3"
                 Content="Добавить"
                 Margin="30,0,30,0"
-                Click="ButtonEmployeeAdd_Click" Cursor="Hand"/>
+                Click="ButtonEmployeeAdd_Click"
+                Cursor="Hand"/>
     </Grid>
 </Window>

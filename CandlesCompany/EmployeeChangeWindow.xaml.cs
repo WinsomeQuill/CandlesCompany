@@ -23,6 +23,11 @@ namespace CandlesCompany
         public EmployeeChangeWindow()
         {
             InitializeComponent();
+            Init();
+        }
+
+        private void Init()
+        {
             DBManager.GetRoles().ForEach(role =>
             {
                 ComboBoxEmployeeChangeRole.Items.Add(role);
@@ -30,7 +35,7 @@ namespace CandlesCompany
 
             List<Users> employees = DBManager.GetEmployees();
 
-            foreach(Users user in employees)
+            foreach (Users user in employees)
             {
                 int index = ComboBoxEmployeeChangeEmail.Items.Add(new ComboBoxItem
                 {
@@ -39,8 +44,11 @@ namespace CandlesCompany
                 });
             }
 
-            ComboBoxEmployeeChangeRole.SelectedIndex = 0;
-            ComboBoxEmployeeChangeEmail.SelectedIndex = 0;
+            ComboBoxEmployeeChangeRole.SelectedIndex = ComboBoxEmployeeChangeEmail.SelectedIndex = 0;
+            if (ComboBoxEmployeeChangeRole.Items.Count <= 0 || ComboBoxEmployeeChangeEmail.Items.Count <= 0)
+            {
+                ButtonEmployeeChange.IsEnabled = false;
+            }
         }
 
         private void ButtonEmployeeChange_Click(object sender, RoutedEventArgs e)
@@ -55,7 +63,10 @@ namespace CandlesCompany
             }
 
             DBManager.ChangeRoleById(user.Id, role);
-            MessageBox.Show($"Вы изменили сотруднику \"{user.Last_Name} {user.First_Name}\" роль на {role}!", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show($"Вы изменили сотруднику \"{user.Last_Name} {user.First_Name}\" должность на \"{role}\"!", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
+            ComboBoxEmployeeChangeEmail.Items.Clear();
+            ComboBoxEmployeeChangeRole.Items.Clear();
+            Init();
         }
     }
 }

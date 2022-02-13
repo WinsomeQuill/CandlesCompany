@@ -24,20 +24,22 @@
             HorizontalAlignment="Center"
             VerticalAlignment="Center"/>
 
-        <TextBox x:Name="TextBoxEmployeeRemoveEmail"
-            materialDesign:HintAssist.Hint="Email / ID Account"
-            materialDesign:TextFieldAssist.TextBoxViewMargin="1 0 1 0"
-            materialDesign:HintAssist.FloatingScale="0.50"
-            Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-            FontSize="20"
-            Grid.Column="0"
-            Grid.Row="1"
-            Margin="10"
-            Cursor="IBeam"/>
+        <ComboBox x:Name="ComboBoxEmployeeRemove"
+                  materialDesign:HintAssist.Hint="Выберите сотрудника"
+                  materialDesign:HintAssist.HintOpacity=".50"
+                  FontSize="20"
+                  HorizontalAlignment="Center"
+                  VerticalContentAlignment="Center"
+                  Width="400"
+                  Height="50"
+                  IsEditable="True"
+                  Grid.Row="1"/>
 
         <Button x:Name="ButtonEmployeeRemove"
                 Grid.Row="3"
-                Content="Сохранить"
-                Margin="30,0,30,0"/>
+                Content="Удалить"
+                Margin="30,0,30,0"
+                Cursor="Hand"
+                Click="ButtonEmployeeRemove_Click"/>
     </Grid>
 </Window>

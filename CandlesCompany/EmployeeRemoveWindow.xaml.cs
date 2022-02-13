@@ -22,6 +22,36 @@ namespace CandlesCompany
         public EmployeeRemoveWindow()
         {
             InitializeComponent();
+            Init();
+        }
+
+        private void Init()
+        {
+            List<Users> employees = DBManager.GetEmployees();
+
+            foreach (Users user in employees)
+            {
+                int index = ComboBoxEmployeeRemove.Items.Add(new ComboBoxItem
+                {
+                    Content = $"{user.Last_Name} {user.First_Name} | {user.Email}",
+                    Tag = user
+                });
+            }
+
+            ComboBoxEmployeeRemove.SelectedIndex = 0;
+            if(ComboBoxEmployeeRemove.Items.Count <= 0)
+            {
+                ButtonEmployeeRemove.IsEnabled = false;
+            }
+        }
+
+        private void ButtonEmployeeRemove_Click(object sender, RoutedEventArgs e)
+        {
+            Users user = (Users)(ComboBoxEmployeeRemove.SelectedItem as ComboBoxItem).Tag;
+            MessageBox.Show($"Вы сняли с должности \"{user.Roles.Name}\" сотрудника \"{user.Last_Name} {user.First_Name}\"!", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
+            DBManager.ChangeRoleById(user.Id, "Пользователь");
+            ComboBoxEmployeeRemove.Items.Clear();
+            Init();
         }
     }
 }

@@ -38,7 +38,7 @@
                   Grid.Row="1"/>
         
         <ComboBox x:Name="ComboBoxEmployeeChangeRole"
-                  materialDesign:HintAssist.Hint="Новая роль сотрудника"
+                  materialDesign:HintAssist.Hint="Новая должность"
                   materialDesign:HintAssist.HintOpacity=".50"
                   FontSize="20"
                   HorizontalAlignment="Center"

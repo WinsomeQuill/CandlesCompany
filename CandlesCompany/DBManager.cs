@@ -61,7 +61,7 @@ namespace CandlesCompany
         }
         public static List<string> GetRoles()
         {
-            return db.Roles.Where(x => x.Id != 1).Select(x => x.Name).ToList();
+            return db.Roles.Where(x => x.Id != 1 && x.Id != 6).Select(x => x.Name).ToList();
         }
         public static void ChangeRoleById(int id, string role)
         {
@@ -78,6 +78,10 @@ namespace CandlesCompany
         public static List<Users> GetEmployees()
         {
             return db.Users.Where(x => x.Id_Role != 1 && x.Id_Role != 6).Select(x => x).ToList();
+        }
+        public static List<Users> GetUsers()
+        {
+            return db.Users.Where(x => x.Id_Role == 6).Select(x => x).ToList();
         }
     }
 }
