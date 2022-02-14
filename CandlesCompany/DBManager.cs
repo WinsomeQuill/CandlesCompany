@@ -108,5 +108,25 @@ namespace CandlesCompany
             candle.Id_Type_Candle = id_type;
             db.SaveChanges();
         }
+        public static void AddItem(int id_type, string name, string description, int count, double price, byte[] image)
+        {
+            Candles candle = new Candles
+            {
+                Description = description,
+                Name = name,
+                Image = image,
+                Count = count,
+                Price = (decimal)price,
+                Id_Type_Candle = id_type
+            };
+            db.Candles.Add(candle);
+            db.SaveChanges();
+        }
+        public static void RemoveItem(int id)
+        {
+            Candles candle = db.Candles.Where(x => x.Id == id).SingleOrDefault();
+            db.Candles.Remove(candle);
+            db.SaveChanges();
+        }
     }
 }

@@ -15,7 +15,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="360"/>
             <ColumnDefinition Width="281"/>
-            <ColumnDefinition/>
+            <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="60"/>
@@ -46,15 +46,18 @@
                   Width="310"
                   IsEditable="True"
                   Grid.Row="1"
-                  Margin="0,20,0,20" SelectionChanged="ComboBoxItemChangeSelectItem_SelectionChanged"/>
+                  Margin="0,20,0,20"
+                  SelectionChanged="ComboBoxItemChangeSelectItem_SelectionChanged"/>
 
         <TextBlock
             Style="{StaticResource MaterialDesignHeadline5TextBlock}"
             Text="Изменить товар"
             Grid.Column="0"
-            Grid.ColumnSpan="2"
+            Grid.ColumnSpan="3"
             HorizontalAlignment="Center"
-            VerticalAlignment="Center" Height="32" Width="178"/>
+            VerticalAlignment="Center"
+            Height="32"
+            Width="178"/>
 
         <ComboBox x:Name="ComboBoxItemChangeType"
                   materialDesign:HintAssist.Hint="Тип товара"
@@ -78,7 +81,7 @@
             Margin="10,10,10,10"
             Cursor="IBeam"/>
 
-        <TextBox x:Name="TextBoxItemDescription"
+        <TextBox x:Name="TextBoxItemChangeDescription"
                 Style="{StaticResource MaterialDesignOutlinedTextBox}"
                 VerticalAlignment="Top"
                 Height="230"
@@ -121,7 +124,8 @@
                 Grid.Column="0"
                 Grid.Row="5"
                 Grid.ColumnSpan="3"
-                Margin="200,0,200,0" Click="ButtonItemChangeSave_Click"/>
+                Margin="200,0,200,0"
+                Click="ButtonItemChangeSave_Click"/>
 
     </Grid>
 </Window>

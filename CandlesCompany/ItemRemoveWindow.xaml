@@ -43,6 +43,8 @@
                 Grid.Column="0"
                 Grid.Row="2"
                 Grid.ColumnSpan="2"
-                Margin="190,0,190,0" Cursor="Hand"/>
+                Margin="190,0,190,0"
+                Cursor="Hand"
+                Click="ButtonItemRemoveSave_Click"/>
     </Grid>
 </Window>
