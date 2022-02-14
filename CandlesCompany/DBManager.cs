@@ -83,5 +83,30 @@ namespace CandlesCompany
         {
             return db.Users.Where(x => x.Id_Role == 6).Select(x => x).ToList();
         }
+        public static byte[] GetImageItem(int id)
+        {
+            byte[] result = db.Candles.Where(x => x.Id == id).Select(x => x.Image).FirstOrDefault();
+            if(result.Length == 0 || result == null) { return null; }
+            return result;
+        }
+        public static List<Candles> GetCandles()
+        {
+            return db.Candles.Select(x => x).ToList();
+        }
+        public static List<Type_Candle> GetTypeCandles()
+        {
+            return db.Type_Candle.Select(x => x).ToList();
+        }
+        public static void UpdateItem(int id, int id_type, string name, string description, int count, double price, byte[] image)
+        {
+            Candles candle = db.Candles.SingleOrDefault(x => x.Id == id);
+            candle.Image = image;
+            candle.Price = (decimal)price;
+            candle.Name = name;
+            candle.Description = description;
+            candle.Count = count;
+            candle.Id_Type_Candle = id_type;
+            db.SaveChanges();
+        }
     }
 }

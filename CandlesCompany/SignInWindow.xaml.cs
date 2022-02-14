@@ -35,28 +35,29 @@ namespace CandlesCompany
 
         private void ButtonSignInJoin_Click(object sender, RoutedEventArgs e)
         {
-            Dictionary<string, string> cache = null;
             string email = TextBoxSignInEmail.Text;
             string pass = PasswordBoxSignIn.Password;
 
-            Thread thr = new Thread(delegate ()
+            if (!DBManager.Join(email, pass))
             {
-                if (!DBManager.Join(email, pass))
+                Task.Run(async () =>
                 {
-                    MessageBox.Show("Неверный логин или пароль!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
-                }
+                    await Dispatcher.InvokeAsync(() =>
+                    {
+                        ButtonSignInJoin.IsEnabled = false;
+                        MessageBoxResult result = MessageBox.Show("Неверный логин или пароль!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                        if (result == MessageBoxResult.OK)
+                        {
+                            ButtonSignInJoin.IsEnabled = true;
+                        }
+                    });
+                });
+                return;
+            }
 
-                object item = DBManager.UserInfo(email);
-                cache = Utils.Utils.ToDictionary<string>(item);   
-            });
+            object item = DBManager.UserInfo(email);
+            Dictionary<string, string> cache = Utils.Utils.ToDictionary<string>(item);
 
-            thr.Start();
-            thr.Join();
-
-            if(cache == null) { return; }
-
-            
             UserCache._id = Convert.ToInt32(cache["Id"]);
             UserCache._first_name = cache["First_Name"];
             UserCache._last_name = cache["Last_Name"];

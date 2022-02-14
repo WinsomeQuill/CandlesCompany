@@ -20,12 +20,13 @@ namespace CandlesCompany
     /// </summary>
     public partial class ListItem : UserControl
     {
-        public ListItem(string name, string description, string info)
+        public Candles candle { get; set; }
+        public ListItem(string name, string description, Candles candle)
         {
             InitializeComponent();
-            TextBlockName.Text = name;
-            TextBlockDescription.Text = description;
-            TextBlockInformation.Text = info;
+            TextBlockItemName.Text = name;
+            TextBlockItemDescription.Text = description;
+            this.candle = candle;
         }
     }
 }

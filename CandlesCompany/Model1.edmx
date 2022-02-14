@@ -15,6 +15,7 @@
           <Property Name="Price" Type="decimal" Precision="10" Scale="2" Nullable="false" />
           <Property Name="Id_Type_Candle" Type="int" Nullable="false" />
           <Property Name="Count" Type="int" Nullable="false" />
+          <Property Name="Image" Type="image" />
         </EntityType>
         <EntityType Name="Candles_Order">
           <Key>
@@ -85,7 +86,7 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="First_Name" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Last_Name" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="Middle_Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Middle_Name" Type="nvarchar" MaxLength="50" />
           <Property Name="Id_Role" Type="int" Nullable="false" />
           <Property Name="Phone" Type="nvarchar" MaxLength="11" />
           <Property Name="Email" Type="nvarchar" MaxLength="170" Nullable="false" />
@@ -230,6 +231,7 @@
           <Property Name="Count" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Candles_Order" Relationship="Self.FK_Candles_Order_Candles" FromRole="Candles" ToRole="Candles_Order" />
           <NavigationProperty Name="Type_Candle" Relationship="Self.FK_Candles_Type_Candle" FromRole="Candles" ToRole="Type_Candle" />
+          <Property Name="Image" Type="Binary" MaxLength="Max" FixedLength="false" />
         </EntityType>
         <EntityType Name="Candles_Order">
           <Key>
@@ -310,7 +312,7 @@
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="First_Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Last_Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Middle_Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Middle_Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Id_Role" Type="Int32" Nullable="false" />
           <Property Name="Phone" Type="String" MaxLength="11" FixedLength="false" Unicode="true" />
           <Property Name="Email" Type="String" MaxLength="170" FixedLength="false" Unicode="true" Nullable="false" />
@@ -450,6 +452,7 @@
           <EntitySetMapping Name="Candles">
             <EntityTypeMapping TypeName="candlesModel.Candles">
               <MappingFragment StoreEntitySet="Candles">
+                <ScalarProperty Name="Image" ColumnName="Image" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Description" ColumnName="Description" />

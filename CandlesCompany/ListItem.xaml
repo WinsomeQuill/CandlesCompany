@@ -5,56 +5,40 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:CandlesCompany"
              mc:Ignorable="d"
-             d:DesignHeight="450"
-             d:DesignWidth="450">
+             Height="150"
+             Width="270"
+             MaxWidth="470">
+
     <Grid Background="White">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="230*"/>
-            <ColumnDefinition Width="310*"/>
-            <ColumnDefinition Width="230*"/>
-        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="8*"/>
-            <RowDefinition Height="3*"/>
-            <RowDefinition Height="3*"/>
-            <RowDefinition Height="2*"/>
-            <RowDefinition Height="2*"/>
+            <RowDefinition Height="100*"/>
+            <RowDefinition Height="200*"/>
+            <RowDefinition Height="150*"/>
         </Grid.RowDefinitions>
 
-        <Image x:Name="Image"
-               Grid.Row="0"
-               Grid.Column="0"
-               Grid.ColumnSpan="3"
-               Margin="20,20,20,20"
-               HorizontalAlignment="Center"
-               VerticalAlignment="Center"/>
+        <TextBlock x:Name="TextBlockItemName"
+                   Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+                   Text="Name"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   Grid.Column="0"
+                   Grid.Row="0"
+                   TextWrapping="WrapWithOverflow"/>
 
-        <TextBlock x:Name="TextBlockName"
+        <TextBlock x:Name="TextBlockItemDescription"
+                   Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
+                   Text="Description"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
                    Grid.Row="1"
-                   Grid.Column="0"
-                   Grid.ColumnSpan="3"
-                   Margin="70, 5, 70, 5"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Center"/>
+                   TextWrapping="WrapWithOverflow"/>
 
-        <TextBlock x:Name="TextBlockDescription"
-                   Grid.Row="2"
-                   Grid.Column="0"
-                   Grid.ColumnSpan="3"
-                   Margin="40, 5, 40, 5"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Center"/>
-
-        <TextBlock x:Name="TextBlockInformation"
-                   Grid.Row="3"
-                   Grid.Column="0"
-                   Grid.ColumnSpan="3"
-                   Margin="60,5,60,5"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Center"/>
-
-        <Button x:Name="ButtonBuy"
-                Grid.Row="4"
-                Content="Buy" Grid.ColumnSpan="3" Margin="134,9,134,9" Cursor="Hand"/>
+        <Button x:Name="Button"
+                Grid.Column="0"
+                Grid.Row="2"
+                Height="40"
+                Width="90"
+                FontSize="16"
+                Content="_Preview"/>
     </Grid>
 </UserControl>

@@ -15,7 +15,8 @@
     <Grid>
         <TabControl
             Style="{StaticResource MaterialDesignNavigatilRailTabControl}"
-            TabStripPlacement="Left">
+            TabStripPlacement="Top"
+            HorizontalContentAlignment="Center">
             <TabItem>
                 <TabItem.Header>
                     <StackPanel
@@ -23,8 +24,8 @@
                         Width="auto">
                         <materialDesign:PackIcon
                             Kind="Account"
-                            Width="24"
-                            Height="24"
+                            Width="34"
+                            Height="34"
                             HorizontalAlignment="Center" />
                         <TextBlock
                             Text="Профиль"
@@ -82,8 +83,8 @@
                         Width="auto">
                         <materialDesign:PackIcon
                             Kind="PackageVariantClosed"
-                            Width="24"
-                            Height="24"
+                            Width="34"
+                            Height="34"
                             HorizontalAlignment="Center" />
                         <TextBlock
                             Text="Заказы"
@@ -101,8 +102,8 @@
                         Width="auto">
                         <materialDesign:PackIcon
                             Kind="Cart"
-                            Width="24"
-                            Height="24"
+                            Width="34"
+                            Height="34"
                             HorizontalAlignment="Center" />
                         <TextBlock
                             Text="Каталог"
@@ -110,8 +111,65 @@
                     </StackPanel>
                 </TabItem.Header>
                 <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="70*" MinWidth="200" MaxWidth="450"/>
+                        <ColumnDefinition Width="100*"/>
+                    </Grid.ColumnDefinitions>
+
                     <ListView x:Name="ListViewCatalog"
-                              HorizontalContentAlignment="Center"/>
+                              HorizontalContentAlignment="Center"
+                              Grid.Column="0"/>
+
+                    <StackPanel x:Name="StackPanelCatalogSelectedItem"
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                Orientation="Vertical">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="85*"/>
+                                <RowDefinition Height="123*"/>
+                                <RowDefinition Height="81*"/>
+                                <RowDefinition Height="74*"/>
+                            </Grid.RowDefinitions>
+                            
+                            <TextBlock x:Name="TextBlockCatalogSelectedItemTitle"
+                                       Grid.Row="0"
+                                       Style="{StaticResource MaterialDesignHeadline3TextBlock}"
+                                       HorizontalAlignment="Center"
+                                       Text="Title"/>
+                            
+                            <Image x:Name="ImageCatalogSelectedItem"
+                                   Grid.Row="1"
+                                   Grid.Column="0"/>
+                            
+                            <Grid Grid.Row="2">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                
+                                <TextBlock x:Name="TextBlockCatalogSelectedItemDescription"
+                                       Grid.Column="0"
+                                       Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Center"
+                                       Text="Description"/>
+
+                                <TextBlock x:Name="TextBlockCatalogSelectedItemPrice"
+                                       Grid.Column="1"
+                                       Style="{StaticResource MaterialDesignSubtitle2TextBlock}"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Center"
+                                       Text="Price and Count"/>
+                            </Grid>
+
+                            <Button x:Name="ButtonCatalogSelectedItemBuy"
+                                    Grid.Column="0"
+                                    Grid.Row="3"
+                                    Content="_В корзину"
+                                    Margin="30,30,30,0"/>
+                        </Grid>
+                    </StackPanel>
                 </Grid>
             </TabItem>
             <TabItem>
@@ -121,8 +179,8 @@
                         Width="auto">
                         <materialDesign:PackIcon
                             Kind="HelpCircleOutline"
-                            Width="24"
-                            Height="24"
+                            Width="34"
+                            Height="34"
                             HorizontalAlignment="Center" />
                         <TextBlock 
                             Text="Помощь"
@@ -171,8 +229,8 @@
                         Width="auto">
                         <materialDesign:PackIcon
                             Kind="AccountLock"
-                            Width="24"
-                            Height="24"
+                            Width="34"
+                            Height="34"
                             HorizontalAlignment="Center" />
                         <TextBlock 
                             Text="Админ"

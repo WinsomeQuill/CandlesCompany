@@ -39,7 +39,7 @@ namespace CandlesCompany
                 {
                     DBManager.db.Candles.ToList().ForEach(candle =>
                     {
-                        ListViewCatalog.Items.Add(new ListItem(candle.Name, candle.Description, $"Цена: {candle.Price} руб. | Количество: {candle.Count}"));
+                        ListViewCatalog.Items.Add(new ListItem(candle.Name, candle.Description, candle));
                     });
                 });
             });

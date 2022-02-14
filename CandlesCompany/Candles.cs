@@ -26,6 +26,7 @@ namespace CandlesCompany
         public decimal Price { get; set; }
         public int Id_Type_Candle { get; set; }
         public int Count { get; set; }
+        public byte[] Image { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Candles_Order> Candles_Order { get; set; }
