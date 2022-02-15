@@ -55,17 +55,15 @@ namespace CandlesCompany
                 return;
             }
 
-            object item = DBManager.UserInfo(email);
-            Dictionary<string, string> cache = Utils.Utils.ToDictionary<string>(item);
+            Users user = DBManager.UserInfo(email);
 
-            UserCache._id = Convert.ToInt32(cache["Id"]);
-            UserCache._first_name = cache["First_Name"];
-            UserCache._last_name = cache["Last_Name"];
-            UserCache._middle_name = cache["Middle_Name"];
-            UserCache._phone = cache["Phone"];
-            UserCache._email = cache["Email"];
-            UserCache._priority = Convert.ToInt32(cache["Priority"]);
-            UserCache._role_name = cache["Name"];
+            UserCache._id = user.Id;
+            UserCache._first_name = user.First_Name;
+            UserCache._last_name = user.Last_Name;
+            UserCache._middle_name = user.Middle_Name;
+            UserCache._phone = user.Phone;
+            UserCache._email = user.Email;
+            UserCache._role = user.Roles;
 
             new MainWindow().Show();
             Close();

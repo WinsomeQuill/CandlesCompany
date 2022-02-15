@@ -14,7 +14,6 @@ namespace CandlesCompany.Cache
         public static string _middle_name { get; set; }
         public static string _phone { get; set; }
         public static string _email { get; set; }
-        public static int _priority { get; set; }
-        public static string _role_name { get; set; }
+        public static Roles _role { get; set; }
     }
 }

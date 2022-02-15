@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -28,21 +29,21 @@ namespace CandlesCompany
             TextBlockProfileName.Text = $"ФИО: {UserCache._last_name} {UserCache._first_name} {UserCache._middle_name}";
             TextBlockProfilePhone.Text = $"Телефон: {UserCache._phone}";
             TextBlockProfileEmail.Text = $"Эл. почта: {UserCache._email}";
-            TextBlockProfileRole.Text = $"Должность: {UserCache._role_name}";
+            TextBlockProfileRole.Text = $"Должность: {UserCache._role.Name}";
         }
 
         private void CatalogInit()
         {
-            Task.Run(async () =>
+            new Thread(delegate ()
             {
-                await Dispatcher.InvokeAsync(() =>
+                Dispatcher.Invoke(delegate ()
                 {
                     DBManager.db.Candles.ToList().ForEach(candle =>
                     {
                         ListViewCatalog.Items.Add(new ListItem(candle.Name, candle.Description, candle));
                     });
                 });
-            });
+            }).Start();
         }
 
         private void ButtonManagementAddEmployee_Click(object sender, RoutedEventArgs e)

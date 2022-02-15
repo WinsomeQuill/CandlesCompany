@@ -42,6 +42,10 @@ namespace CandlesCompany
                     });
 
                     ComboBoxItemRemoveSelectItem.SelectedIndex = 0;
+                    if (ComboBoxItemRemoveSelectItem.Items.Count <= 0)
+                    {
+                        ButtonItemRemoveSave.IsEnabled = false;
+                    }
                 });
             }).Start();
         }

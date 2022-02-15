@@ -42,7 +42,15 @@ namespace CandlesCompany
                     {
                         ComboBoxItemChangeSelectItem.Items.Add(new ComboBoxItem { Content = c.Name, Tag = c });
                     });
+
                     ComboBoxItemChangeSelectItem.SelectedIndex = 0;
+                    if (ComboBoxItemChangeSelectItem.Items.Count <= 0)
+                    {
+                        lock (new object())
+                        {
+                            ButtonItemChangeSave.IsEnabled = false;
+                        }
+                    }
                     UpdateInfo();
                 });
             }).Start();
@@ -60,7 +68,15 @@ namespace CandlesCompany
                     {
                         ComboBoxItemChangeType.Items.Add(new ComboBoxItem { Content = c.Name, Tag = c });
                     });
+
                     ComboBoxItemChangeType.SelectedIndex = 0;
+                    if (ComboBoxItemChangeType.Items.Count <= 0)
+                    {
+                        lock(new object())
+                        {
+                            ButtonItemChangeSave.IsEnabled = false;
+                        }
+                    }
                 });
             }).Start();
         }

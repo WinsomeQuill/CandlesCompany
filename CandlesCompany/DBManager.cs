@@ -13,51 +13,34 @@ namespace CandlesCompany
         public static candlesEntities db { get; set; } = new candlesEntities();
         public static bool Join(string email, string pass)
         {
-            int user = db.Users
-                .Where(x => x.Email == email && x.Password == pass)
-                .Select(x => x.Id).FirstOrDefault();
-
-            return user != 0;
+            return db.Users.Where(x => x.Email == email && x.Password == pass).Select(x => x.Id).FirstOrDefault() != 0;
         }
         public static bool ExistUser(string email)
         {
-            int user = db.Users
-                .Where(x => x.Email == email)
-                .Select(x => x.Id).FirstOrDefault();
-            return user != 0;
+            return db.Users.Where(x => x.Email == email).Select(x => x.Id).FirstOrDefault() != 0;
         }
-        public static bool Registration(string email, string pass, string first_name, string last_name, string middle_name = null)
+        public static void Registration(string email, string pass, string first_name, string last_name, string middle_name = null)
         {
-            if(ExistUser(email))
+            Users user = new Users
             {
-                return false;
-            }
-
-            Users user = new Users();
-            user.Email = email;
-            user.Password = pass;
-            user.First_Name = first_name;
-            user.Last_Name = last_name;
-            user.Middle_Name = middle_name;
-            user.Id_Role = 5;
+                Email = email,
+                Password = pass,
+                First_Name = first_name,
+                Last_Name = last_name,
+                Middle_Name = middle_name,
+                Id_Role = 5
+            };
 
             db.Users.Add(user);
             db.SaveChanges();
-            return true;
         }
-        public static object UserInfo(string email)
+        public static Users UserInfo(string email)
         {
-             var parts = db.Users
-                .Where(x => x.Email == email)
-                .Select(x => new { x.Id, x.Last_Name, x.First_Name, x.Middle_Name, x.Phone, x.Email, x.Roles.Priority, x.Roles.Name }).ToList();
-            return parts.FirstOrDefault();
+            return db.Users.Where(x => x.Email == email).Select(x => x).FirstOrDefault();
         }
-        public static object UserInfo(int id)
+        public static Users UserInfo(int id)
         {
-            var parts = db.Users
-               .Where(x => x.Id == id)
-               .Select(x => new { x.Id, x.Last_Name, x.First_Name, x.Middle_Name, x.Phone, x.Email, x.Roles.Priority, x.Roles.Name }).ToList();
-            return parts.FirstOrDefault();
+            return db.Users.Where(x => x.Id == id).Select(x => x).FirstOrDefault();
         }
         public static List<string> GetRoles()
         {
