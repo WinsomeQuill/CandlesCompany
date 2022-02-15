@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -12,12 +11,6 @@ namespace CandlesCompany.Utils
 {
     public static class Utils
     {
-        public static Dictionary<string, TValue> ToDictionary<TValue>(object obj)
-        {
-            var json = JsonConvert.SerializeObject(obj);
-            var dictionary = JsonConvert.DeserializeObject<Dictionary<string, TValue>>(json);
-            return dictionary;
-        }
         public static byte[] ImageToBinary(Image image)
         {
             MemoryStream stream = new MemoryStream();
