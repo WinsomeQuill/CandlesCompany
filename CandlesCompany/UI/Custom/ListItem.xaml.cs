@@ -14,7 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace CandlesCompany
+namespace CandlesCompany.UI.Custom
 {
     /// <summary>
     /// Логика взаимодействия для ListItem.xaml

@@ -13,7 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace CandlesCompany
+namespace CandlesCompany.UI.Employee
 {
     /// <summary>
     /// Логика взаимодействия для EmployeeRemoveWindow.xaml

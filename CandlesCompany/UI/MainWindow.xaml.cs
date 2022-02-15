@@ -15,7 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace CandlesCompany
+namespace CandlesCompany.UI
 {
     /// <summary>
     /// Логика взаимодействия для MainWindow.xaml
@@ -46,34 +46,34 @@ namespace CandlesCompany
                 {
                     DBManager.db.Candles.ToList().ForEach(candle =>
                     {
-                        ListViewCatalog.Items.Add(new ListItem(candle.Name, candle.Description, candle, _selectediteminfo));
+                        ListViewCatalog.Items.Add(new Custom.ListItem(candle.Name, candle.Description, candle, _selectediteminfo));
                     });
                 });
             }).Start();
         }
         private void ButtonManagementAddEmployee_Click(object sender, RoutedEventArgs e)
         {
-            new EmployeeAddWindow().Show();
-        }
-        private void ButtonManagementAddItem_Click(object sender, RoutedEventArgs e)
-        {
-            new ItemAddWindow().Show();
-        }
-        private void ButtonManagementRemoveEmployee_Click(object sender, RoutedEventArgs e)
-        {
-            new EmployeeRemoveWindow().Show();
-        }
-        private void ButtonManagementChangeItem_Click(object sender, RoutedEventArgs e)
-        {
-            new ItemChangeWindow().Show();
-        }
-        private void ButtonManagementRemoveItem_Click(object sender, RoutedEventArgs e)
-        {
-            new ItemRemoveWindow().Show();
+            new Employee.EmployeeAddWindow().Show();
         }
         private void ButtonManagementChangeEmployee_Click(object sender, RoutedEventArgs e)
         {
-            new EmployeeChangeWindow().Show();
+            new Employee.EmployeeChangeWindow().Show();
+        }
+        private void ButtonManagementRemoveEmployee_Click(object sender, RoutedEventArgs e)
+        {
+            new Employee.EmployeeRemoveWindow().Show();
+        }
+        private void ButtonManagementAddItem_Click(object sender, RoutedEventArgs e)
+        {
+            new Item.ItemAddWindow().Show();
+        }
+        private void ButtonManagementChangeItem_Click(object sender, RoutedEventArgs e)
+        {
+            new Item.ItemChangeWindow().Show();
+        }
+        private void ButtonManagementRemoveItem_Click(object sender, RoutedEventArgs e)
+        {
+            new Item.ItemRemoveWindow().Show();
         }
     }
 }
