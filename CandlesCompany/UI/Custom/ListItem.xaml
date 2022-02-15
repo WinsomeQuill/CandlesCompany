@@ -39,6 +39,8 @@
                 Height="40"
                 Width="90"
                 FontSize="16"
-                Content="_Preview"/>
+                Content="_Preview"
+                Click="Button_Click"
+                Cursor="Hand"/>
     </Grid>
 </UserControl>

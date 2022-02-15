@@ -26,13 +26,11 @@ namespace CandlesCompany
         {
             InitializeComponent();
         }
-
         private void ButtonSignInRegistered_Click(object sender, RoutedEventArgs e)
         {
             new SignUpWindow().Show();
             Close();
         }
-
         private void ButtonSignInJoin_Click(object sender, RoutedEventArgs e)
         {
             string email = TextBoxSignInEmail.Text;
