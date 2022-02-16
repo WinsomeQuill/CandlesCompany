@@ -20,16 +20,26 @@ namespace CandlesCompany.UI.Custom
     /// </summary>
     public partial class SelectedItemInfo : UserControl
     {
-        private MainWindow _mainWindow;
+        private MainWindow _mainWindow { get; set; }
+        public Candles _candle { get; set; }
         public SelectedItemInfo(MainWindow mainWindow)
         {
             InitializeComponent();
             _mainWindow = mainWindow;
         }
-
         private void ButtonCatalogSelectedItemBuy_Click(object sender, RoutedEventArgs e)
         {
+            if (_candle == null)
+            {
+                MessageBox.Show("Произошла ошибка при добавлении товара в корзину!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
 
+            _mainWindow.ListViewBasket.Items.Add(new BasketItem(_candle));
+            DBManager.AddCandlesBasket(Cache.UserCache._id, _candle);
+            Cache.UserCache.Basket.Add(_candle);
+            ButtonCatalogSelectedItemBuy.IsEnabled = false;
+            ButtonCatalogSelectedItemBuy.Content = "В корзине";
         }
     }
 }

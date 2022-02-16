@@ -92,6 +92,14 @@
           <Property Name="Email" Type="nvarchar" MaxLength="170" Nullable="false" />
           <Property Name="Password" Type="nvarchar" MaxLength="36" Nullable="false" />
         </EntityType>
+        <EntityType Name="Users_Baskets">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Id_User" Type="int" Nullable="false" />
+          <Property Name="Id_Candles" Type="int" Nullable="false" />
+        </EntityType>
         <Association Name="FK_Candles_Order_Candles">
           <End Role="Candles" Type="Self.Candles" Multiplicity="1" />
           <End Role="Candles_Order" Type="Self.Candles_Order" Multiplicity="*" />
@@ -164,6 +172,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Users_Baskets_Candles">
+          <End Role="Candles" Type="Self.Candles" Multiplicity="1" />
+          <End Role="Users_Baskets" Type="Self.Users_Baskets" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Candles">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Users_Baskets">
+              <PropertyRef Name="Id_Candles" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Users_Baskets_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="Users_Baskets" Type="Self.Users_Baskets" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Users_Baskets">
+              <PropertyRef Name="Id_User" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Users_Roles">
           <End Role="Roles" Type="Self.Roles" Multiplicity="1" />
           <End Role="Users" Type="Self.Users" Multiplicity="*" />
@@ -186,6 +218,7 @@
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Type_Candle" EntityType="Self.Type_Candle" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Users_Baskets" EntityType="Self.Users_Baskets" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_Candles_Order_Candles" Association="Self.FK_Candles_Order_Candles">
             <End Role="Candles" EntitySet="Candles" />
             <End Role="Candles_Order" EntitySet="Candles_Order" />
@@ -210,6 +243,14 @@
             <End Role="Users" EntitySet="Users" />
             <End Role="Orders" EntitySet="Orders" />
           </AssociationSet>
+          <AssociationSet Name="FK_Users_Baskets_Candles" Association="Self.FK_Users_Baskets_Candles">
+            <End Role="Candles" EntitySet="Candles" />
+            <End Role="Users_Baskets" EntitySet="Users_Baskets" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Users_Baskets_Users" Association="Self.FK_Users_Baskets_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Users_Baskets" EntitySet="Users_Baskets" />
+          </AssociationSet>
           <AssociationSet Name="FK_Users_Roles" Association="Self.FK_Users_Roles">
             <End Role="Roles" EntitySet="Roles" />
             <End Role="Users" EntitySet="Users" />
@@ -232,6 +273,7 @@
           <NavigationProperty Name="Candles_Order" Relationship="Self.FK_Candles_Order_Candles" FromRole="Candles" ToRole="Candles_Order" />
           <NavigationProperty Name="Type_Candle" Relationship="Self.FK_Candles_Type_Candle" FromRole="Candles" ToRole="Type_Candle" />
           <Property Name="Image" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <NavigationProperty Name="Users_Baskets" Relationship="candlesModel.FK_Users_Baskets_Candles" FromRole="Candles" ToRole="Users_Baskets" />
         </EntityType>
         <EntityType Name="Candles_Order">
           <Key>
@@ -319,6 +361,7 @@
           <NavigationProperty Name="Orders" Relationship="Self.FK_Orders_Users1" FromRole="Users" ToRole="Orders" />
           <NavigationProperty Name="Roles" Relationship="Self.FK_Users_Roles" FromRole="Users" ToRole="Roles" />
           <Property Name="Password" Type="String" Nullable="false" MaxLength="36" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Users_Baskets" Relationship="candlesModel.FK_Users_Baskets_Users" FromRole="Users" ToRole="Users_Baskets" />
         </EntityType>
         <Association Name="FK_Candles_Order_Candles">
           <End Role="Candles" Type="Self.Candles" Multiplicity="1" />
@@ -442,7 +485,50 @@
             <End Role="Roles" EntitySet="Roles" />
             <End Role="Users" EntitySet="Users" />
           </AssociationSet>
+          <EntitySet Name="Users_Baskets" EntityType="candlesModel.Users_Baskets" />
+          <AssociationSet Name="FK_Users_Baskets_Candles" Association="candlesModel.FK_Users_Baskets_Candles">
+            <End Role="Candles" EntitySet="Candles" />
+            <End Role="Users_Baskets" EntitySet="Users_Baskets" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Users_Baskets_Users" Association="candlesModel.FK_Users_Baskets_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Users_Baskets" EntitySet="Users_Baskets" />
+          </AssociationSet>
         </EntityContainer>
+        <EntityType Name="Users_Baskets">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Id_User" Type="Int32" Nullable="false" />
+          <Property Name="Id_Candles" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Candles" Relationship="candlesModel.FK_Users_Baskets_Candles" FromRole="Users_Baskets" ToRole="Candles" />
+          <NavigationProperty Name="Users" Relationship="candlesModel.FK_Users_Baskets_Users" FromRole="Users_Baskets" ToRole="Users" />
+        </EntityType>
+        <Association Name="FK_Users_Baskets_Candles">
+          <End Type="candlesModel.Candles" Role="Candles" Multiplicity="1" />
+          <End Type="candlesModel.Users_Baskets" Role="Users_Baskets" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Candles">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Users_Baskets">
+              <PropertyRef Name="Id_Candles" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Users_Baskets_Users">
+          <End Type="candlesModel.Users" Role="Users" Multiplicity="1" />
+          <End Type="candlesModel.Users_Baskets" Role="Users_Baskets" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Users_Baskets">
+              <PropertyRef Name="Id_User" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -542,6 +628,15 @@
                 <ScalarProperty Name="Id_Role" ColumnName="Id_Role" />
                 <ScalarProperty Name="Phone" ColumnName="Phone" />
                 <ScalarProperty Name="Email" ColumnName="Email" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users_Baskets">
+            <EntityTypeMapping TypeName="candlesModel.Users_Baskets">
+              <MappingFragment StoreEntitySet="Users_Baskets">
+                <ScalarProperty Name="Id_Candles" ColumnName="Id_Candles" />
+                <ScalarProperty Name="Id_User" ColumnName="Id_User" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

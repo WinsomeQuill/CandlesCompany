@@ -38,6 +38,27 @@ namespace CandlesCompany.UI.Custom
             _selectediteminfo.TextBlockCatalogSelectedItemPrice.Text = $"Цена в рублях: {_candle.Price}\nКоличество: {_candle.Count}";
             _selectediteminfo.ImageCatalogSelectedItem.Source = Utils.Utils.BinaryToImage(_candle.Image);
             _selectediteminfo.ImageCatalogSelectedItem.Width = _selectediteminfo.ImageCatalogSelectedItem.Height = 300;
+            _selectediteminfo._candle = _candle;
+            _selectediteminfo.Visibility = Visibility.Visible;
+            if (IsInBasket())
+            {
+                _selectediteminfo.ButtonCatalogSelectedItemBuy.IsEnabled = false;
+                _selectediteminfo.ButtonCatalogSelectedItemBuy.Content = "В корзине";
+            }
+            else
+            {
+                _selectediteminfo.ButtonCatalogSelectedItemBuy.IsEnabled = true;
+                _selectediteminfo.ButtonCatalogSelectedItemBuy.Content = "В корзину";
+            }
+        }
+        private bool IsInBasket()
+        {
+            if (Cache.UserCache.Basket.IndexOf(_candle) == -1)
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }

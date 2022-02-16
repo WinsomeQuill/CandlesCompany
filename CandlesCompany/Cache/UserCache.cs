@@ -8,6 +8,7 @@ namespace CandlesCompany.Cache
 {
     public static class UserCache
     {
+        public static List<Candles> Basket = new List<Candles>();
         public static int _id { get; set; }
         public static string _last_name { get; set; }
         public static string _first_name { get; set; }

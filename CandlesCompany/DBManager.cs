@@ -111,5 +111,20 @@ namespace CandlesCompany
             db.Candles.Remove(candle);
             db.SaveChanges();
         }
+        public static List<Candles> GetCandlesBasket(int id_user)
+        {
+            return db.Users_Baskets.Where(x => x.Id_User == id_user && x.Candles.Id == x.Id_Candles).Select(x => x.Candles).ToList();
+        }
+        public static void AddCandlesBasket(int id_user, Candles candle)
+        {
+            db.Users_Baskets.Add(new Users_Baskets { Id_Candles = candle.Id, Id_User = id_user });
+            db.SaveChanges();
+        }
+        public static void RemoveCandlesBasket(int id_user, int id_candle)
+        {
+            Users_Baskets basket = db.Users_Baskets.Where(x => x.Id_User == id_user && x.Id_Candles == id_candle).Select(x => x).FirstOrDefault();
+            db.Users_Baskets.Remove(basket);
+            db.SaveChanges();
+        }
     }
 }

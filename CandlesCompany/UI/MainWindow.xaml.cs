@@ -22,11 +22,12 @@ namespace CandlesCompany.UI
     /// </summary>
     public partial class MainWindow : Window
     {
-        private SelectedItemInfo _selectediteminfo { get; set; }
+        public SelectedItemInfo _selectediteminfo { get; set; }
         public MainWindow()
         {
             InitializeComponent();
             CatalogInit();
+            BasketInit();
 
             TextBlockProfileName.Text = $"ФИО: {UserCache._last_name} {UserCache._first_name} {UserCache._middle_name}";
             TextBlockProfilePhone.Text = $"Телефон: {UserCache._phone}";
@@ -37,6 +38,20 @@ namespace CandlesCompany.UI
             _selectediteminfo.SetValue(Grid.ColumnProperty, 1);
             _selectediteminfo.SetValue(Grid.RowProperty, 0);
             _selectediteminfo.Visibility = Visibility.Collapsed;
+        }
+        private void BasketInit()
+        {
+            new Thread(delegate ()
+            {
+                Dispatcher.Invoke(delegate ()
+                {
+                    DBManager.GetCandlesBasket(UserCache._id).ForEach(candle =>
+                    {
+                        UserCache.Basket.Add(candle);
+                        ListViewBasket.Items.Add(new BasketItem(candle));
+                    });
+                });
+            }).Start();
         }
         private void CatalogInit()
         {

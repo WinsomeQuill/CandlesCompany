@@ -21,6 +21,9 @@
         <AssociationConnector Association="candlesModel.FK_Orders_Order_Status" ManuallyRouted="false" />
         <AssociationConnector Association="candlesModel.FK_Orders_Users1" ManuallyRouted="false" />
         <AssociationConnector Association="candlesModel.FK_Users_Roles" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="candlesModel.Users_Baskets" Width="1.5" PointX="7.5" PointY="7.75" />
+        <AssociationConnector Association="candlesModel.FK_Users_Baskets_Candles" />
+        <AssociationConnector Association="candlesModel.FK_Users_Baskets_Users" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

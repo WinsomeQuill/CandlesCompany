@@ -34,5 +34,6 @@ namespace CandlesCompany
         public virtual DbSet<sysdiagrams> sysdiagrams { get; set; }
         public virtual DbSet<Type_Candle> Type_Candle { get; set; }
         public virtual DbSet<Users> Users { get; set; }
+        public virtual DbSet<Users_Baskets> Users_Baskets { get; set; }
     }
 }
