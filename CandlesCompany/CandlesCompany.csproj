@@ -90,6 +90,9 @@
     <Compile Include="UI\Custom\SelectedItemInfo.xaml.cs">
       <DependentUpon>SelectedItemInfo.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UI\Custom\SummaryInformation.xaml.cs">
+      <DependentUpon>SummaryInformation.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\Employee\EmployeeAddWindow.xaml.cs">
       <DependentUpon>EmployeeAddWindow.xaml</DependentUpon>
     </Compile>
@@ -140,6 +143,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UI\Custom\SelectedItemInfo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Custom\SummaryInformation.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

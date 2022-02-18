@@ -35,9 +35,16 @@ namespace CandlesCompany.UI.Custom
                 return;
             }
 
+            if (Cache.UserCache.Basket.ContainsKey(_candle))
+            {
+                MessageBox.Show("Вы уже добавили этот товар в корзину!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
             _mainWindow.ListViewBasket.Items.Add(new BasketItem(_candle));
             DBManager.AddCandlesBasket(Cache.UserCache._id, _candle);
-            Cache.UserCache.Basket.Add(_candle);
+            Utils.Utils._summaryInformation.AddCount(1);
+            Utils.Utils._summaryInformation.AddPrice((double)_candle.Price);
             ButtonCatalogSelectedItemBuy.IsEnabled = false;
             ButtonCatalogSelectedItemBuy.Content = "В корзине";
         }

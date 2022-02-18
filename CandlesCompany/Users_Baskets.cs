@@ -17,6 +17,7 @@ namespace CandlesCompany
         public int Id { get; set; }
         public int Id_User { get; set; }
         public int Id_Candles { get; set; }
+        public int Count { get; set; }
     
         public virtual Candles Candles { get; set; }
         public virtual Users Users { get; set; }

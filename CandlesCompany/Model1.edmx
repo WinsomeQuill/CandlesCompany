@@ -99,6 +99,7 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Id_User" Type="int" Nullable="false" />
           <Property Name="Id_Candles" Type="int" Nullable="false" />
+          <Property Name="Count" Type="int" Nullable="false" />
         </EntityType>
         <Association Name="FK_Candles_Order_Candles">
           <End Role="Candles" Type="Self.Candles" Multiplicity="1" />
@@ -504,6 +505,7 @@
           <Property Name="Id_Candles" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Candles" Relationship="candlesModel.FK_Users_Baskets_Candles" FromRole="Users_Baskets" ToRole="Candles" />
           <NavigationProperty Name="Users" Relationship="candlesModel.FK_Users_Baskets_Users" FromRole="Users_Baskets" ToRole="Users" />
+          <Property Name="Count" Type="Int32" Nullable="false" />
         </EntityType>
         <Association Name="FK_Users_Baskets_Candles">
           <End Type="candlesModel.Candles" Role="Candles" Multiplicity="1" />
@@ -634,6 +636,7 @@
           <EntitySetMapping Name="Users_Baskets">
             <EntityTypeMapping TypeName="candlesModel.Users_Baskets">
               <MappingFragment StoreEntitySet="Users_Baskets">
+                <ScalarProperty Name="Count" ColumnName="Count" />
                 <ScalarProperty Name="Id_Candles" ColumnName="Id_Candles" />
                 <ScalarProperty Name="Id_User" ColumnName="Id_User" />
                 <ScalarProperty Name="Id" ColumnName="Id" />

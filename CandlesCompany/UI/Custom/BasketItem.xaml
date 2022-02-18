@@ -29,12 +29,14 @@
                MinHeight="140"
                Height="140"
                MaxHeight="140"
-               MinWidth="140"
-               Width="140"
-               MaxWidth="140"
+               MinWidth="160"
+               Width="160"
+               MaxWidth="160"
                Grid.Column="0"
-               Grid.Row="1"
-               Grid.RowSpan="2"/>
+               Grid.Row="0"
+               Grid.RowSpan="4"
+               VerticalAlignment="Center"
+               Margin="0,0,0,0"/>
 
         <TextBlock x:Name="TextBlockBasketItemName"
                    Style="{StaticResource MaterialDesignHeadline6TextBlock}"
@@ -61,7 +63,8 @@
                  HorizontalContentAlignment="Center"
                  Grid.Row="1"
                  Grid.Column="2"
-                 Grid.RowSpan="2"/>
+                 Grid.RowSpan="2"
+                 TextChanged="TextBoxBasketItemCount_TextChanged"/>
 
         <Button x:Name="ButtonBasketItemCountPlus"
                 Style="{StaticResource MaterialDesignFloatingActionButton}"

@@ -9,8 +9,8 @@
         MinHeight="400"
         Height="450"
         MaxHeight="900"
-        MinWidth="1000"
-        Width="1100"
+        MinWidth="1200"
+        Width="1200"
         MaxWidth="1500">
     <Grid>
         <TabControl
@@ -91,7 +91,7 @@
                             HorizontalAlignment="Center" />
                     </StackPanel>
                 </TabItem.Header>
-                <Grid>
+                <Grid x:Name="GridBasketItems">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="20*"/>
                         <ColumnDefinition Width="8*"/>

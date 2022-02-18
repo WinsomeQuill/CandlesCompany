@@ -22,43 +22,37 @@ namespace CandlesCompany.UI.Custom
     public partial class ListItem : UserControl
     {
         public Candles _candle { get; set; }
-        private SelectedItemInfo _selectediteminfo { get; set; }
-        public ListItem(string name, string description, Candles candle, SelectedItemInfo selectedItemInfo)
+        public ListItem(string name, string description, Candles candle)
         {
             InitializeComponent();
             TextBlockItemName.Text = name;
             TextBlockItemDescription.Text = description;
             _candle = candle;
-            _selectediteminfo = selectedItemInfo;
         }
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            _selectediteminfo.TextBlockCatalogSelectedItemTitle.Text = TextBlockItemName.Text;
-            _selectediteminfo.TextBlockCatalogSelectedItemDescription.Text = TextBlockItemDescription.Text;
-            _selectediteminfo.TextBlockCatalogSelectedItemPrice.Text = $"Цена в рублях: {_candle.Price}\nКоличество: {_candle.Count}";
-            _selectediteminfo.ImageCatalogSelectedItem.Source = Utils.Utils.BinaryToImage(_candle.Image);
-            _selectediteminfo.ImageCatalogSelectedItem.Width = _selectediteminfo.ImageCatalogSelectedItem.Height = 300;
-            _selectediteminfo._candle = _candle;
-            _selectediteminfo.Visibility = Visibility.Visible;
+            Utils.Utils._selectediteminfo.TextBlockCatalogSelectedItemTitle.Text = TextBlockItemName.Text;
+            Utils.Utils._selectediteminfo.TextBlockCatalogSelectedItemDescription.Text = TextBlockItemDescription.Text;
+            Utils.Utils._selectediteminfo.TextBlockCatalogSelectedItemPrice.Text = $"Цена в рублях: {_candle.Price}\nКоличество: {_candle.Count}";
+            Utils.Utils._selectediteminfo.ImageCatalogSelectedItem.Source = Utils.Utils.BinaryToImage(_candle.Image);
+            Utils.Utils._selectediteminfo.ImageCatalogSelectedItem.Width = Utils.Utils._selectediteminfo.ImageCatalogSelectedItem.Height = 300;
+            Utils.Utils._selectediteminfo._candle = _candle;
+            Utils.Utils._selectediteminfo.Visibility = Visibility.Visible;
+
             if (IsInBasket())
             {
-                _selectediteminfo.ButtonCatalogSelectedItemBuy.IsEnabled = false;
-                _selectediteminfo.ButtonCatalogSelectedItemBuy.Content = "В корзине";
+                Utils.Utils._selectediteminfo.ButtonCatalogSelectedItemBuy.IsEnabled = false;
+                Utils.Utils._selectediteminfo.ButtonCatalogSelectedItemBuy.Content = "В корзине";
             }
             else
             {
-                _selectediteminfo.ButtonCatalogSelectedItemBuy.IsEnabled = true;
-                _selectediteminfo.ButtonCatalogSelectedItemBuy.Content = "В корзину";
+                Utils.Utils._selectediteminfo.ButtonCatalogSelectedItemBuy.IsEnabled = true;
+                Utils.Utils._selectediteminfo.ButtonCatalogSelectedItemBuy.Content = "В корзину";
             }
         }
         private bool IsInBasket()
         {
-            if (Cache.UserCache.Basket.IndexOf(_candle) == -1)
-            {
-                return false;
-            }
-
-            return true;
+            return Cache.UserCache.Basket.ContainsKey(_candle);
         }
     }
 }

@@ -22,34 +22,44 @@ namespace CandlesCompany.UI
     /// </summary>
     public partial class MainWindow : Window
     {
-        public SelectedItemInfo _selectediteminfo { get; set; }
         public MainWindow()
         {
             InitializeComponent();
             CatalogInit();
             BasketInit();
 
+            Utils.Utils._mainWindow = this;
+
             TextBlockProfileName.Text = $"ФИО: {UserCache._last_name} {UserCache._first_name} {UserCache._middle_name}";
             TextBlockProfilePhone.Text = $"Телефон: {UserCache._phone}";
             TextBlockProfileEmail.Text = $"Эл. почта: {UserCache._email}";
             TextBlockProfileRole.Text = $"Должность: {UserCache._role.Name}";
-            _selectediteminfo = new SelectedItemInfo(this);
-            GridCatalogItems.Children.Add(_selectediteminfo);
-            _selectediteminfo.SetValue(Grid.ColumnProperty, 1);
-            _selectediteminfo.SetValue(Grid.RowProperty, 0);
-            _selectediteminfo.Visibility = Visibility.Collapsed;
+
+            Utils.Utils._selectediteminfo = new SelectedItemInfo(this);
+            GridCatalogItems.Children.Add(Utils.Utils._selectediteminfo);
+            Utils.Utils._selectediteminfo.SetValue(Grid.ColumnProperty, 1);
+            Utils.Utils._selectediteminfo.SetValue(Grid.RowProperty, 0);
+            Utils.Utils._selectediteminfo.Visibility = Visibility.Collapsed;
+
+            Utils.Utils._summaryInformation = new SummaryInformation();
+            GridBasketItems.Children.Add(Utils.Utils._summaryInformation);
+            Utils.Utils._summaryInformation.SetValue(Grid.ColumnProperty, 1);
+            Utils.Utils._summaryInformation.SetValue(Grid.RowProperty, 0);
         }
         private void BasketInit()
         {
             new Thread(delegate ()
             {
-                Dispatcher.Invoke(delegate ()
+                Dispatcher.InvokeAsync(delegate ()
                 {
-                    DBManager.GetCandlesBasket(UserCache._id).ForEach(candle =>
+                    foreach(var item in DBManager.GetCandlesBasket(UserCache._id))
                     {
-                        UserCache.Basket.Add(candle);
-                        ListViewBasket.Items.Add(new BasketItem(candle));
-                    });
+                        Candles candle = item.Key;
+                        UserCache.Basket.Add(candle, item.Value);
+                        ListViewBasket.Items.Add(new BasketItem(candle, item.Value));
+                        Utils.Utils._summaryInformation.AddCount(item.Value);
+                        Utils.Utils._summaryInformation.AddPrice((double)candle.Price * item.Value);
+                    }
                 });
             }).Start();
         }
@@ -61,7 +71,7 @@ namespace CandlesCompany.UI
                 {
                     DBManager.db.Candles.ToList().ForEach(candle =>
                     {
-                        ListViewCatalog.Items.Add(new Custom.ListItem(candle.Name, candle.Description, candle, _selectediteminfo));
+                        ListViewCatalog.Items.Add(new Custom.ListItem(candle.Name, candle.Description, candle));
                     });
                 });
             }).Start();

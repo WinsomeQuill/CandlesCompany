@@ -111,19 +111,29 @@ namespace CandlesCompany
             db.Candles.Remove(candle);
             db.SaveChanges();
         }
-        public static List<Candles> GetCandlesBasket(int id_user)
+        public static Dictionary<Candles, int> GetCandlesBasket(int id_user)
         {
-            return db.Users_Baskets.Where(x => x.Id_User == id_user && x.Candles.Id == x.Id_Candles).Select(x => x.Candles).ToList();
+            return db.Users_Baskets.Where(x => x.Id_User == id_user && x.Candles.Id == x.Id_Candles).ToDictionary(x => x.Candles, x => x.Count);
         }
         public static void AddCandlesBasket(int id_user, Candles candle)
         {
-            db.Users_Baskets.Add(new Users_Baskets { Id_Candles = candle.Id, Id_User = id_user });
+            db.Users_Baskets.Add(new Users_Baskets { Id_Candles = candle.Id, Id_User = id_user, Count = 1 });
             db.SaveChanges();
+            UserCache.Basket.Add(candle, 1);
         }
-        public static void RemoveCandlesBasket(int id_user, int id_candle)
+        public static void UpdateCandlesBasket(int id_user, Candles candle, int count)
         {
-            Users_Baskets basket = db.Users_Baskets.Where(x => x.Id_User == id_user && x.Id_Candles == id_candle).Select(x => x).FirstOrDefault();
+            Users_Baskets basket = db.Users_Baskets.Where(x => x.Id_User == id_user && x.Id_Candles == candle.Id).SingleOrDefault();
+            basket.Count = count;
+            db.SaveChanges();
+            UserCache.Basket.Remove(candle);
+            UserCache.Basket.Add(candle, count);
+        }
+        public static void RemoveCandlesBasket(int id_user, Candles candle)
+        {
+            Users_Baskets basket = db.Users_Baskets.Where(x => x.Id_User == id_user && x.Id_Candles == candle.Id).SingleOrDefault();
             db.Users_Baskets.Remove(basket);
+            UserCache.Basket.Remove(candle);
             db.SaveChanges();
         }
     }
