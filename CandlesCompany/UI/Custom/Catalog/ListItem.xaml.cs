@@ -39,7 +39,7 @@ namespace CandlesCompany.UI.Custom.Catalog
             Utils.Utils._selectediteminfo._candle = _candle;
             Utils.Utils._selectediteminfo.Visibility = Visibility.Visible;
 
-            if (IsInBasket())
+            if (Utils.Utils.IsInBasket(_candle))
             {
                 Utils.Utils._selectediteminfo.ButtonCatalogSelectedItemBuy.IsEnabled = false;
                 Utils.Utils._selectediteminfo.ButtonCatalogSelectedItemBuy.Content = "В корзине";
@@ -49,10 +49,6 @@ namespace CandlesCompany.UI.Custom.Catalog
                 Utils.Utils._selectediteminfo.ButtonCatalogSelectedItemBuy.IsEnabled = true;
                 Utils.Utils._selectediteminfo.ButtonCatalogSelectedItemBuy.Content = "В корзину";
             }
-        }
-        private bool IsInBasket()
-        {
-            return Cache.UserCache.Basket.ContainsKey(_candle);
         }
     }
 }

@@ -73,20 +73,7 @@ namespace CandlesCompany.UI.Custom.Basket
             {
                 Dispatcher.Invoke(delegate ()
                 {
-                    foreach (BasketItem item in Utils.Utils._listViewBasket.Items)
-                    {
-                        var order = DBManager.AddOrder(Cache.UserCache._id, item._candle.Id, item._count, (double)item._candle.Price * item._count);
-                        Utils.Utils._dataGridOrdersList.Items.Add(new Orders.OrderList(
-                            order.Id,
-                            order.Date,
-                            order.Candles_Order.Candles.Name,
-                            (double)order.Price,
-                            order.Candles_Order.Count,
-                            order.Order_Status.Id
-                        ));
-                        DBManager.RemoveCandlesBasket(Cache.UserCache._id, item._candle);
-                    }
-                    Utils.Utils._listViewBasket.Items.Clear();
+                    Utils.Utils.BasketToOrders();
                 });
             }).Start();
             MessageBox.Show("Ваш заказ упешно создан! Подробнее смотрите в раделе \"Заказы\"!", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);

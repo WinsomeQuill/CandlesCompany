@@ -32,9 +32,9 @@ namespace CandlesCompany.UI.Auth
         }
         private void ButtonSignUpRegister_Click(object sender, RoutedEventArgs e)
         {
-            new Thread(delegate ()
+            Task.Run(async () =>
             {
-                Dispatcher.Invoke(delegate ()
+                await Dispatcher.InvokeAsync(() =>
                 {
                     string email = TextBoxSignUpEmail.Text;
                     string pass = PasswordBoxSignUp.Password;
@@ -56,7 +56,7 @@ namespace CandlesCompany.UI.Auth
                     DBManager.Registration(email, pass, first_name, last_name, middle_name);
                     MessageBox.Show("Вы зарегистрировались! Спасибо!", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
                 });
-            }).Start();
+            });
         }
     }
 }

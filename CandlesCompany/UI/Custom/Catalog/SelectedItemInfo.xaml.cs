@@ -21,12 +21,10 @@ namespace CandlesCompany.UI.Custom.Catalog
     /// </summary>
     public partial class SelectedItemInfo : UserControl
     {
-        private MainWindow _mainWindow { get; set; }
         public Candles _candle { get; set; }
-        public SelectedItemInfo(MainWindow mainWindow)
+        public SelectedItemInfo()
         {
             InitializeComponent();
-            _mainWindow = mainWindow;
         }
         private void ButtonCatalogSelectedItemBuy_Click(object sender, RoutedEventArgs e)
         {
@@ -36,16 +34,13 @@ namespace CandlesCompany.UI.Custom.Catalog
                 return;
             }
 
-            if (Cache.UserCache.Basket.ContainsKey(_candle))
+            if (Utils.Utils.IsInBasket(_candle))
             {
                 MessageBox.Show("Вы уже добавили этот товар в корзину!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
-            _mainWindow.ListViewBasket.Items.Add(new BasketItem(_candle));
-            DBManager.AddCandlesBasket(Cache.UserCache._id, _candle);
-            Utils.Utils._summaryInformation.AddCount(1);
-            Utils.Utils._summaryInformation.AddPrice((double)_candle.Price);
+            Utils.Utils.AddItemInBasket(_candle);
             ButtonCatalogSelectedItemBuy.IsEnabled = false;
             ButtonCatalogSelectedItemBuy.Content = "В корзине";
         }

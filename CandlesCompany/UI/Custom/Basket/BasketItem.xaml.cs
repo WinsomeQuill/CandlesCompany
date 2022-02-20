@@ -33,7 +33,7 @@ namespace CandlesCompany.UI.Custom.Basket
             ImageBasketItemImage.Source = Utils.Utils.BinaryToImage(_candle.Image);
             TextBoxBasketItemCount.Text = $"{count}";
             _count = count;
-            SetPrice(_count);
+            SetPriceFormat(_count);
             CountCheck();
         }
         private void ButtonBasketItemCountPlus_Click(object sender, RoutedEventArgs e)
@@ -46,7 +46,7 @@ namespace CandlesCompany.UI.Custom.Basket
                 _count = count;
                 Utils.Utils._summaryInformation.AddCount(1);
                 Utils.Utils._summaryInformation.AddPrice((double)_candle.Price);
-                SetPrice(_count);
+                SetPriceFormat(_count);
                 DBManager.UpdateCandlesBasket(Cache.UserCache._id, _candle, _count);
                 CountCheck();
             }
@@ -66,7 +66,7 @@ namespace CandlesCompany.UI.Custom.Basket
                 Utils.Utils._summaryInformation.TakeCount(1);
                 Utils.Utils._summaryInformation.TakePrice((double)_candle.Price);
                 DBManager.UpdateCandlesBasket(Cache.UserCache._id, _candle, _count);
-                SetPrice(_count);
+                SetPriceFormat(_count);
                 CountCheck();
             }
             catch (FormatException)
@@ -124,7 +124,7 @@ namespace CandlesCompany.UI.Custom.Basket
         {
             CountCheck();
         }
-        private void SetPrice(int count)
+        private void SetPriceFormat(int count)
         {
             TextBlockBasketItemPrice.Text = $"Цена в рублях: {_candle.Price * count}";
         }

@@ -32,13 +32,14 @@ namespace CandlesCompany.UI
             OrdersInit();
 
             Utils.Utils._mainWindow = this;
+            Utils.Utils._defaultImage = new BitmapImage(new Uri(@"pack://application:,,,/CandlesCompany;component/Resources/Images/Items/notfound.png"));
 
             TextBlockProfileName.Text = $"ФИО: {UserCache._last_name} {UserCache._first_name} {UserCache._middle_name}";
             TextBlockProfilePhone.Text = $"Телефон: {UserCache._phone}";
             TextBlockProfileEmail.Text = $"Эл. почта: {UserCache._email}";
             TextBlockProfileRole.Text = $"Должность: {UserCache._role.Name}";
 
-            Utils.Utils._selectediteminfo = new SelectedItemInfo(this);
+            Utils.Utils._selectediteminfo = new SelectedItemInfo();
             GridCatalogItems.Children.Add(Utils.Utils._selectediteminfo);
             Utils.Utils._selectediteminfo.SetValue(Grid.ColumnProperty, 1);
             Utils.Utils._selectediteminfo.SetValue(Grid.RowProperty, 0);

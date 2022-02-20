@@ -96,7 +96,7 @@ namespace CandlesCompany.UI.Item
                 return;
             }
 
-            ImageItemChangePreview.Source = new BitmapImage(new Uri(@"pack://application:,,,/CandlesCompany;component/Resources/Images/Items/notfound.png"));
+            ImageItemChangePreview.Source = Utils.Utils._defaultImage;
         }
         private void ButtonItemChangeSelectImage_Click(object sender, RoutedEventArgs e)
         {
