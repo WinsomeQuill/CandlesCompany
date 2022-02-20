@@ -14,6 +14,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using CandlesCompany.UI.Custom.Basket;
+using CandlesCompany.UI.Custom.Catalog;
 
 namespace CandlesCompany.UI
 {
@@ -27,6 +29,7 @@ namespace CandlesCompany.UI
             InitializeComponent();
             CatalogInit();
             BasketInit();
+            OrdersInit();
 
             Utils.Utils._mainWindow = this;
 
@@ -45,6 +48,28 @@ namespace CandlesCompany.UI
             GridBasketItems.Children.Add(Utils.Utils._summaryInformation);
             Utils.Utils._summaryInformation.SetValue(Grid.ColumnProperty, 1);
             Utils.Utils._summaryInformation.SetValue(Grid.RowProperty, 0);
+
+            Utils.Utils._listViewBasket = ListViewBasket;
+            Utils.Utils._dataGridOrdersList = DataGridOrdersList;
+        }
+        private void OrdersInit()
+        {
+            new Thread(delegate ()
+            {
+                Dispatcher.Invoke(delegate ()
+                {
+                    DBManager.GetOrders(UserCache._id).ForEach(o =>
+                    {
+                        DataGridOrdersList.Items.Add(new Custom.Orders.OrderList(
+                            o.Id,
+                            o.Date,
+                            o.Candles_Order.Candles.Name,
+                            (double)o.Price,
+                            o.Candles_Order.Count,
+                            o.Order_Status.Id));
+                    });
+                });
+            }).Start();
         }
         private void BasketInit()
         {
@@ -71,7 +96,7 @@ namespace CandlesCompany.UI
                 {
                     DBManager.db.Candles.ToList().ForEach(candle =>
                     {
-                        ListViewCatalog.Items.Add(new Custom.ListItem(candle.Name, candle.Description, candle));
+                        ListViewCatalog.Items.Add(new Custom.Catalog.ListItem(candle.Name, candle.Description, candle));
                     });
                 });
             }).Start();

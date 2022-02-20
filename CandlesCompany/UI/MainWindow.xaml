@@ -82,6 +82,95 @@
                         Height="auto"
                         Width="auto">
                         <materialDesign:PackIcon
+                            Kind="PackageVariantClosed"
+                            Width="34"
+                            Height="34"
+                            HorizontalAlignment="Center" />
+                        <TextBlock
+                            Text="Заказы"
+                            HorizontalAlignment="Center" />
+                    </StackPanel>
+                </TabItem.Header>
+                <Grid>
+                    <DataGrid x:Name="DataGridOrdersList"
+                              IsReadOnly="True"
+                              AutoGenerateColumns="True"
+                              CanUserAddRows="False"
+                              CanUserDeleteRows="False"
+                              ItemsSource="{Binding OrderList}">
+                        <DataGrid.Columns>
+                            <DataGridTemplateColumn Header="Номер заказа">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding FormatOrderID}"
+                                                   HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center"
+                                                   Style="{StaticResource MaterialDesignDataGridTextColumnStyle}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <!--<DataGridTextColumn Header="Номер заказа" Binding="{Binding OrderID}" IsReadOnly="True"/>-->
+                            <DataGridTextColumn Header="Дата создания" Binding="{Binding DateCreated}" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="Название товара" Binding="{Binding NameItem}" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="Цена за штуку" Binding="{Binding CountPrice}" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="Общая цена" Binding="{Binding TotalPrice}" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="Количество" Binding="{Binding Count}" IsReadOnly="True"/>
+                            <DataGridTemplateColumn Header="Статус заказа">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="1*"/>
+                                                <RowDefinition Height="1*"/>
+                                            </Grid.RowDefinitions>
+
+                                            <ProgressBar Grid.Row="0"
+                                                         Grid.Column="0"
+                                                         HorizontalAlignment="Center"
+                                                         VerticalAlignment="Center"
+                                                         Width="130"
+                                                         Height="5"
+                                                         IsIndeterminate="{Binding ProgressBarAnimation}"
+                                                         Value="{Binding ProgressBarValue}"
+                                                         Foreground="{Binding ProgressBarForeground}"
+                                                         Background="#dbdbdb"
+                                                         BorderThickness="0"/>
+
+                                            <TextBlock Grid.Column="0"
+                                                       Grid.Row="1"
+                                                       HorizontalAlignment="Center"
+                                                       VerticalAlignment="Center"
+                                                       Margin="0,0,0,0"
+                                                       Style="{StaticResource MaterialDesignDataGridTextColumnStyle}"
+                                                       Text="{Binding Status}"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="Подробнее">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <Button Grid.Column="0"
+                                                    Grid.Row="0"
+                                                    Margin="10,0,10,0"
+                                                    Height="25"
+                                                    FontSize="12"
+                                                    Content="_Подробнее"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+            <TabItem>
+                <TabItem.Header>
+                    <StackPanel
+                        Height="auto"
+                        Width="auto">
+                        <materialDesign:PackIcon
                             Kind="PackageVariant"
                             Width="34"
                             Height="34"
@@ -100,25 +189,6 @@
                     <ListView x:Name="ListViewBasket"
                               HorizontalContentAlignment="Center"
                               Grid.Column="0"/>
-                </Grid>
-            </TabItem>
-            <TabItem>
-                <TabItem.Header>
-                    <StackPanel
-                        Height="auto"
-                        Width="auto">
-                        <materialDesign:PackIcon
-                            Kind="PackageVariantClosed"
-                            Width="34"
-                            Height="34"
-                            HorizontalAlignment="Center" />
-                        <TextBlock
-                            Text="Заказы"
-                            HorizontalAlignment="Center" />
-                    </StackPanel>
-                </TabItem.Header>
-                <Grid>
-
                 </Grid>
             </TabItem>
             <TabItem>
@@ -196,7 +266,6 @@
 
                 </Grid>
             </TabItem>
-
             <TabItem>
                 <TabItem.Header>
                     <StackPanel

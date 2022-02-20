@@ -136,5 +136,34 @@ namespace CandlesCompany
             UserCache.Basket.Remove(candle);
             db.SaveChanges();
         }
+        public static List<Orders> GetOrders(int id_user)
+        {
+            return db.Orders.Where(x => x.Id_User == id_user).ToList();
+        }
+        public static Orders AddOrder(int id_user, int candle_id, int count, double price)
+        {
+            Candles_Order candles_Order = new Candles_Order
+            {
+                Count = count,
+                Id_Candles = candle_id,
+            };
+
+            db.Candles_Order.Add(candles_Order);
+            db.SaveChanges();
+
+            Orders order = new Orders
+            {
+                Id_User = id_user,
+                Id_Candles_Order = candles_Order.Id,
+                Price = (decimal)price,
+                Id_Status = 1,
+                Address = "None",
+                Date = DateTime.Now,
+            };
+
+            Orders result = db.Orders.Add(order);
+            db.SaveChanges();
+            return result;
+        }
     }
 }

@@ -1,9 +1,9 @@
-﻿<UserControl x:Class="CandlesCompany.UI.Custom.SummaryInformation"
+﻿<UserControl x:Class="CandlesCompany.UI.Custom.Basket.SummaryInformation"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:CandlesCompany.UI.Custom"
+             xmlns:local="clr-namespace:CandlesCompany.UI.Custom.Basket"
              mc:Ignorable="d" 
              d:DesignHeight="500" d:DesignWidth="400">
     <Grid Background="White">
@@ -45,7 +45,8 @@
                 Height="70"
                 FontSize="18"
                 Grid.Column="0"
-                Grid.Row="3"/>
+                Grid.Row="3"
+                Click="ButtonSummaryInformationBuy_Click"/>
 
         <TextBlock x:Name="TextBlockSummaryInformationPersonal"
                    Style="{StaticResource MaterialDesignHelperTextBlock}"

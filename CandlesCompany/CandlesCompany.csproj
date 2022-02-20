@@ -84,14 +84,17 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="DBManager.cs" />
-    <Compile Include="UI\Custom\BasketItem.xaml.cs">
+    <Compile Include="UI\Custom\Basket\BasketItem.xaml.cs">
       <DependentUpon>BasketItem.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\Custom\SelectedItemInfo.xaml.cs">
+    <Compile Include="UI\Custom\Catalog\SelectedItemInfo.xaml.cs">
       <DependentUpon>SelectedItemInfo.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\Custom\SummaryInformation.xaml.cs">
+    <Compile Include="UI\Custom\Basket\SummaryInformation.xaml.cs">
       <DependentUpon>SummaryInformation.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Custom\Orders\OrderList.xaml.cs">
+      <DependentUpon>OrderList.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\Employee\EmployeeAddWindow.xaml.cs">
       <DependentUpon>EmployeeAddWindow.xaml</DependentUpon>
@@ -138,15 +141,19 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Utils\Utils.cs" />
-    <Page Include="UI\Custom\BasketItem.xaml">
+    <Page Include="UI\Custom\Basket\BasketItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\Custom\SelectedItemInfo.xaml">
+    <Page Include="UI\Custom\Catalog\SelectedItemInfo.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\Custom\SummaryInformation.xaml">
+    <Page Include="UI\Custom\Basket\SummaryInformation.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Custom\Orders\OrderList.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -174,7 +181,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\Custom\ListItem.xaml">
+    <Page Include="UI\Custom\Catalog\ListItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -194,7 +201,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="UI\Custom\ListItem.xaml.cs">
+    <Compile Include="UI\Custom\Catalog\ListItem.xaml.cs">
       <DependentUpon>ListItem.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\MainWindow.xaml.cs">

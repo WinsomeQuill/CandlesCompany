@@ -15,15 +15,15 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace CandlesCompany.UI.Custom
+namespace CandlesCompany.UI.Custom.Basket
 {
     /// <summary>
     /// Логика взаимодействия для BasketItem.xaml
     /// </summary>
     public partial class BasketItem : UserControl
     {
-        private Candles _candle { get; set; }
-        private int _count { get; set; }
+        public Candles _candle { get; set; }
+        public int _count { get; set; }
         public BasketItem(Candles candles, int count = 1)
         {
             InitializeComponent();

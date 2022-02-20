@@ -12,8 +12,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using CandlesCompany.UI.Custom.Basket;
 
-namespace CandlesCompany.UI.Custom
+namespace CandlesCompany.UI.Custom.Catalog
 {
     /// <summary>
     /// Логика взаимодействия для SelectedItemInfo.xaml

@@ -1,5 +1,6 @@
 ﻿using CandlesCompany.UI;
-using CandlesCompany.UI.Custom;
+using CandlesCompany.UI.Custom.Basket;
+using CandlesCompany.UI.Custom.Catalog;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -17,6 +18,15 @@ namespace CandlesCompany.Utils
         public static MainWindow _mainWindow { get; set; }
         public static SelectedItemInfo _selectediteminfo { get; set; }
         public static SummaryInformation _summaryInformation { get; set; }
+        public static ListView _listViewBasket { get; set; }
+        public static DataGrid _dataGridOrdersList { get; set; }
+        public enum OrderStatus
+        {
+            New,
+            InWork,
+            InDelivery,
+            Completed
+        }
         public static byte[] ImageToBinary(Image image)
         {
             MemoryStream stream = new MemoryStream();
@@ -27,7 +37,6 @@ namespace CandlesCompany.Utils
         }
         public static BitmapImage BinaryToImage(byte[] imageData)
         {
-
             if (imageData == null || imageData.Length == 0) return null;
             var image = new BitmapImage();
             using (var mem = new MemoryStream(imageData))
