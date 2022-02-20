@@ -135,6 +135,10 @@ namespace CandlesCompany.UI
         private void ButtonProfileSetAvatar_Click(object sender, RoutedEventArgs e)
         {
             BitmapImage image = Utils.Utils.GetImageWindowsDialog();
+            if (image == null)
+            {
+                return;
+            }
             ImageBrushProfileAvatar.ImageSource = image;
             DBManager.SetAvatarUser(Utils.Utils.ImageToBinary(image));
         }

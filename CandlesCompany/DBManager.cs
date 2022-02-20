@@ -13,7 +13,7 @@ namespace CandlesCompany
         public static candlesEntities db { get; set; } = new candlesEntities();
         public static bool Join(string email, string pass)
         {
-            return db.Users.Where(x => x.Email == email && x.Password == pass).Select(x => x.Id).FirstOrDefault() != 0;
+            return db.Users.Where(x => x.Email == email && x.Password == pass).Select(x => x.Id).Single() != 0;
         }
         public static bool ExistUser(string email)
         {
@@ -23,8 +23,8 @@ namespace CandlesCompany
         {
             Users user = new Users
             {
-                Email = email,
-                Password = pass,
+                Email = email.ToLower(),
+                Password = pass.ToLower(),
                 First_Name = first_name,
                 Last_Name = last_name,
                 Middle_Name = middle_name,
