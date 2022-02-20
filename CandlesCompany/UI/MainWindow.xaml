@@ -7,16 +7,15 @@
         mc:Ignorable="d"
         Title="Candle Company"
         MinHeight="400"
-        Height="450"
+        Height="550"
         MaxHeight="900"
         MinWidth="1200"
         Width="1200"
         MaxWidth="1500">
     <Grid>
-        <TabControl
-            Style="{StaticResource MaterialDesignNavigatilRailTabControl}"
-            TabStripPlacement="Top"
-            HorizontalContentAlignment="Center">
+        <TabControl Style="{StaticResource MaterialDesignNavigatilRailTabControl}"
+                    TabStripPlacement="Top"
+                    HorizontalContentAlignment="Center">
             <TabItem>
                 <TabItem.Header>
                     <StackPanel
@@ -35,45 +34,89 @@
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="60"/>
-                        <RowDefinition Height="52*"/>
-                        <RowDefinition Height="52*"/>
-                        <RowDefinition Height="52*"/>
-                        <RowDefinition Height="55*"/>
-                        <RowDefinition Height="186*"/>
+                        <RowDefinition Height="100"/>
+                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="1*"/>
                     </Grid.RowDefinitions>
-                    <TextBlock
-                        Style="{StaticResource MaterialDesignHeadline5TextBlock}"
-                        Text="Inforamtion"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"/>
+                    <TextBlock Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+                               Text="Личный профиль"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               Grid.Row="0"/>
 
                     <TextBlock x:Name="TextBlockProfileName"
-                        Style="{StaticResource MaterialDesignHeadline5TextBlock}"
-                        Text="%Last_Name% %First_Name% %Middle_Name%"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        Grid.Row="1"/>
+                               Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+                               Text="%Last_Name% %First_Name% %Middle_Name%"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               Grid.Row="2"/>
+
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="1*"/>
+                            <RowDefinition Height="1*"/>
+                        </Grid.RowDefinitions>
+                        
+                        <Ellipse Width="100"
+                                 Height="100"
+                                 HorizontalAlignment="Right"
+                                 Margin="0,0,10,0"
+                                 Grid.Column="0"
+                                 Grid.Row="0"
+                                 Grid.RowSpan="2">
+
+                            <Ellipse.Fill>
+                                <ImageBrush x:Name="ImageBrushProfileAvatar"
+                                            ImageSource="pack://application:,,,/CandlesCompany;component/Resources/Images/Users/default_avatar.png"/>
+                            </Ellipse.Fill>
+                        </Ellipse>
+
+                        <Button x:Name="ButtonProfileSetAvatar"
+                                Grid.Column="1"
+                                Grid.Row="0"
+                                Width="150"
+                                HorizontalAlignment="Left"
+                                Margin="10,0,0,0"
+                                Content="_Выбрать фото"
+                                Click="ButtonProfileSetAvatar_Click"/>
+
+                        <Button x:Name="ButtonProfileRemoveAvatar"
+                                Grid.Column="1"
+                                Grid.Row="1"
+                                Width="150"
+                                HorizontalAlignment="Left"
+                                Margin="10,0,0,0"
+                                Content="_Удалить фото"
+                                Click="ButtonProfileRemoveAvatar_Click"/>
+                    </Grid>
 
                     <TextBlock x:Name="TextBlockProfileEmail"
-                        Style="{StaticResource MaterialDesignHeadline5TextBlock}"
-                        Text="Email: alexmaroni329@gmail.com"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        Grid.Row="2"/>
+                               Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+                               Text="Email: alexmaroni329@gmail.com"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               Grid.Row="3"/>
 
                     <TextBlock x:Name="TextBlockProfilePhone"
-                        Style="{StaticResource MaterialDesignHeadline5TextBlock}"
-                        Text="Phone: Null ? +79136484657"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        Grid.Row="3"/>
+                               Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+                               Text="Телефон: +79136484657"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               Grid.Row="4"/>
 
                     <TextBlock x:Name="TextBlockProfileRole"
-                        Style="{StaticResource MaterialDesignHeadline5TextBlock}"
-                        Text="Role: %Name%"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        Grid.Row="4"/>
+                               Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+                               Text="Должность: %Name%"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               Grid.Row="5"/>
                 </Grid>
             </TabItem>
             <TabItem>
@@ -281,78 +324,182 @@
                             HorizontalAlignment="Center" />
                     </StackPanel>
                 </TabItem.Header>
+
                 <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="242*"/>
-                        <ColumnDefinition Width="242*"/>
-                        <ColumnDefinition Width="242*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="60"/>
-                        <RowDefinition Height="85*"/>
-                        <RowDefinition Height="114*"/>
-                        <RowDefinition Height="116*"/>
-                        <RowDefinition Height="60"/>
-                    </Grid.RowDefinitions>
+                    <TabControl Style="{StaticResource MaterialDesignNavigatilRailTabControl}"
+                                TabStripPlacement="Top"
+                                HorizontalContentAlignment="Center">
+                        <TabItem Width="100">
+                            <TabItem.Header>
+                                <StackPanel Height="auto"
+                                            Width="auto">
+                                    <materialDesign:PackIcon Kind="AccountLock"
+                                                             Width="34"
+                                                             Height="34"
+                                                             HorizontalAlignment="Center" />
+                                    <TextBlock Text="Управление сотрудниками"
+                                               TextWrapping="Wrap"
+                                               HorizontalAlignment="Center" />
+                                </StackPanel>
+                            </TabItem.Header>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="242*"/>
+                                    <ColumnDefinition Width="242*"/>
+                                    <ColumnDefinition Width="242*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="60"/>
+                                    <RowDefinition Height="85*"/>
+                                    <RowDefinition Height="114*"/>
+                                </Grid.RowDefinitions>
 
-                    <TextBlock
-                        Style="{StaticResource MaterialDesignHeadline4TextBlock}"
-                        Text="Управление сотрудниками"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        Grid.Row="0"
-                        Grid.Column="0"
-                        Grid.ColumnSpan="3"/>
+                                <TextBlock Style="{StaticResource MaterialDesignHeadline4TextBlock}"
+                                           Text="Управление сотрудниками"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"
+                                           Grid.Row="0"
+                                           Grid.Column="0"
+                                           Grid.ColumnSpan="3"/>
 
-                    <Button x:Name="ButtonManagementAddEmployee"
-                            Content="_Добавить сотрудника"
-                            Grid.Column="0"
-                            Grid.Row="1"
-                            Margin="30,0,30,0"
-                            Click="ButtonManagementAddEmployee_Click"/>
+                                <Button x:Name="ButtonManagementAddEmployee"
+                                        Content="_Добавить сотрудника"
+                                        Grid.Column="0"
+                                        Grid.Row="1"
+                                        Margin="30,0,30,0"
+                                        Click="ButtonManagementAddEmployee_Click"/>
 
-                    <Button x:Name="ButtonManagementChangeEmployee"
-                            Content="_Изменить сотрудника"
-                            Grid.Column="1"
-                            Grid.Row="1"
-                            Margin="30,0,30,0"
-                            Click="ButtonManagementChangeEmployee_Click"/>
+                                <Button x:Name="ButtonManagementChangeEmployee"
+                                        Content="_Изменить сотрудника"
+                                        Grid.Column="1"
+                                        Grid.Row="1"
+                                        Margin="30,0,30,0"
+                                        Click="ButtonManagementChangeEmployee_Click"/>
 
-                    <Button x:Name="ButtonManagementRemoveEmployee"
-                            Content="_Удалить сотрудника"
-                            Grid.Column="2"
-                            Grid.Row="1"
-                            Margin="30,0,30,0"
-                            Cursor="Hand"
-                            Click="ButtonManagementRemoveEmployee_Click"/>
+                                <Button x:Name="ButtonManagementRemoveEmployee"
+                                        Content="_Удалить сотрудника"
+                                        Grid.Column="2"
+                                        Grid.Row="1"
+                                        Margin="30,0,30,0"
+                                        Cursor="Hand"
+                                        Click="ButtonManagementRemoveEmployee_Click"/>
 
-                    <TextBlock
-                        Style="{StaticResource MaterialDesignHeadline4TextBlock}"
-                        Text="Управление каталогом"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        Grid.Row="2"
-                        Grid.Column="0"
-                        Grid.ColumnSpan="3"/>
+                            </Grid>
+                        </TabItem>
+                        <TabItem Width="100">
+                            <TabItem.Header>
+                                <StackPanel Height="auto"
+                                            Width="auto">
+                                    <materialDesign:PackIcon Kind="AccountLock"
+                                                             Width="34"
+                                                             Height="34"
+                                                             HorizontalAlignment="Center" />
+                                    <TextBlock Text="Управление товарами"
+                                               TextWrapping="Wrap"
+                                               HorizontalAlignment="Center" />
+                                </StackPanel>
+                            </TabItem.Header>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="242*"/>
+                                    <ColumnDefinition Width="242*"/>
+                                    <ColumnDefinition Width="242*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="60"/>
+                                    <RowDefinition Height="85*"/>
+                                    <RowDefinition Height="114*"/>
+                                </Grid.RowDefinitions>
 
-                    <Button x:Name="ButtonManagementAddItem"
-                            Content="_Добавить товар"
-                            Grid.Column="0"
-                            Grid.Row="3"
-                            Margin="30,0,30,0" Click="ButtonManagementAddItem_Click"/>
 
-                    <Button x:Name="ButtonManagementChangeItem"
-                            Content="_Изменить товар"
-                            Grid.Column="1"
-                            Grid.Row="3"
-                            Margin="30,0,30,0" Click="ButtonManagementChangeItem_Click"/>
+                                <TextBlock Style="{StaticResource MaterialDesignHeadline4TextBlock}"
+                                           Text="Управление каталогом"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"
+                                           Grid.Row="0"
+                                           Grid.Column="1"/>
 
-                    <Button x:Name="ButtonManagementRemoveItem"
-                            Content="_Удалить товар"
-                            Grid.Column="2"
-                            Grid.Row="3"
-                            Margin="30,0,30,0" Click="ButtonManagementRemoveItem_Click"/>
+                                <Button x:Name="ButtonManagementAddItem"
+                                        Content="_Добавить товар"
+                                        Grid.Column="0"
+                                        Grid.Row="1"
+                                        Margin="30,0,30,0" 
+                                        Click="ButtonManagementAddItem_Click"/>
 
+                                <Button x:Name="ButtonManagementChangeItem"
+                                        Content="_Изменить товар"
+                                        Grid.Column="1"
+                                        Grid.Row="1"
+                                        Margin="30,0,30,0" 
+                                        Click="ButtonManagementChangeItem_Click"/>
+
+                                <Button x:Name="ButtonManagementRemoveItem"
+                                        Content="_Удалить товар"
+                                        Grid.Column="2"
+                                        Grid.Row="1"
+                                        Margin="30,0,30,0" 
+                                        Click="ButtonManagementRemoveItem_Click"/>
+
+                            </Grid>
+                        </TabItem>
+                        <TabItem Width="100"
+                                 Style="{StaticResource MaterialDesignNavigationRailTabItem}">
+                            <TabItem.Header>
+                                <StackPanel Height="auto"
+                                            Width="auto">
+                                    <materialDesign:PackIcon Kind="AccountLock"
+                                                             Width="34"
+                                                             Height="34"
+                                                             HorizontalAlignment="Center" />
+                                    <TextBlock Text="Управление пользователями"
+                                               TextWrapping="Wrap"
+                                               HorizontalAlignment="Center" />
+                                </StackPanel>
+                            </TabItem.Header>
+                            <Grid>
+                                <DataGrid x:Name="DataGridManagementUsersList"
+                                          IsReadOnly="True">
+                                    <DataGrid.ContextMenu>
+                                        <ContextMenu>
+                                            <MenuItem Header="Click Me"/>
+                                            <MenuItem Header="Click Me1"/>
+                                            <MenuItem Header="Click Me2"/>
+                                        </ContextMenu>
+                                    </DataGrid.ContextMenu>
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Номер ааканта" Binding="{Binding UserID}"/>
+                                        <DataGridTemplateColumn Header="ФИО" MinWidth="220" Width="230" MaxWidth="270">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="40"/>
+                                                            <ColumnDefinition Width="210" MinWidth="100" MaxWidth="400"/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <Ellipse Width="40"
+                                                                 Height="40"
+                                                                 Grid.Column="0">
+                                                            <Ellipse.Fill>
+                                                                <ImageBrush ImageSource="{Binding UserAvatar}"/>
+                                                            </Ellipse.Fill>
+                                                        </Ellipse>
+                                                        
+                                                        <TextBlock Style="{StaticResource MaterialDesignDataGridTextColumnStyle}"
+                                                                   Text="{Binding UserName}"
+                                                                   Grid.Column="1"
+                                                                   Margin="10,0,0,0"
+                                                                   HorizontalAlignment="Left"
+                                                                   VerticalAlignment="Center"/>
+                                                    </Grid>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                        <DataGridTextColumn Header="Почта" Binding="{Binding UserEmail}"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </Grid>
+                        </TabItem>
+                    </TabControl>
                 </Grid>
             </TabItem>
         </TabControl>

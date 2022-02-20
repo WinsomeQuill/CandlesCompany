@@ -91,6 +91,7 @@
           <Property Name="Phone" Type="nvarchar" MaxLength="11" />
           <Property Name="Email" Type="nvarchar" MaxLength="170" Nullable="false" />
           <Property Name="Password" Type="nvarchar" MaxLength="36" Nullable="false" />
+          <Property Name="Avatar" Type="image" />
         </EntityType>
         <EntityType Name="Users_Baskets">
           <Key>
@@ -363,6 +364,7 @@
           <NavigationProperty Name="Roles" Relationship="Self.FK_Users_Roles" FromRole="Users" ToRole="Roles" />
           <Property Name="Password" Type="String" Nullable="false" MaxLength="36" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Users_Baskets" Relationship="candlesModel.FK_Users_Baskets_Users" FromRole="Users" ToRole="Users_Baskets" />
+          <Property Name="Avatar" Type="Binary" MaxLength="Max" FixedLength="false" />
         </EntityType>
         <Association Name="FK_Candles_Order_Candles">
           <End Role="Candles" Type="Self.Candles" Multiplicity="1" />
@@ -622,6 +624,7 @@
           <EntitySetMapping Name="Users">
             <EntityTypeMapping TypeName="candlesModel.Users">
               <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="Avatar" ColumnName="Avatar" />
                 <ScalarProperty Name="Password" ColumnName="Password" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="First_Name" ColumnName="First_Name" />

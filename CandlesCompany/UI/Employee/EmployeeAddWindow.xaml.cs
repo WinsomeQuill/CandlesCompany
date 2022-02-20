@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -28,27 +29,31 @@ namespace CandlesCompany.UI.Employee
 
         private void Init()
         {
-            DBManager.GetRoles().ForEach(role =>
+            new Thread(delegate ()
             {
-                ComboBoxEmployeeAddRole.Items.Add(role);
-            });
-
-            List<Users> users = DBManager.GetUsers();
-
-            foreach (Users user in users)
-            {
-                int index = ComboBoxEmployeeAdd.Items.Add(new ComboBoxItem
+                Dispatcher.Invoke(delegate ()
                 {
-                    Content = $"{user.Last_Name} {user.First_Name} | {user.Email}",
-                    Tag = user
-                });
-            }
+                    DBManager.GetRoles().ForEach(role =>
+                    {
+                        ComboBoxEmployeeAddRole.Items.Add(role);
+                    });
 
-            ComboBoxEmployeeAddRole.SelectedIndex = ComboBoxEmployeeAdd.SelectedIndex = 0;
-            if (ComboBoxEmployeeAdd.Items.Count <= 0 || ComboBoxEmployeeAddRole.Items.Count <= 0)
-            {
-                ButtonEmployeeAdd.IsEnabled = false;
-            }
+                    DBManager.GetUsers().ForEach(user =>
+                    {
+                        int index = ComboBoxEmployeeAdd.Items.Add(new ComboBoxItem
+                        {
+                            Content = $"{user.Last_Name} {user.First_Name} | {user.Email}",
+                            Tag = user
+                        });
+                    });
+
+                    ComboBoxEmployeeAddRole.SelectedIndex = ComboBoxEmployeeAdd.SelectedIndex = 0;
+                    if (ComboBoxEmployeeAdd.Items.Count <= 0 || ComboBoxEmployeeAddRole.Items.Count <= 0)
+                    {
+                        ButtonEmployeeAdd.IsEnabled = false;
+                    }
+                });
+            });
         }
 
         private void ButtonEmployeeAdd_Click(object sender, RoutedEventArgs e)

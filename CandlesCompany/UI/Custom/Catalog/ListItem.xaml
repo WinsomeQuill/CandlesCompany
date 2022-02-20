@@ -6,14 +6,15 @@
              xmlns:local="clr-namespace:CandlesCompany.UI.Custom.Catalog"
              mc:Ignorable="d"
              Height="150"
-             Width="270"
-             MaxWidth="470">
+             MinWidth="400"
+             Width="630"
+             MaxWidth="770">
 
-    <Grid Background="White">
+    <Grid Background="#ededed">
         <Grid.RowDefinitions>
             <RowDefinition Height="100*"/>
-            <RowDefinition Height="200*"/>
-            <RowDefinition Height="150*"/>
+            <RowDefinition Height="180*"/>
+            <RowDefinition Height="170*"/>
         </Grid.RowDefinitions>
 
         <TextBlock x:Name="TextBlockItemName"
@@ -37,9 +38,9 @@
                 Grid.Column="0"
                 Grid.Row="2"
                 Height="40"
-                Width="90"
+                Width="200"
                 FontSize="16"
-                Content="_Preview"
+                Content="_Подробнее"
                 Click="Button_Click"
                 Cursor="Hand"/>
     </Grid>

@@ -134,6 +134,7 @@
     <Compile Include="Type_Candle.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="UI\UsersList.cs" />
     <Compile Include="Users.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
@@ -270,6 +271,7 @@
       <DependentUpon>Model1.edmx</DependentUpon>
       <LastGenOutput>Model1.cs</LastGenOutput>
     </Content>
+    <Resource Include="Resources\Images\Users\default_avatar.png" />
     <Resource Include="Resources\Images\Items\notfound.png" />
   </ItemGroup>
   <ItemGroup>

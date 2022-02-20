@@ -38,6 +38,7 @@ namespace CandlesCompany.UI
             TextBlockProfilePhone.Text = $"Телефон: {UserCache._phone}";
             TextBlockProfileEmail.Text = $"Эл. почта: {UserCache._email}";
             TextBlockProfileRole.Text = $"Должность: {UserCache._role.Name}";
+            ImageBrushProfileAvatar.ImageSource = UserCache._avatar;
 
             Utils.Utils._selectediteminfo = new SelectedItemInfo();
             GridCatalogItems.Children.Add(Utils.Utils._selectediteminfo);
@@ -52,6 +53,11 @@ namespace CandlesCompany.UI
 
             Utils.Utils._listViewBasket = ListViewBasket;
             Utils.Utils._dataGridOrdersList = DataGridOrdersList;
+
+            DBManager.GetUsers().ForEach(user =>
+            {
+                DataGridManagementUsersList.Items.Add(new UsersList(user.Id, $"{user.Last_Name} {user.First_Name} {user.Middle_Name}", user.Email, Utils.Utils.BinaryToImage(user.Avatar)));
+            });
         }
         private void OrdersInit()
         {
@@ -125,6 +131,22 @@ namespace CandlesCompany.UI
         private void ButtonManagementRemoveItem_Click(object sender, RoutedEventArgs e)
         {
             new Item.ItemRemoveWindow().Show();
+        }
+        private void ButtonProfileSetAvatar_Click(object sender, RoutedEventArgs e)
+        {
+            BitmapImage image = Utils.Utils.GetImageWindowsDialog();
+            ImageBrushProfileAvatar.ImageSource = image;
+            DBManager.SetAvatarUser(Utils.Utils.ImageToBinary(image));
+        }
+        private void ButtonProfileRemoveAvatar_Click(object sender, RoutedEventArgs e)
+        {
+            if (ImageBrushProfileAvatar.ImageSource == Utils.Utils._defaultAvatar)
+            {
+                MessageBox.Show("У вас нету фотографии!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+            ImageBrushProfileAvatar.ImageSource = Utils.Utils._defaultAvatar;
+            DBManager.RemoveAvatarUser();
         }
     }
 }

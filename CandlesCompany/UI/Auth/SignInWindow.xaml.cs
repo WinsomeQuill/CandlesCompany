@@ -36,13 +36,13 @@ namespace CandlesCompany.UI.Auth
             string email = TextBoxSignInEmail.Text;
             string pass = PasswordBoxSignIn.Password;
 
+            ButtonSignInJoin.IsEnabled = false;
             if (!DBManager.Join(email, pass))
             {
                 Task.Run(async () =>
                 {
                     await Dispatcher.InvokeAsync(() =>
                     {
-                        ButtonSignInJoin.IsEnabled = false;
                         MessageBoxResult result = MessageBox.Show("Неверный логин или пароль!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                         if (result == MessageBoxResult.OK)
                         {
@@ -53,7 +53,18 @@ namespace CandlesCompany.UI.Auth
                 return;
             }
 
+            Utils.Utils._defaultAvatar = new BitmapImage(new Uri(@"pack://application:,,,/CandlesCompany;component/Resources/Images/Users/default_avatar.png"));
             Users user = DBManager.UserInfo(email);
+
+            BitmapImage avatar = null;
+            if (user.Avatar == null)
+            {
+                avatar = Utils.Utils._defaultAvatar;
+            }
+            else
+            {
+                avatar = Utils.Utils.BinaryToImage(user.Avatar);
+            }
 
             UserCache._id = user.Id;
             UserCache._first_name = user.First_Name;
@@ -62,6 +73,7 @@ namespace CandlesCompany.UI.Auth
             UserCache._phone = user.Phone;
             UserCache._email = user.Email;
             UserCache._role = user.Roles;
+            UserCache._avatar = avatar;
 
             new MainWindow().Show();
             Close();

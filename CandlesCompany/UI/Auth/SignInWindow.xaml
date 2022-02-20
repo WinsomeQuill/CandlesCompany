@@ -22,58 +22,57 @@
             <RowDefinition Height="79*"/>
         </Grid.RowDefinitions>
 
-        <TextBlock
-            Style="{StaticResource MaterialDesignHeadline5TextBlock}"
-            Text="Авторизация"
-            Grid.Column="0"
-            Grid.Row="0"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"/>
+        <TextBlock Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+                   Text="Авторизация"
+                   Grid.Column="0"
+                   Grid.Row="0"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"/>
 
         <TextBox x:Name="TextBoxSignInEmail"
-            materialDesign:HintAssist.Hint="Ваша почта"
-            materialDesign:TextFieldAssist.TextBoxViewMargin="1 0 1 0"
-            materialDesign:HintAssist.FloatingScale="0.50"
-            Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-            FontSize="20"
-            Grid.Column="0"
-            Grid.Row="1"
-            Margin="10"
-            Cursor="IBeam"/>
+                 materialDesign:HintAssist.Hint="Ваша почта"
+                 materialDesign:TextFieldAssist.TextBoxViewMargin="1 0 1 0"
+                 materialDesign:HintAssist.FloatingScale="0.50"
+                 Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                 FontSize="20"
+                 Grid.Column="0"
+                 Grid.Row="1"
+                 Margin="10"
+                 Cursor="IBeam"/>
 
         <PasswordBox x:Name="PasswordBoxSignIn"
-            Style="{StaticResource MaterialDesignFloatingHintPasswordBox}"
-            materialDesign:HintAssist.Hint="Ваш пароль"
-            materialDesign:TextFieldAssist.HasClearButton="True"
-            materialDesign:TextFieldAssist.TextBoxViewMargin="1 0 1 0"
-            materialDesign:HintAssist.HelperText="Минимум 8 символов"
-            FontSize="20"
-            Grid.Column="0"
-            Grid.Row="2"
-            Margin="10"
-            Cursor="IBeam"/>
+                     Style="{StaticResource MaterialDesignFloatingHintPasswordBox}"
+                     materialDesign:HintAssist.Hint="Ваш пароль"
+                     materialDesign:TextFieldAssist.HasClearButton="True"
+                     materialDesign:TextFieldAssist.TextBoxViewMargin="1 0 1 0"
+                     materialDesign:HintAssist.HelperText="Минимум 8 символов"
+                     FontSize="20"
+                     Grid.Column="0"
+                     Grid.Row="2"
+                     Margin="10"
+                     Cursor="IBeam"/>
 
         <Button x:Name="ButtonSignInJoin"
-            Style="{StaticResource MaterialDesignRaisedButton}"
-            Width="100"
-            MinWidth="90"
-            MaxWidth="200"
-            ToolTip="Resource name: MaterialDesignRaisedLightButton"
-            Content="_Войти"
-            IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
-            Grid.Column="0"
-            Grid.Row="3" Click="ButtonSignInJoin_Click"/>
+                Style="{StaticResource MaterialDesignRaisedButton}"
+                Width="100"
+                MinWidth="90"
+                MaxWidth="200"
+                ToolTip="Нажмите чтобы войти в аккаунт"
+                Content="_Войти"
+                Grid.Column="0"
+                Grid.Row="3"
+                Click="ButtonSignInJoin_Click"/>
 
         <Button x:Name="ButtonSignInRegistered"
-            Style="{StaticResource MaterialDesignRaisedButton}"
-            Width="170"
-            MinWidth="170"
-            MaxWidth="240"
-            ToolTip="Resource name: MaterialDesignRaisedLightButton"
-            Content="_Зарегистрироваться"
-            IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
-            Grid.Column="0"
-            Grid.Row="4"
-            Cursor="Hand" Click="ButtonSignInRegistered_Click"/>
+                Style="{StaticResource MaterialDesignRaisedButton}"
+                Width="170"
+                MinWidth="170"
+                MaxWidth="240"
+                ToolTip="Нажмите чтобы зарегистрироваться"
+                Content="_Зарегистрироваться"
+                Grid.Column="0"
+                Grid.Row="4"
+                Cursor="Hand"
+                Click="ButtonSignInRegistered_Click"/>
     </Grid>
 </Window>

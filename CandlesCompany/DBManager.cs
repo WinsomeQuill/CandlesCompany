@@ -69,7 +69,7 @@ namespace CandlesCompany
         public static byte[] GetImageItem(int id)
         {
             byte[] result = db.Candles.Where(x => x.Id == id).Select(x => x.Image).FirstOrDefault();
-            if(result.Length == 0 || result == null) { return null; }
+            if (result.Length == 0 || result == null) { return null; }
             return result;
         }
         public static List<Candles> GetCandles()
@@ -164,6 +164,20 @@ namespace CandlesCompany
             Orders result = db.Orders.Add(order);
             db.SaveChanges();
             return result;
+        }
+        public static void RemoveAvatarUser()
+        {
+            Users user = db.Users.Where(x => x.Id == UserCache._id).SingleOrDefault();
+            UserCache._avatar = null;
+            user.Avatar = null;
+            db.SaveChanges();
+        }
+        public static void SetAvatarUser(byte[] image)
+        {
+            Users user = db.Users.Where(x => x.Id == UserCache._id).SingleOrDefault();
+            UserCache._avatar = Utils.Utils.BinaryToImage(image);
+            user.Avatar = image;
+            db.SaveChanges();
         }
     }
 }

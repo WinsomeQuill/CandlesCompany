@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
 
 namespace CandlesCompany.Cache
 {
@@ -17,5 +18,6 @@ namespace CandlesCompany.Cache
         public static string _phone { get; set; }
         public static string _email { get; set; }
         public static Roles _role { get; set; }
+        public static BitmapImage _avatar { get; set; }
     }
 }

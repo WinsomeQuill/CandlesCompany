@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -18,11 +19,20 @@ namespace CandlesCompany.Utils
         public static ListView _listViewBasket { get; set; }
         public static DataGrid _dataGridOrdersList { get; set; }
         public static BitmapImage _defaultImage { get; set; }
+        public static BitmapImage _defaultAvatar { get; set; }
         public static byte[] ImageToBinary(Image image)
         {
             MemoryStream stream = new MemoryStream();
             JpegBitmapEncoder encoder = new JpegBitmapEncoder();
             encoder.Frames.Add(BitmapFrame.Create((BitmapImage)image.Source));
+            encoder.Save(stream);
+            return stream.ToArray();
+        }
+        public static byte[] ImageToBinary(BitmapImage image)
+        {
+            MemoryStream stream = new MemoryStream();
+            JpegBitmapEncoder encoder = new JpegBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(image));
             encoder.Save(stream);
             return stream.ToArray();
         }
@@ -81,6 +91,23 @@ namespace CandlesCompany.Utils
             DBManager.AddCandlesBasket(Cache.UserCache._id, candle);
             _summaryInformation.AddCount(1);
             _summaryInformation.AddPrice((double)candle.Price);
+        }
+        public static BitmapImage GetImageWindowsDialog()
+        {
+            OpenFileDialog openFileDialog1 = new OpenFileDialog();
+
+            openFileDialog1.InitialDirectory = "c:\\";
+            openFileDialog1.Filter = "(*.png, *.jpg)|*.png;*.jpg";
+            openFileDialog1.FilterIndex = 2;
+            openFileDialog1.RestoreDirectory = true;
+
+            if (openFileDialog1.ShowDialog() == true)
+            {
+                string Path = openFileDialog1.FileName;
+                return new BitmapImage(new Uri(Path));
+            }
+
+            return null;
         }
     }
 }
