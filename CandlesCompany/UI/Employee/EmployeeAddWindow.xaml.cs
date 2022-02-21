@@ -53,7 +53,7 @@ namespace CandlesCompany.UI.Employee
                         ButtonEmployeeAdd.IsEnabled = false;
                     }
                 });
-            });
+            }).Start();
         }
 
         private void ButtonEmployeeAdd_Click(object sender, RoutedEventArgs e)
