@@ -12,19 +12,18 @@ namespace CandlesCompany
     using System;
     using System.Collections.Generic;
     
-    public partial class Orders
+    public partial class Order_Address
     {
-        public int Id { get; set; }
-        public int Id_User { get; set; }
-        public int Id_Candles_Order { get; set; }
-        public decimal Price { get; set; }
-        public int Id_Status { get; set; }
-        public int Id_Address { get; set; }
-        public System.DateTime Date { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Order_Address()
+        {
+            this.Orders = new HashSet<Orders>();
+        }
     
-        public virtual Candles_Order Candles_Order { get; set; }
-        public virtual Order_Status Order_Status { get; set; }
-        public virtual Users Users { get; set; }
-        public virtual Order_Address Order_Address { get; set; }
+        public int Id { get; set; }
+        public string Address { get; set; }
+    
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Orders> Orders { get; set; }
     }
 }

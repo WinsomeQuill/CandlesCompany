@@ -152,12 +152,11 @@
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
-                            <!--<DataGridTextColumn Header="Номер заказа" Binding="{Binding OrderID}" IsReadOnly="True"/>-->
-                            <DataGridTextColumn Header="Дата создания" Binding="{Binding DateCreated}" IsReadOnly="True"/>
-                            <DataGridTextColumn Header="Название товара" Binding="{Binding NameItem}" IsReadOnly="True"/>
-                            <DataGridTextColumn Header="Цена за штуку" Binding="{Binding CountPrice}" IsReadOnly="True"/>
-                            <DataGridTextColumn Header="Общая цена" Binding="{Binding TotalPrice}" IsReadOnly="True"/>
-                            <DataGridTextColumn Header="Количество" Binding="{Binding Count}" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="Дата создания" Binding="{Binding DateCreated}"/>
+                            <DataGridTextColumn Header="Название товара" Binding="{Binding NameItem}"/>
+                            <DataGridTextColumn Header="Цена за штуку" Binding="{Binding CountPrice}"/>
+                            <DataGridTextColumn Header="Общая цена" Binding="{Binding TotalPrice}"/>
+                            <DataGridTextColumn Header="Количество" Binding="{Binding Count}"/>
                             <DataGridTemplateColumn Header="Статус заказа">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
@@ -190,6 +189,7 @@
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
+                            <DataGridTextColumn Header="Адрес доставки" Binding="{Binding Address}"/>
                             <DataGridTemplateColumn Header="Подробнее">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
@@ -495,6 +495,88 @@
                                             </DataGridTemplateColumn.CellTemplate>
                                         </DataGridTemplateColumn>
                                         <DataGridTextColumn Header="Почта" Binding="{Binding UserEmail}"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </Grid>
+                        </TabItem>
+                        <TabItem Style="{StaticResource MaterialDesignNavigationRailTabItem}"
+                                 Width="100">
+                            <TabItem.Header>
+                                <StackPanel Height="auto"
+                                            Width="auto">
+                                    <materialDesign:PackIcon Kind="AccountLock"
+                                                             Width="34"
+                                                             Height="34"
+                                                             HorizontalAlignment="Center" />
+                                    <TextBlock Text="Управление доставкой"
+                                               TextWrapping="Wrap"
+                                               HorizontalAlignment="Center"/>
+                                </StackPanel>
+                            </TabItem.Header>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="80"/>
+                                    <RowDefinition Height="1*"/>
+                                </Grid.RowDefinitions>
+
+                                <Grid Grid.Row="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="300"/>
+                                        <ColumnDefinition Width="300"/>
+                                        <ColumnDefinition Width="300"/>
+                                        <ColumnDefinition Width="1*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBox x:Name="TextBoxAddAddress"
+                                             Grid.Column="0"
+                                             materialDesign:HintAssist.Hint="Новый адрес"
+                                             materialDesign:HintAssist.IsFloating="True"
+                                             Margin="10,20,10,20"/>
+
+                                    <Button x:Name="ButtonAddAddresses"
+                                            Grid.Column="1"
+                                            Content="_Добавить адрес"
+                                            Margin="20,0,20,0"
+                                            Click="ButtonAddAddresses_Click"/>
+
+                                    <TextBox x:Name="TextBoxSearchAddress"
+                                             Grid.Column="2"
+                                             Grid.ColumnSpan="2"
+                                             materialDesign:HintAssist.Hint="Поиск адреса"
+                                             materialDesign:HintAssist.IsFloating="True"
+                                             Margin="10,20,10,20"
+                                             TextChanged="TextBoxSearchAddress_TextChanged"/>
+                                </Grid>
+
+                                <DataGrid x:Name="DataGridAddressesList"
+                                          IsReadOnly="True"
+                                          Grid.Row="1">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Номер" Binding="{Binding Id}"/>
+                                        <DataGridTemplateColumn Header="Адрес пункта доставки">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="250"/>
+                                                            <ColumnDefinition Width="1*"/>
+                                                        </Grid.ColumnDefinitions>
+
+                                                        <TextBlock Text="{Binding Address}"
+                                                                   Grid.Column="0"
+                                                                   Style="{StaticResource MaterialDesignDataGridTextColumnStyle}"
+                                                                   VerticalAlignment="Center"/>
+
+                                                        <Button x:Name="ButtonAddressListSelected"
+                                                                Content="Удалить"
+                                                                Grid.Column="1"
+                                                                Tag="{Binding Id}"
+                                                                Width="100"
+                                                                Click="ButtonAddressListSelected_Click"/>
+                                                    </Grid>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
                                     </DataGrid.Columns>
                                 </DataGrid>
                             </Grid>

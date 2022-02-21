@@ -58,6 +58,7 @@ namespace CandlesCompany.UI
             {
                 DataGridManagementUsersList.Items.Add(new UsersList(user.Id, $"{user.Last_Name} {user.First_Name} {user.Middle_Name}", user.Email, Utils.Utils.BinaryToImage(user.Avatar)));
             });
+            AddressesListReload();
         }
         private void OrdersInit()
         {
@@ -73,7 +74,9 @@ namespace CandlesCompany.UI
                             o.Candles_Order.Candles.Name,
                             (double)o.Price,
                             o.Candles_Order.Count,
-                            o.Order_Status.Id));
+                            o.Order_Status.Id,
+                            o.Order_Address.Address
+                        ));
                     });
                 });
             }).Start();
@@ -107,6 +110,27 @@ namespace CandlesCompany.UI
                     });
                 });
             }).Start();
+        }
+        private void AddressesListReload()
+        {
+            DataGridAddressesList.Items.Clear();
+            Utils.Utils._summaryInformation.ComboBoxSummaryInformationAddress.Items.Clear();
+            Task.Run(async () =>
+            {
+                Utils.Utils._Addresses = DBManager.GetAddresses();
+                await Dispatcher.InvokeAsync(() =>
+                {
+                    Utils.Utils._Addresses.ForEach((address) =>
+                    {
+                        DataGridAddressesList.Items.Add(address);
+                        Utils.Utils._summaryInformation.ComboBoxSummaryInformationAddress.Items.Add(new ComboBoxItem
+                        {
+                            Content = $"{address.Address}",
+                            Tag = address
+                        });
+                    });
+                });
+            });
         }
         private void ButtonManagementAddEmployee_Click(object sender, RoutedEventArgs e)
         {
@@ -151,6 +175,63 @@ namespace CandlesCompany.UI
             }
             ImageBrushProfileAvatar.ImageSource = Utils.Utils._defaultAvatar;
             DBManager.RemoveAvatarUser();
+        }
+        private void TextBoxSearchAddress_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            string search = TextBoxSearchAddress.Text;
+
+            if (search.Length == 0)
+            {
+                AddressesListReload();
+                return;
+            }
+
+            DataGridAddressesList.Items.Clear();
+            Task.Run(async () =>
+            {
+                await Dispatcher.InvokeAsync(() =>
+                {
+                    Utils.Utils._Addresses.ForEach(address =>
+                    {
+                        if (address.Address.Contains(search))
+                        {
+                            DataGridAddressesList.Items.Add(address);
+                        }
+                    });
+                });
+            });
+        }
+        private void ButtonAddressListSelected_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = (Button)sender;
+            DBManager.RemoveAddress((int)button.Tag);
+            AddressesListReload();
+        }
+        private void ButtonAddAddresses_Click(object sender, RoutedEventArgs e)
+        {
+            string address = TextBoxAddAddress.Text;
+
+            if (address.Length == 0)
+            {
+                MessageBox.Show("Пустой адрес!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            if (address.Length < 5)
+            {
+                MessageBox.Show("Слишмко короткий адрес!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            Task.Run(async () =>
+            {
+                await Dispatcher.InvokeAsync(() =>
+                {
+                    DBManager.AddAddresses(address);
+                    AddressesListReload();
+                    MessageBox.Show("Вы добавили новый адрес!", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
+                });
+            });
         }
     }
 }

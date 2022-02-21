@@ -24,6 +24,7 @@ namespace CandlesCompany.UI.Custom.Basket
         public double _price { get; set; }
         public int _salePercent { get; set; }
         public double _amount { get; set; }
+        public Order_Address _address { get; set; }
         public SummaryInformation()
         {
             InitializeComponent();
@@ -64,19 +65,30 @@ namespace CandlesCompany.UI.Custom.Basket
         public void Reset()
         {
             _price = _amount = 0;
+            _address = null;
             TextBlockSummaryInformationPrice.Text = $"Итоговая цена: {_price} руб.";
             TextBlockSummaryInformationCount.Text = $"Общее количество: {_amount} шт.";
+            ComboBoxSummaryInformationAddress.SelectedItem = null;
         }
         private void ButtonSummaryInformationBuy_Click(object sender, RoutedEventArgs e)
         {
-            new Thread(delegate ()
+            Task.Run(() =>
             {
-                Dispatcher.Invoke(delegate ()
+                Dispatcher.InvokeAsync(() =>
                 {
-                    Utils.Utils.BasketToOrders();
+                    if (!Utils.Utils.BasketToOrders())
+                    {
+                        MessageBox.Show("Не удалось создать заказ! Проверьте данные!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
+                    MessageBox.Show("Ваш заказ упешно создан! Подробнее смотрите в раделе \"Заказы\"!", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
                 });
-            }).Start();
-            MessageBox.Show("Ваш заказ упешно создан! Подробнее смотрите в раделе \"Заказы\"!", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
+            });
+        }
+        private void ComboBoxSummaryInformationAddress_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBoxItem item = ComboBoxSummaryInformationAddress.SelectedItem as ComboBoxItem;
+            _address = item.Tag as Order_Address;
         }
     }
 }

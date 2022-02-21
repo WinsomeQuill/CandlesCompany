@@ -35,6 +35,13 @@
           <Property Name="DateStart" Type="datetime" Nullable="false" />
           <Property Name="DateEnd" Type="datetime" Nullable="false" />
         </EntityType>
+        <EntityType Name="Order_Address">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Address" Type="nvarchar" MaxLength="170" Nullable="false" />
+        </EntityType>
         <EntityType Name="Order_Status">
           <Key>
             <PropertyRef Name="Id" />
@@ -51,7 +58,7 @@
           <Property Name="Id_Candles_Order" Type="int" Nullable="false" />
           <Property Name="Price" Type="decimal" Precision="10" Scale="2" Nullable="false" />
           <Property Name="Id_Status" Type="int" Nullable="false" />
-          <Property Name="Address" Type="nvarchar" MaxLength="170" Nullable="false" />
+          <Property Name="Id_Address" Type="int" Nullable="false" />
           <Property Name="Date" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="Roles">
@@ -150,6 +157,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Orders_Order_Address">
+          <End Role="Order_Address" Type="Self.Order_Address" Multiplicity="1" />
+          <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Order_Address">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Orders">
+              <PropertyRef Name="Id_Address" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Orders_Order_Status">
           <End Role="Order_Status" Type="Self.Order_Status" Multiplicity="1" />
           <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
@@ -214,6 +233,7 @@
           <EntitySet Name="Candles" EntityType="Self.Candles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Candles_Order" EntityType="Self.Candles_Order" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Candles_Sale_Percent" EntityType="Self.Candles_Sale_Percent" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Order_Address" EntityType="Self.Order_Address" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Order_Status" EntityType="Self.Order_Status" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Orders" EntityType="Self.Orders" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Roles" EntityType="Self.Roles" Schema="dbo" store:Type="Tables" />
@@ -235,6 +255,10 @@
           </AssociationSet>
           <AssociationSet Name="FK_Orders_Candles_Order" Association="Self.FK_Orders_Candles_Order">
             <End Role="Candles_Order" EntitySet="Candles_Order" />
+            <End Role="Orders" EntitySet="Orders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Orders_Order_Address" Association="Self.FK_Orders_Order_Address">
+            <End Role="Order_Address" EntitySet="Order_Address" />
             <End Role="Orders" EntitySet="Orders" />
           </AssociationSet>
           <AssociationSet Name="FK_Orders_Order_Status" Association="Self.FK_Orders_Order_Status">
@@ -272,10 +296,10 @@
           <Property Name="Price" Type="Decimal" Precision="10" Scale="2" Nullable="false" />
           <Property Name="Id_Type_Candle" Type="Int32" Nullable="false" />
           <Property Name="Count" Type="Int32" Nullable="false" />
+          <Property Name="Image" Type="Binary" MaxLength="Max" FixedLength="false" />
           <NavigationProperty Name="Candles_Order" Relationship="Self.FK_Candles_Order_Candles" FromRole="Candles" ToRole="Candles_Order" />
           <NavigationProperty Name="Type_Candle" Relationship="Self.FK_Candles_Type_Candle" FromRole="Candles" ToRole="Type_Candle" />
-          <Property Name="Image" Type="Binary" MaxLength="Max" FixedLength="false" />
-          <NavigationProperty Name="Users_Baskets" Relationship="candlesModel.FK_Users_Baskets_Candles" FromRole="Candles" ToRole="Users_Baskets" />
+          <NavigationProperty Name="Users_Baskets" Relationship="Self.FK_Users_Baskets_Candles" FromRole="Candles" ToRole="Users_Baskets" />
         </EntityType>
         <EntityType Name="Candles_Order">
           <Key>
@@ -316,11 +340,12 @@
           <Property Name="Id_Candles_Order" Type="Int32" Nullable="false" />
           <Property Name="Price" Type="Decimal" Precision="10" Scale="2" Nullable="false" />
           <Property Name="Id_Status" Type="Int32" Nullable="false" />
-          <Property Name="Address" Type="String" MaxLength="170" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Id_Address" Type="Int32" Nullable="false" />
           <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
           <NavigationProperty Name="Candles_Order" Relationship="Self.FK_Orders_Candles_Order" FromRole="Orders" ToRole="Candles_Order" />
           <NavigationProperty Name="Order_Status" Relationship="Self.FK_Orders_Order_Status" FromRole="Orders" ToRole="Order_Status" />
           <NavigationProperty Name="Users" Relationship="Self.FK_Orders_Users1" FromRole="Orders" ToRole="Users" />
+          <NavigationProperty Name="Order_Address" Relationship="candlesModel.FK_Orders_Order_Address" FromRole="Orders" ToRole="Order_Address" />
         </EntityType>
         <EntityType Name="Roles">
           <Key>
@@ -360,11 +385,22 @@
           <Property Name="Id_Role" Type="Int32" Nullable="false" />
           <Property Name="Phone" Type="String" MaxLength="11" FixedLength="false" Unicode="true" />
           <Property Name="Email" Type="String" MaxLength="170" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="36" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Avatar" Type="Binary" MaxLength="Max" FixedLength="false" />
           <NavigationProperty Name="Orders" Relationship="Self.FK_Orders_Users1" FromRole="Users" ToRole="Orders" />
           <NavigationProperty Name="Roles" Relationship="Self.FK_Users_Roles" FromRole="Users" ToRole="Roles" />
-          <Property Name="Password" Type="String" Nullable="false" MaxLength="36" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Users_Baskets" Relationship="candlesModel.FK_Users_Baskets_Users" FromRole="Users" ToRole="Users_Baskets" />
-          <Property Name="Avatar" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <NavigationProperty Name="Users_Baskets" Relationship="Self.FK_Users_Baskets_Users" FromRole="Users" ToRole="Users_Baskets" />
+        </EntityType>
+        <EntityType Name="Users_Baskets">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Id_User" Type="Int32" Nullable="false" />
+          <Property Name="Id_Candles" Type="Int32" Nullable="false" />
+          <Property Name="Count" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Candles" Relationship="Self.FK_Users_Baskets_Candles" FromRole="Users_Baskets" ToRole="Candles" />
+          <NavigationProperty Name="Users" Relationship="Self.FK_Users_Baskets_Users" FromRole="Users_Baskets" ToRole="Users" />
         </EntityType>
         <Association Name="FK_Candles_Order_Candles">
           <End Role="Candles" Type="Self.Candles" Multiplicity="1" />
@@ -387,6 +423,18 @@
             </Principal>
             <Dependent Role="Candles">
               <PropertyRef Name="Id_Type_Candle" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Users_Baskets_Candles">
+          <End Role="Candles" Type="Self.Candles" Multiplicity="1" />
+          <End Role="Users_Baskets" Type="Self.Users_Baskets" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Candles">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Users_Baskets">
+              <PropertyRef Name="Id_Candles" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -450,6 +498,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Users_Baskets_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="Users_Baskets" Type="Self.Users_Baskets" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Users_Baskets">
+              <PropertyRef Name="Id_User" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="candlesEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Candles" EntityType="Self.Candles" />
           <EntitySet Name="Candles_Order" EntityType="Self.Candles_Order" />
@@ -460,6 +520,7 @@
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
           <EntitySet Name="Type_Candle" EntityType="Self.Type_Candle" />
           <EntitySet Name="Users" EntityType="Self.Users" />
+          <EntitySet Name="Users_Baskets" EntityType="Self.Users_Baskets" />
           <AssociationSet Name="FK_Candles_Order_Candles" Association="Self.FK_Candles_Order_Candles">
             <End Role="Candles" EntitySet="Candles" />
             <End Role="Candles_Order" EntitySet="Candles_Order" />
@@ -467,6 +528,10 @@
           <AssociationSet Name="FK_Candles_Type_Candle" Association="Self.FK_Candles_Type_Candle">
             <End Role="Type_Candle" EntitySet="Type_Candle" />
             <End Role="Candles" EntitySet="Candles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Users_Baskets_Candles" Association="Self.FK_Users_Baskets_Candles">
+            <End Role="Candles" EntitySet="Candles" />
+            <End Role="Users_Baskets" EntitySet="Users_Baskets" />
           </AssociationSet>
           <AssociationSet Name="FK_Candles_Order_Candles_Sale_Percent" Association="Self.FK_Candles_Order_Candles_Sale_Percent">
             <End Role="Candles_Sale_Percent" EntitySet="Candles_Sale_Percent" />
@@ -488,48 +553,33 @@
             <End Role="Roles" EntitySet="Roles" />
             <End Role="Users" EntitySet="Users" />
           </AssociationSet>
-          <EntitySet Name="Users_Baskets" EntityType="candlesModel.Users_Baskets" />
-          <AssociationSet Name="FK_Users_Baskets_Candles" Association="candlesModel.FK_Users_Baskets_Candles">
-            <End Role="Candles" EntitySet="Candles" />
-            <End Role="Users_Baskets" EntitySet="Users_Baskets" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Users_Baskets_Users" Association="candlesModel.FK_Users_Baskets_Users">
+          <AssociationSet Name="FK_Users_Baskets_Users" Association="Self.FK_Users_Baskets_Users">
             <End Role="Users" EntitySet="Users" />
             <End Role="Users_Baskets" EntitySet="Users_Baskets" />
           </AssociationSet>
+          <EntitySet Name="Order_Address" EntityType="candlesModel.Order_Address" />
+          <AssociationSet Name="FK_Orders_Order_Address" Association="candlesModel.FK_Orders_Order_Address">
+            <End Role="Order_Address" EntitySet="Order_Address" />
+            <End Role="Orders" EntitySet="Orders" />
+          </AssociationSet>
         </EntityContainer>
-        <EntityType Name="Users_Baskets">
+        <EntityType Name="Order_Address">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Id_User" Type="Int32" Nullable="false" />
-          <Property Name="Id_Candles" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Candles" Relationship="candlesModel.FK_Users_Baskets_Candles" FromRole="Users_Baskets" ToRole="Candles" />
-          <NavigationProperty Name="Users" Relationship="candlesModel.FK_Users_Baskets_Users" FromRole="Users_Baskets" ToRole="Users" />
-          <Property Name="Count" Type="Int32" Nullable="false" />
+          <Property Name="Address" Type="String" Nullable="false" MaxLength="170" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Orders" Relationship="candlesModel.FK_Orders_Order_Address" FromRole="Order_Address" ToRole="Orders" />
         </EntityType>
-        <Association Name="FK_Users_Baskets_Candles">
-          <End Type="candlesModel.Candles" Role="Candles" Multiplicity="1" />
-          <End Type="candlesModel.Users_Baskets" Role="Users_Baskets" Multiplicity="*" />
+        <Association Name="FK_Orders_Order_Address">
+          <End Type="candlesModel.Order_Address" Role="Order_Address" Multiplicity="1" />
+          <End Type="candlesModel.Orders" Role="Orders" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Candles">
+            <Principal Role="Order_Address">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="Users_Baskets">
-              <PropertyRef Name="Id_Candles" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Users_Baskets_Users">
-          <End Type="candlesModel.Users" Role="Users" Multiplicity="1" />
-          <End Type="candlesModel.Users_Baskets" Role="Users_Baskets" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Users_Baskets">
-              <PropertyRef Name="Id_User" />
+            <Dependent Role="Orders">
+              <PropertyRef Name="Id_Address" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -542,13 +592,13 @@
           <EntitySetMapping Name="Candles">
             <EntityTypeMapping TypeName="candlesModel.Candles">
               <MappingFragment StoreEntitySet="Candles">
-                <ScalarProperty Name="Image" ColumnName="Image" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="Price" ColumnName="Price" />
                 <ScalarProperty Name="Id_Type_Candle" ColumnName="Id_Type_Candle" />
                 <ScalarProperty Name="Count" ColumnName="Count" />
+                <ScalarProperty Name="Image" ColumnName="Image" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -588,7 +638,7 @@
                 <ScalarProperty Name="Id_Candles_Order" ColumnName="Id_Candles_Order" />
                 <ScalarProperty Name="Price" ColumnName="Price" />
                 <ScalarProperty Name="Id_Status" ColumnName="Id_Status" />
-                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="Id_Address" ColumnName="Id_Address" />
                 <ScalarProperty Name="Date" ColumnName="Date" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -624,8 +674,6 @@
           <EntitySetMapping Name="Users">
             <EntityTypeMapping TypeName="candlesModel.Users">
               <MappingFragment StoreEntitySet="Users">
-                <ScalarProperty Name="Avatar" ColumnName="Avatar" />
-                <ScalarProperty Name="Password" ColumnName="Password" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="First_Name" ColumnName="First_Name" />
                 <ScalarProperty Name="Last_Name" ColumnName="Last_Name" />
@@ -633,15 +681,25 @@
                 <ScalarProperty Name="Id_Role" ColumnName="Id_Role" />
                 <ScalarProperty Name="Phone" ColumnName="Phone" />
                 <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Avatar" ColumnName="Avatar" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Users_Baskets">
             <EntityTypeMapping TypeName="candlesModel.Users_Baskets">
               <MappingFragment StoreEntitySet="Users_Baskets">
-                <ScalarProperty Name="Count" ColumnName="Count" />
-                <ScalarProperty Name="Id_Candles" ColumnName="Id_Candles" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Id_User" ColumnName="Id_User" />
+                <ScalarProperty Name="Id_Candles" ColumnName="Id_Candles" />
+                <ScalarProperty Name="Count" ColumnName="Count" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Order_Address">
+            <EntityTypeMapping TypeName="candlesModel.Order_Address">
+              <MappingFragment StoreEntitySet="Order_Address">
+                <ScalarProperty Name="Address" ColumnName="Address" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

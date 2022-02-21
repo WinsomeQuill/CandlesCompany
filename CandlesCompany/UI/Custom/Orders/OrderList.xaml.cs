@@ -31,7 +31,8 @@ namespace CandlesCompany.UI.Custom.Orders
         public int ProgressBarValue { get; set; } //значение progressbar в DataGrid
         public bool ProgressBarAnimation { get; set; } //вкл/выкл анимацию progressbar в DataGrid
         public string ProgressBarForeground { get; set; } //цвет бегущей полосы в progressbar в DataGrid
-        public OrderList(int order_id, DateTime dateCreated, string name, double totalPrice, int count, int orderStatusId)
+        public string Address { get; set; } //адрес доставки
+        public OrderList(int order_id, DateTime dateCreated, string name, double totalPrice, int count, int orderStatusId, string address)
         {
             InitializeComponent();
             OrderID = order_id;
@@ -41,6 +42,7 @@ namespace CandlesCompany.UI.Custom.Orders
             CountPrice = totalPrice / count;
             Count = count;
             FormatOrderID = $"№{OrderID}";
+            Address = address;
 
             switch (orderStatusId)
             {

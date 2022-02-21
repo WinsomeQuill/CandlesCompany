@@ -20,6 +20,7 @@ namespace CandlesCompany.Utils
         public static DataGrid _dataGridOrdersList { get; set; }
         public static BitmapImage _defaultImage { get; set; }
         public static BitmapImage _defaultAvatar { get; set; }
+        public static List<Order_Address> _Addresses { get; set; }
         public static byte[] ImageToBinary(Image image)
         {
             MemoryStream stream = new MemoryStream();
@@ -64,22 +65,30 @@ namespace CandlesCompany.Utils
                 _summaryInformation.AddPrice((double)item.Key.Price);
             }
         }
-        public static void BasketToOrders()
+        public static bool BasketToOrders()
         {
+            if (_summaryInformation._address == null)
+            {
+                return false;
+            }
+
             foreach (UI.Custom.Basket.BasketItem item in _listViewBasket.Items)
             {
-                var order = DBManager.AddOrder(Cache.UserCache._id, item._candle.Id, item._count, (double)item._candle.Price * item._count);
+                Orders order = DBManager.AddOrder(Cache.UserCache._id, item._candle.Id, item._count, (double)item._candle.Price * item._count, _summaryInformation._address);
                 _dataGridOrdersList.Items.Add(new UI.Custom.Orders.OrderList(
                     order.Id,
                     order.Date,
                     order.Candles_Order.Candles.Name,
                     (double)order.Price,
                     order.Candles_Order.Count,
-                    order.Order_Status.Id
+                    1,
+                    order.Order_Address.Address
                 ));
                 DBManager.RemoveCandlesBasket(Cache.UserCache._id, item._candle);
             }
             _listViewBasket.Items.Clear();
+
+            return true;
         }
         public static bool IsInBasket(Candles candle)
         {

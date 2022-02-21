@@ -13,7 +13,7 @@ namespace CandlesCompany
         public static candlesEntities db { get; set; } = new candlesEntities();
         public static bool Join(string email, string pass)
         {
-            return db.Users.Where(x => x.Email == email && x.Password == pass).Select(x => x.Id).Single() != 0;
+            return db.Users.Where(x => x.Email == email && x.Password == pass).Select(x => x.Id).SingleOrDefault() != 0;
         }
         public static bool ExistUser(string email)
         {
@@ -140,7 +140,7 @@ namespace CandlesCompany
         {
             return db.Orders.Where(x => x.Id_User == id_user).ToList();
         }
-        public static Orders AddOrder(int id_user, int candle_id, int count, double price)
+        public static Orders AddOrder(int id_user, int candle_id, int count, double price, Order_Address address)
         {
             Candles_Order candles_Order = new Candles_Order
             {
@@ -157,13 +157,13 @@ namespace CandlesCompany
                 Id_Candles_Order = candles_Order.Id,
                 Price = (decimal)price,
                 Id_Status = 1,
-                Address = "None",
+                Order_Address = address,
                 Date = DateTime.Now,
             };
 
-            Orders result = db.Orders.Add(order);
+            db.Orders.Add(order);
             db.SaveChanges();
-            return result;
+            return order;
         }
         public static void RemoveAvatarUser()
         {
@@ -177,6 +177,26 @@ namespace CandlesCompany
             Users user = db.Users.Where(x => x.Id == UserCache._id).SingleOrDefault();
             UserCache._avatar = Utils.Utils.BinaryToImage(image);
             user.Avatar = image;
+            db.SaveChanges();
+        }
+        public static void AddAddresses(string name)
+        {
+            Order_Address address = new Order_Address
+            {
+                Address = name,
+            };
+
+            db.Order_Address.Add(address);
+            db.SaveChanges();
+        }
+        public static List<Order_Address> GetAddresses()
+        {
+            return db.Order_Address.Select(x => x).ToList();
+        }
+        public static void RemoveAddress(int id)
+        {
+            Order_Address a = db.Order_Address.Where(x => x.Id == id).SingleOrDefault();
+            db.Order_Address.Remove(a);
             db.SaveChanges();
         }
     }
