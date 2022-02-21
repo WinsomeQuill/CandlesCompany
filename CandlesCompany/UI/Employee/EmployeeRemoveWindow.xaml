@@ -28,8 +28,6 @@
                   materialDesign:HintAssist.Hint="Выберите сотрудника"
                   materialDesign:HintAssist.HintOpacity=".50"
                   FontSize="20"
-                  HorizontalAlignment="Center"
-                  VerticalContentAlignment="Center"
                   Width="400"
                   Height="50"
                   IsEditable="True"

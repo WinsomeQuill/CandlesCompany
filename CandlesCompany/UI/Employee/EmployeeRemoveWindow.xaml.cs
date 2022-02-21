@@ -32,18 +32,18 @@ namespace CandlesCompany.UI.Employee
             {
                 Dispatcher.Invoke(delegate ()
                 {
+                    if (ComboBoxEmployeeRemove.Items.Count != 0)
+                    {
+                        ComboBoxEmployeeRemove.Items.Clear();
+                    }
+
                     DBManager.GetEmployees().ForEach(e =>
                     {
-                            if (ComboBoxEmployeeRemove.Items.Count != 0)
-                            {
-                                ComboBoxEmployeeRemove.Items.Clear();
-                            }
-
-                            ComboBoxEmployeeRemove.Items.Add(new ComboBoxItem
-                            {
-                                Content = $"{e.Last_Name} {e.First_Name} | {e.Email}",
-                                Tag = e
-                            });
+                        ComboBoxEmployeeRemove.Items.Add(new ComboBoxItem
+                        {
+                            Content = $"{e.Last_Name} {e.First_Name} | {e.Email}",
+                            Tag = e
+                        });
                     });
 
                     ComboBoxEmployeeRemove.SelectedIndex = 0;

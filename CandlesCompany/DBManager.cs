@@ -58,13 +58,25 @@ namespace CandlesCompany
             user.Id_Role = db.Roles.Where(x => x.Name == role).Select(x => x.Id).FirstOrDefault();
             db.SaveChanges();
         }
-        public static List<Users> GetEmployees()
-        {
-            return db.Users.Where(x => x.Id_Role != 1 && x.Id_Role != 6).Select(x => x).ToList();
-        }
         public static List<Users> GetUsers()
         {
             return db.Users.Where(x => x.Id_Role == 6).Select(x => x).ToList();
+        }
+        public static List<Users> GetUsersByRoleDelivery()
+        {
+            return db.Users.Where(x => x.Id_Role == 3).Select(x => x).ToList();
+        }
+        public static List<Users> GetUsersByRoleManager()
+        {
+            return db.Users.Where(x => x.Id_Role == 4).Select(x => x).ToList();
+        }
+        public static List<Users> GetUsersByRoleAdministrator()
+        {
+            return db.Users.Where(x => x.Id_Role == 5).Select(x => x).ToList();
+        }
+        public static List<Users> GetEmployees(int startIdRole = 1, int endIdRole = 6)
+        {
+            return db.Users.Where(x => x.Id_Role > startIdRole && x.Id_Role < endIdRole).Select(x => x).ToList();
         }
         public static byte[] GetImageItem(int id)
         {
