@@ -29,6 +29,8 @@ namespace CandlesCompany.UI.Custom.Basket
         {
             InitializeComponent();
             TextBlockSummaryInformationSale.Text = "Скидка: 0%";
+            TextBlockSummaryInformationCount.Text = $"Общее количество: 0 шт.";
+            TextBlockSummaryInformationPrice.Text = $"Итоговая цена: 0 руб.";
         }
         public void AddPrice(double price)
         {

@@ -56,7 +56,17 @@ namespace CandlesCompany.UI
 
             DBManager.GetUsers().ForEach(user =>
             {
-                DataGridManagementUsersList.Items.Add(new UsersList(user.Id, $"{user.Last_Name} {user.First_Name} {user.Middle_Name}", user.Email, Utils.Utils.BinaryToImage(user.Avatar)));
+                BitmapImage avatar = null;
+                if (user.Avatar == null)
+                {
+                    avatar = Utils.Utils._defaultAvatar;
+                }
+                else
+                {
+                    avatar = Utils.Utils.BinaryToImage(user.Avatar);
+                }
+
+                DataGridManagementUsersList.Items.Add(new UsersList(user.Id, $"{user.Last_Name} {user.First_Name} {user.Middle_Name}", user.Email, avatar));
             });
             AddressesListReload();
         }

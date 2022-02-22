@@ -467,7 +467,15 @@
                                         </ContextMenu>
                                     </DataGrid.ContextMenu>
                                     <DataGrid.Columns>
-                                        <DataGridTextColumn Header="Номер ааканта" Binding="{Binding UserID}"/>
+                                        <DataGridTemplateColumn Header="Номер аккаунта">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding UserID}"
+                                                               VerticalAlignment="Center"
+                                                               Style="{StaticResource MaterialDesignDataGridTextColumnStyle}"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
                                         <DataGridTemplateColumn Header="ФИО" MinWidth="220" Width="230" MaxWidth="270">
                                             <DataGridTemplateColumn.CellTemplate>
                                                 <DataTemplate>
@@ -494,7 +502,15 @@
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
                                         </DataGridTemplateColumn>
-                                        <DataGridTextColumn Header="Почта" Binding="{Binding UserEmail}"/>
+                                        <DataGridTemplateColumn Header="Почта">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding UserEmail}"
+                                                               VerticalAlignment="Center"
+                                                               Style="{StaticResource MaterialDesignDataGridTextColumnStyle}"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
                                     </DataGrid.Columns>
                                 </DataGrid>
                             </Grid>
