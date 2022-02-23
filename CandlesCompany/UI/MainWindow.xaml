@@ -457,13 +457,35 @@
                                 </StackPanel>
                             </TabItem.Header>
                             <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="50"/>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="50"/>
+                                </Grid.RowDefinitions>
+
+                                <Grid Grid.Row="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="500"/>
+                                        <ColumnDefinition Width="1*"/>
+                                    </Grid.ColumnDefinitions>
+                                    
+                                    <TextBox x:Name="TextBoxUsersSearch"
+                                             Grid.Column="0"
+                                             materialDesign:HintAssist.Hint="Поиск"
+                                             materialDesign:HintAssist.IsFloating="True"
+                                             VerticalAlignment="Center"
+                                             Margin="10,0,10,0"
+                                             TextChanged="TextBoxUsersSearch_TextChanged"/>
+                                </Grid>
+
                                 <DataGrid x:Name="DataGridManagementUsersList"
+                                          Grid.Row="1"
                                           IsReadOnly="True">
                                     <DataGrid.ContextMenu>
                                         <ContextMenu>
-                                            <MenuItem Header="Click Me"/>
-                                            <MenuItem Header="Click Me1"/>
-                                            <MenuItem Header="Click Me2"/>
+                                            <MenuItem x:Name="DataGridManagementMenuItemRefresh"
+                                                      Header="Обновить"
+                                                      Click="DataGridManagementMenuItemRefresh_Click"/>
                                         </ContextMenu>
                                     </DataGrid.ContextMenu>
                                     <DataGrid.Columns>
@@ -513,6 +535,53 @@
                                         </DataGridTemplateColumn>
                                     </DataGrid.Columns>
                                 </DataGrid>
+
+                                <Grid Grid.Row="2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="20*"/>
+                                        <ColumnDefinition Width="12*" MinWidth="200"/>
+                                        <ColumnDefinition Width="20*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Button x:Name="ButtonUsersListPageBack"
+                                            Grid.Column="0"
+                                            Content="_Предыдущая страница"
+                                            HorizontalAlignment="Right"
+                                            VerticalAlignment="Center"
+                                            Width="200"
+                                            Margin="0,0,10,0"
+                                            Click="ButtonUsersListPageBack_Click"/>
+                                    
+                                    <Grid Grid.Column="1">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="18*"/>
+                                            <ColumnDefinition Width="140"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <TextBox x:Name="TextBoxUsersPage"
+                                                 Grid.Column="0"
+                                                 materialDesign:HintAssist.Hint="Номер страницы"
+                                                 materialDesign:HintAssist.IsFloating="True"
+                                                 VerticalAlignment="Center"
+                                                 Margin="10,0,10,0"
+                                                 DragEnter="TextBoxUsersPage_DragEnter"/>
+
+                                        <TextBlock x:Name="TextBlockUsersTotalPage"
+                                                   Grid.Column="1"
+                                                   Text="Total: %Count%"
+                                                   HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center"/>
+                                    </Grid>
+
+                                    <Button x:Name="ButtonUsersListPageNext"
+                                            Grid.Column="2"
+                                            Content="_Следующая страница"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Width="200"
+                                            Margin="10,0,0,0"
+                                            Click="ButtonUsersListPageNext_Click"/>
+                                </Grid>
                             </Grid>
                         </TabItem>
                         <TabItem Style="{StaticResource MaterialDesignNavigationRailTabItem}"
@@ -531,7 +600,7 @@
                             </TabItem.Header>
                             <Grid>
                                 <Grid.RowDefinitions>
-                                    <RowDefinition Height="80"/>
+                                    <RowDefinition Height="50"/>
                                     <RowDefinition Height="1*"/>
                                 </Grid.RowDefinitions>
 
@@ -547,7 +616,8 @@
                                              Grid.Column="0"
                                              materialDesign:HintAssist.Hint="Новый адрес"
                                              materialDesign:HintAssist.IsFloating="True"
-                                             Margin="10,20,10,20"/>
+                                             VerticalAlignment="Center"
+                                             Margin="10,0,10,0"/>
 
                                     <Button x:Name="ButtonAddAddresses"
                                             Grid.Column="1"
@@ -560,7 +630,8 @@
                                              Grid.ColumnSpan="2"
                                              materialDesign:HintAssist.Hint="Поиск адреса"
                                              materialDesign:HintAssist.IsFloating="True"
-                                             Margin="10,20,10,20"
+                                             Margin="10,0,10,0"
+                                             VerticalAlignment="Center"
                                              TextChanged="TextBoxSearchAddress_TextChanged"/>
                                 </Grid>
 

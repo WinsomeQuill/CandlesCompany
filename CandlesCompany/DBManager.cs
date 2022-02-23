@@ -58,9 +58,19 @@ namespace CandlesCompany
             user.Id_Role = db.Roles.Where(x => x.Name == role).Select(x => x.Id).FirstOrDefault();
             db.SaveChanges();
         }
-        public static List<Users> GetUsers()
+        public static int GetUsersCount()
         {
-            return db.Users.Where(x => x.Id_Role == 6).Select(x => x).ToList();
+            return db.Users.Count();
+        }
+        public static List<Users> GetUsersForPage(int page)
+        {
+            return db.Users.Where(x => x.Id_Role == 6).Select(x => x).OrderBy(x => x.Id).Skip(50 * page).Take(50).ToList();
+        }
+        public static List<Users> FindUsers(string value)
+        {
+            List<Users> users = new List<Users>();
+            users.AddRange(db.Users.Where(x => x.Last_Name.Contains(value) || x.First_Name.Contains(value) || x.Middle_Name.Contains(value)).Select(x => x).Distinct().Take(50).ToList());
+            return users;
         }
         public static List<Users> GetUsersByRoleDelivery()
         {

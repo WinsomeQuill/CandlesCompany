@@ -60,9 +60,12 @@ namespace CandlesCompany.UI.Employee
             Users user = (Users)(ComboBoxEmployeeRemove.SelectedItem as ComboBoxItem).Tag;
             MessageBoxResult result = MessageBox.Show($"Вы действительно хотите снять с должности \"{user.Roles.Name}\" сотрудника \"{user.Last_Name} {user.First_Name}\"", "Подтверждение",
                 MessageBoxButton.YesNo, MessageBoxImage.Question);
+
             if (result == MessageBoxResult.No) { return; }
+
             MessageBox.Show($"Вы сняли с должности \"{user.Roles.Name}\" сотрудника \"{user.Last_Name} {user.First_Name}\"!", "Успешно", 
                 MessageBoxButton.OK, MessageBoxImage.Information);
+
             DBManager.ChangeRoleById(user.Id, "Пользователь");
             ComboBoxEmployeeRemove.Items.Clear();
             Init();

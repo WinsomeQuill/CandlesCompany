@@ -38,7 +38,7 @@ namespace CandlesCompany.UI.Employee
                         ComboBoxEmployeeAddRole.Items.Add(role);
                     });
 
-                    DBManager.GetUsers().ForEach(user =>
+                    DBManager.GetUsersForPage(1).ForEach(user =>
                     {
                         int index = ComboBoxEmployeeAdd.Items.Add(new ComboBoxItem
                         {

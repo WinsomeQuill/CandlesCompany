@@ -16,6 +16,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using CandlesCompany.UI.Custom.Basket;
 using CandlesCompany.UI.Custom.Catalog;
+using System.Text.RegularExpressions;
 
 namespace CandlesCompany.UI
 {
@@ -24,51 +25,53 @@ namespace CandlesCompany.UI
     /// </summary>
     public partial class MainWindow : Window
     {
+        private int _usersListCurrentPage = 1;
+        private int _usersListPageSize = 50;
+        private int _usersListTotalPages = 0;
         public MainWindow()
         {
             InitializeComponent();
+            Utils.Utils._mainWindow = this;
+            Utils.Utils._defaultImage = new BitmapImage(new Uri(@"pack://application:,,,/CandlesCompany;component/Resources/Images/Items/notfound.png"));
+            Utils.Utils._listViewBasket = ListViewBasket;
+            Utils.Utils._dataGridOrdersList = DataGridOrdersList;
+            _usersListTotalPages = (int)Math.Ceiling((decimal)DBManager.GetUsersCount() / _usersListPageSize);
+            TextBlockUsersTotalPage.Text = $"Всего страниц: {_usersListTotalPages}";
+            TextBoxUsersPage.Text = "1";
+            ButtonUsersListPageBack.IsEnabled = false;
+
             CatalogInit();
             BasketInit();
             OrdersInit();
+            ProfileInit();
+            SelectedItemInit();
+            SummaryInformationInit();
 
-            Utils.Utils._mainWindow = this;
-            Utils.Utils._defaultImage = new BitmapImage(new Uri(@"pack://application:,,,/CandlesCompany;component/Resources/Images/Items/notfound.png"));
-
-            TextBlockProfileName.Text = $"ФИО: {UserCache._last_name} {UserCache._first_name} {UserCache._middle_name}";
-            TextBlockProfilePhone.Text = $"Телефон: {UserCache._phone}";
-            TextBlockProfileEmail.Text = $"Эл. почта: {UserCache._email}";
-            TextBlockProfileRole.Text = $"Должность: {UserCache._role.Name}";
-            ImageBrushProfileAvatar.ImageSource = UserCache._avatar;
-
+            ReloadWindowManagementUserList();
+            AddressesListReload();
+        }
+        private void SummaryInformationInit()
+        {
+            Utils.Utils._summaryInformation = new SummaryInformation();
+            GridBasketItems.Children.Add(Utils.Utils._summaryInformation);
+            Utils.Utils._summaryInformation.SetValue(Grid.ColumnProperty, 1);
+            Utils.Utils._summaryInformation.SetValue(Grid.RowProperty, 0);
+        }
+        private void SelectedItemInit()
+        {
             Utils.Utils._selectediteminfo = new SelectedItemInfo();
             GridCatalogItems.Children.Add(Utils.Utils._selectediteminfo);
             Utils.Utils._selectediteminfo.SetValue(Grid.ColumnProperty, 1);
             Utils.Utils._selectediteminfo.SetValue(Grid.RowProperty, 0);
             Utils.Utils._selectediteminfo.Visibility = Visibility.Collapsed;
-
-            Utils.Utils._summaryInformation = new SummaryInformation();
-            GridBasketItems.Children.Add(Utils.Utils._summaryInformation);
-            Utils.Utils._summaryInformation.SetValue(Grid.ColumnProperty, 1);
-            Utils.Utils._summaryInformation.SetValue(Grid.RowProperty, 0);
-
-            Utils.Utils._listViewBasket = ListViewBasket;
-            Utils.Utils._dataGridOrdersList = DataGridOrdersList;
-
-            DBManager.GetUsers().ForEach(user =>
-            {
-                BitmapImage avatar = null;
-                if (user.Avatar == null)
-                {
-                    avatar = Utils.Utils._defaultAvatar;
-                }
-                else
-                {
-                    avatar = Utils.Utils.BinaryToImage(user.Avatar);
-                }
-
-                DataGridManagementUsersList.Items.Add(new UsersList(user.Id, $"{user.Last_Name} {user.First_Name} {user.Middle_Name}", user.Email, avatar));
-            });
-            AddressesListReload();
+        }
+        private void ProfileInit()
+        {
+            TextBlockProfileName.Text = $"ФИО: {UserCache._last_name} {UserCache._first_name} {UserCache._middle_name}";
+            TextBlockProfilePhone.Text = $"Телефон: {UserCache._phone}";
+            TextBlockProfileEmail.Text = $"Эл. почта: {UserCache._email}";
+            TextBlockProfileRole.Text = $"Должность: {UserCache._role.Name}";
+            ImageBrushProfileAvatar.ImageSource = UserCache._avatar;
         }
         private void OrdersInit()
         {
@@ -144,7 +147,13 @@ namespace CandlesCompany.UI
         }
         private void ButtonManagementAddEmployee_Click(object sender, RoutedEventArgs e)
         {
-            new Employee.EmployeeAddWindow().Show();
+            Task.Run(async () =>
+            {
+                await Dispatcher.InvokeAsync(() =>
+                {
+                    new Employee.EmployeeAddWindow().Show();
+                });
+            });
         }
         private void ButtonManagementChangeEmployee_Click(object sender, RoutedEventArgs e)
         {
@@ -242,6 +251,100 @@ namespace CandlesCompany.UI
                     MessageBox.Show("Вы добавили новый адрес!", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
                 });
             });
+        }
+        public void ReloadWindowManagementUserList()
+        {
+            new Thread(delegate ()
+            {
+                Dispatcher.InvokeAsync(delegate ()
+                {
+                    DataGridManagementUsersList.Items.Clear();
+                    DBManager.GetUsersForPage(_usersListCurrentPage).ForEach(user =>
+                    {
+                        BitmapImage avatar = null;
+                        if (user.Avatar == null)
+                        {
+                            avatar = Utils.Utils._defaultAvatar;
+                        }
+                        else
+                        {
+                            avatar = Utils.Utils.BinaryToImage(user.Avatar);
+                        }
+
+                        DataGridManagementUsersList.Items.Add(new UI.UsersList(user.Id, $"{user.Last_Name} {user.First_Name} {user.Middle_Name}", user.Email, avatar));
+                    });
+                });
+            }).Start();
+        }
+        private void DataGridManagementMenuItemRefresh_Click(object sender, RoutedEventArgs e)
+        {
+            ReloadWindowManagementUserList();
+        }
+        private void ButtonUsersListPageBack_Click(object sender, RoutedEventArgs e)
+        {
+            _usersListCurrentPage -= 1;
+            if (_usersListCurrentPage <= 1)
+            {
+                ButtonUsersListPageBack.IsEnabled = false;
+            }
+
+            ButtonUsersListPageNext.IsEnabled = true;
+            TextBoxUsersPage.Text = _usersListCurrentPage.ToString();
+            ReloadWindowManagementUserList();
+        }
+        private void ButtonUsersListPageNext_Click(object sender, RoutedEventArgs e)
+        {
+            _usersListCurrentPage += 1;
+            if (_usersListCurrentPage >= _usersListTotalPages)
+            {
+                ButtonUsersListPageNext.IsEnabled = false;
+            }
+
+            ButtonUsersListPageBack.IsEnabled = true;
+            TextBoxUsersPage.Text = _usersListCurrentPage.ToString();
+            ReloadWindowManagementUserList();
+        }
+        private void TextBoxUsersSearch_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            string search = TextBoxUsersSearch.Text;
+            Task.Run(async () =>
+            {
+                await Dispatcher.InvokeAsync(() =>
+                {
+                    if (search.Length == 0)
+                    {
+                        ReloadWindowManagementUserList();
+                        return;
+                    }
+
+                    DataGridManagementUsersList.Items.Clear();
+                    DBManager.FindUsers(search).ForEach(user =>
+                    {
+                        BitmapImage avatar = null;
+                        if (user.Avatar == null)
+                        {
+                            avatar = Utils.Utils._defaultAvatar;
+                        }
+                        else
+                        {
+                            avatar = Utils.Utils.BinaryToImage(user.Avatar);
+                        }
+
+                        DataGridManagementUsersList.Items.Add(new UI.UsersList(user.Id, $"{user.Last_Name} {user.First_Name} {user.Middle_Name}", user.Email, avatar));
+                    });
+                });
+            });
+        }
+        private void TextBoxUsersPage_DragEnter(object sender, DragEventArgs e)
+        {
+            string text = TextBoxUsersPage.Text;
+            if (!new Regex(@"^[0-9]+$").IsMatch(text))
+            {
+                return;
+            }
+
+            _usersListCurrentPage = Convert.ToInt32(text);
+            ReloadWindowManagementUserList();
         }
     }
 }
