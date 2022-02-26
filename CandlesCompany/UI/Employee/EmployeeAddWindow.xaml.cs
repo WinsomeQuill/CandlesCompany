@@ -31,14 +31,16 @@ namespace CandlesCompany.UI.Employee
         {
             new Thread(delegate ()
             {
-                Dispatcher.Invoke(delegate ()
+                Dispatcher.InvokeAsync(async () =>
                 {
                     DBManager.GetRoles().ForEach(role =>
                     {
                         ComboBoxEmployeeAddRole.Items.Add(role);
                     });
 
-                    DBManager.GetUsersForPage(1).ForEach(user =>
+                    List<Users> users = await DBManager.GetUsersForPage(1);
+
+                    users.ForEach(user =>
                     {
                         int index = ComboBoxEmployeeAdd.Items.Add(new ComboBoxItem
                         {

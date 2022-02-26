@@ -1,8 +1,11 @@
 ﻿using CandlesCompany.Cache;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -10,7 +13,7 @@ namespace CandlesCompany
 {
     public static class DBManager
     {
-        public static candlesEntities db { get; set; } = new candlesEntities();
+        public static candlesEntities db { get; } = new candlesEntities();
         public static bool Join(string email, string pass)
         {
             return db.Users.Where(x => x.Email == email && x.Password == pass).Select(x => x.Id).SingleOrDefault() != 0;
@@ -62,14 +65,14 @@ namespace CandlesCompany
         {
             return db.Users.Count();
         }
-        public static List<Users> GetUsersForPage(int page)
+        public async static Task<List<Users>> GetUsersForPage(int page)
         {
-            return db.Users.Where(x => x.Id_Role == 6).Select(x => x).OrderBy(x => x.Id).Skip(50 * page).Take(50).ToList();
+            return await db.Users.Where(x => x.Id_Role == 6).Select(x => x).OrderBy(x => x.Id).Skip(50 * page).Take(50).ToListAsync();
         }
-        public static List<Users> FindUsers(string value)
+        public async static Task<List<Users>> FindUsers(string value)
         {
             List<Users> users = new List<Users>();
-            users.AddRange(db.Users.Where(x => x.Last_Name.Contains(value) || x.First_Name.Contains(value) || x.Middle_Name.Contains(value)).Select(x => x).Distinct().Take(50).ToList());
+            users.AddRange(await db.Users.Where(x => x.First_Name.Contains(value) || x.First_Name.Contains(value) || x.Middle_Name.Contains(value)).Select(x => x).Distinct().Take(500).ToListAsync());
             return users;
         }
         public static List<Users> GetUsersByRoleDelivery()
