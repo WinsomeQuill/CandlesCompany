@@ -14,9 +14,9 @@ namespace CandlesCompany
     public static class DBManager
     {
         public static candlesEntities db { get; } = new candlesEntities();
-        public static bool Join(string email, string pass)
+        public async static Task<bool> Join(string email, string pass)
         {
-            return db.Users.Where(x => x.Email == email && x.Password == pass).Select(x => x.Id).SingleOrDefault() != 0;
+            return await db.Users.Where(x => x.Email == email && x.Password == pass).Select(x => x.Id).SingleOrDefaultAsync() != 0;
         }
         public static bool ExistUser(string email)
         {
@@ -37,9 +37,9 @@ namespace CandlesCompany
             db.Users.Add(user);
             db.SaveChanges();
         }
-        public static Users UserInfo(string email)
+        public async static Task<Users> UserInfo(string email)
         {
-            return db.Users.Where(x => x.Email == email).Select(x => x).FirstOrDefault();
+            return await db.Users.Where(x => x.Email == email).Select(x => x).FirstOrDefaultAsync();
         }
         public static Users UserInfo(int id)
         {
