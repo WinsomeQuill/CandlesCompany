@@ -74,5 +74,16 @@
                 Grid.Row="4"
                 Cursor="Hand"
                 Click="ButtonSignInRegistered_Click"/>
+
+        <ProgressBar x:Name="ProgressBarSignInLoading"
+                     Grid.Row="0"
+                     Grid.RowSpan="5"
+                     VerticalAlignment="Center"
+                     HorizontalAlignment="Center"
+                     Width="100"
+                     Height="100"
+                     Style="{StaticResource MaterialDesignCircularProgressBar}"
+                     IsIndeterminate="True"
+                     Visibility="Collapsed"/>
     </Grid>
 </Window>

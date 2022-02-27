@@ -40,17 +40,17 @@ namespace CandlesCompany.UI.Auth
             {
                 await Dispatcher.InvokeAsync(async () =>
                 {
-                    ButtonSignInJoin.IsEnabled = false;
+                    ButtonSignInJoin.IsEnabled = PasswordBoxSignIn.IsEnabled = TextBoxSignInEmail.IsEnabled = ButtonSignInRegistered.IsEnabled = false;
+                    ProgressBarSignInLoading.Visibility = Visibility.Visible;
                     if (!await DBManager.Join(email, pass))
                     {
-                        MessageBoxResult result = MessageBox.Show("Неверный логин или пароль!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-                        if (result == MessageBoxResult.OK)
-                        {
-                            ButtonSignInJoin.IsEnabled = true;
-                        }
+                        ButtonSignInJoin.IsEnabled = PasswordBoxSignIn.IsEnabled = TextBoxSignInEmail.IsEnabled = ButtonSignInRegistered.IsEnabled = true;
+                        ProgressBarSignInLoading.Visibility = Visibility.Collapsed;
+                        MessageBox.Show("Неверный логин или пароль!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                         return;
                     }
 
+                    ProgressBarSignInLoading.Visibility = Visibility.Collapsed;
                     Utils.Utils._defaultAvatar = new BitmapImage(new Uri(@"pack://application:,,,/CandlesCompany;component/Resources/Images/Users/default_avatar.png"));
                     Users user = await DBManager.UserInfo(email);
 
