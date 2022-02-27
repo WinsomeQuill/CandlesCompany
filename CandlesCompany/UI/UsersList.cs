@@ -17,6 +17,7 @@ namespace CandlesCompany.UI
         public BitmapImage UserAvatar { get; set; }
         public Users User { get; set; }
         public List<string> Roles { get; set; }
+        public string RoleName { get; set; }
         public UsersList(Users user, BitmapImage avatar, List<string> roles)
         {
             User = user;
@@ -24,6 +25,7 @@ namespace CandlesCompany.UI
             UserName = $"{user.Last_Name} {user.First_Name} {user.Middle_Name}";
             UserEmail = user.Email;
             UserAvatar = avatar;
+            RoleName = User.Roles.Name;
             Roles = roles;
         }
         public UsersList(Users user, BitmapImage avatar)
@@ -33,6 +35,8 @@ namespace CandlesCompany.UI
             UserName = $"{user.Last_Name} {user.First_Name} {user.Middle_Name}";
             UserEmail = user.Email;
             UserAvatar = avatar;
+            Roles = new List<string>();
+            Roles.Add("NULL");
         }
     }
 }

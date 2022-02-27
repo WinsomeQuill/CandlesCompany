@@ -121,7 +121,7 @@ namespace CandlesCompany.UI
             TextBlockManagementEmployeeTotalPage.Text = $"Всего страниц: {_employeesListTotalPages}";
             TextBoxManagementEmployeePage.Text = "1";
             _employeesListCurrentPage = 1;
-            ButtonUsersListPageBack.IsEnabled = false;
+            ButtonManagementEmployeePageBack.IsEnabled = false;
             if (countEmployees <= _listPageSize)
             {
                 ButtonManagementEmployeePageNext.IsEnabled = false;
@@ -476,35 +476,40 @@ namespace CandlesCompany.UI
         private async void ButtonDataGridManagementEmployeeRemove_Click(object sender, RoutedEventArgs e)
         {
             Button button = sender as Button;
-            Users user = button.Tag as Users;
 
-            MessageBoxResult result = MessageBox.Show($"Вы действительно хотите снять с должности \"{user.Roles.Name}\" сотрудника \"{user.Last_Name} {user.First_Name}\"", "Подтверждение",
-                MessageBoxButton.YesNo, MessageBoxImage.Question);
-
-            if (result == MessageBoxResult.No) { return; }
-
-            MessageBox.Show($"Вы сняли с должности \"{user.Roles.Name}\" сотрудника \"{user.Last_Name} {user.First_Name}\"!", "Успешно",
-                MessageBoxButton.OK, MessageBoxImage.Information);
-
-            DBManager.ChangeRoleById(user.Id, "Пользователь");
-
-            DataGridManagementEmployeeList.Items.Clear();
-
-            _employeesList = await DBManager.GetEmployees(_employeesListCurrentPage);
-            _employeesList.ForEach(employee =>
+            if (button != null)
             {
-                BitmapImage avatar = null;
-                if (employee.Avatar == null)
-                {
-                    avatar = Utils.Utils._defaultAvatar;
-                }
-                else
-                {
-                    avatar = Utils.Utils.BinaryToImage(employee.Avatar);
-                }
+                Grid grid = button.Parent as Grid;
+                Users user = grid.Tag as Users;
 
-                DataGridManagementEmployeeList.Items.Add(new UI.UsersList(employee, avatar, Utils.Utils._roles));
-            });
+                MessageBoxResult result = MessageBox.Show($"Вы действительно хотите снять с должности \"{user.Roles.Name}\" сотрудника \"{user.Last_Name} {user.First_Name}\"", "Подтверждение",
+                    MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+                if (result == MessageBoxResult.No) { return; }
+
+                MessageBox.Show($"Вы сняли с должности \"{user.Roles.Name}\" сотрудника \"{user.Last_Name} {user.First_Name}\"!", "Успешно",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
+
+                DBManager.ChangeRoleById(user.Id, "Пользователь");
+
+                DataGridManagementEmployeeList.Items.Clear();
+
+                _employeesList = await DBManager.GetEmployees(_employeesListCurrentPage);
+                _employeesList.ForEach(employee =>
+                {
+                    BitmapImage avatar = null;
+                    if (employee.Avatar == null)
+                    {
+                        avatar = Utils.Utils._defaultAvatar;
+                    }
+                    else
+                    {
+                        avatar = Utils.Utils.BinaryToImage(employee.Avatar);
+                    }
+
+                    DataGridManagementEmployeeList.Items.Add(new UI.UsersList(employee, avatar, Utils.Utils._roles));
+                });
+            }
         }
         private T FindParent<T>(DependencyObject dependencyObject) where T : DependencyObject
         {
@@ -575,7 +580,7 @@ namespace CandlesCompany.UI
                             avatar = Utils.Utils.BinaryToImage(user.Avatar);
                         }
 
-                        DataGridManagementEmployeeList.Items.Add(new UI.UsersList(user, avatar));
+                        DataGridManagementEmployeeList.Items.Add(new UI.UsersList(user, avatar, Utils.Utils._roles));
                     });
                     ButtonManagementEmployeeSearch.IsEnabled = true;
                     ProgressBarManagementEmployeeList.Visibility = Visibility.Collapsed;
@@ -584,6 +589,17 @@ namespace CandlesCompany.UI
                     SetPagesUsersList(_employeesList.Count() - 1);
                 });
             }).Start();
+        }
+        private void ComboBoxManagementEmployeeRoles_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox comboBox = sender as ComboBox;
+            if (comboBox != null)
+            {
+                Grid grid = comboBox.Parent as Grid;
+                Users user = grid.Tag as Users;
+                DBManager.ChangeRoleById(user.Id, comboBox.SelectedItem.ToString());
+                ReloadWindowManagementEmployeeList();
+            }
         }
     }
 }

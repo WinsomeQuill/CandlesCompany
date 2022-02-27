@@ -405,11 +405,13 @@
                                                 <DataTemplate>
                                                     <Grid>
                                                         <Grid.ColumnDefinitions>
-                                                            <ColumnDefinition Width="40"/>
+                                                            <ColumnDefinition Width="40" MaxWidth="70"/>
                                                             <ColumnDefinition Width="210" MinWidth="100" MaxWidth="400"/>
                                                         </Grid.ColumnDefinitions>
                                                         <Ellipse Width="40"
+                                                                 MaxWidth="70"
                                                                  Height="40"
+                                                                 MaxHeight="70"
                                                                  Grid.Column="0">
                                                             <Ellipse.Fill>
                                                                 <ImageBrush ImageSource="{Binding UserAvatar}"/>
@@ -435,10 +437,13 @@
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
                                         </DataGridTemplateColumn>
+
+                                        <DataGridTextColumn Header="Текущая должность" Binding="{Binding RoleName}"/>
+
                                         <DataGridTemplateColumn>
                                             <DataGridTemplateColumn.CellTemplate>
                                                 <DataTemplate>
-                                                    <Grid>
+                                                    <Grid Tag="{Binding User}">
                                                         <Grid.ColumnDefinitions>
                                                             <ColumnDefinition Width="1*"/>
                                                             <ColumnDefinition Width="1*"/>
@@ -449,14 +454,13 @@
                                                                 Content="_Удалить сотрудника"
                                                                 VerticalAlignment="Center"
                                                                 Margin="10,0,10,0"
-                                                                Tag="{Binding User}"
                                                                 Click="ButtonDataGridManagementEmployeeRemove_Click"/>
 
-                                                        <ComboBox Grid.Column="1"
+                                                        <ComboBox x:Name="ComboBoxManagementEmployeeRoles"
+                                                                  ItemsSource="{Binding Roles}"
                                                                   materialDesign:HintAssist.Hint="Должность"
-                                                                  Margin="10,0,10,0"
-                                                                  ItemsSource="{Binding ComboBoxRoles}"
-                                                                  SelectedIndex="0"/>
+                                                                  Grid.Column="1"
+                                                                  SelectionChanged="ComboBoxManagementEmployeeRoles_SelectionChanged"/>
                                                     </Grid>
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
