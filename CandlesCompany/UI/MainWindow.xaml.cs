@@ -26,11 +26,19 @@ namespace CandlesCompany.UI
     /// </summary>
     public partial class MainWindow : Window
     {
+        private int _listPageSize { get; set; } = 50;
+
         private int _usersListCurrentPage { get; set; }
-        private int _usersListPageSize = 50;
+        private int _employeesListCurrentPage { get; set; }
+
         private int _usersListTotalPages { get; set; }
+        private int _employeesListTotalPages { get; set; }
+
         private List<Users> _usersList = new List<Users>();
+        private List<Users> _employeesList = new List<Users>();
+
         private bool _isSearchUsersList = false;
+        private bool _isSearchEmployeesList = false;
         public MainWindow()
         {
             InitializeComponent();
@@ -38,8 +46,10 @@ namespace CandlesCompany.UI
             Utils.Utils._defaultImage = new BitmapImage(new Uri(@"pack://application:,,,/CandlesCompany;component/Resources/Images/Items/notfound.png"));
             Utils.Utils._listViewBasket = ListViewBasket;
             Utils.Utils._dataGridOrdersList = DataGridOrdersList;
+            Utils.Utils._roles = DBManager.GetRoles();
 
-            SetPages(DBManager.GetUsersCount());
+            SetPagesUsersList(DBManager.GetUsersCount());
+            SetPagesEmployeesList(DBManager.GetEmployeesCount());
 
             CatalogInit();
             BasketInit();
@@ -49,17 +59,83 @@ namespace CandlesCompany.UI
             SummaryInformationInit();
 
             ReloadWindowManagementUserList();
+            ReloadWindowManagementEmployeeList();
             AddressesListReload();
+
         }
-        private void SetPages(int count)
+        private void ReloadWindowManagementEmployeeList()
+        {
+            new Thread(delegate ()
+            {
+                Dispatcher.InvokeAsync(async () =>
+                {
+                    ProgressBarManagementEmployeeList.Visibility = Visibility.Visible;
+                    DataGridManagementEmployeeList.Visibility= Visibility.Collapsed;
+                    DataGridManagementEmployeeList.Items.Clear();
+
+                    if (!_isSearchEmployeesList)
+                    {
+                        _employeesList = await DBManager.GetEmployees(_employeesListCurrentPage);
+                        _employeesList.ForEach(user =>
+                        {
+                            BitmapImage avatar = null;
+                            if (user.Avatar == null)
+                            {
+                                avatar = Utils.Utils._defaultAvatar;
+                            }
+                            else
+                            {
+                                avatar = Utils.Utils.BinaryToImage(user.Avatar);
+                            }
+
+                            DataGridManagementEmployeeList.Items.Add(new UI.UsersList(user, avatar, Utils.Utils._roles));
+                        });
+                    }
+                    else
+                    {
+                        _employeesList.Skip(_listPageSize * (_employeesListCurrentPage - 1)).Take(_listPageSize).ToList().ForEach(user =>
+                        {
+                            BitmapImage avatar = null;
+                            if (user.Avatar == null)
+                            {
+                                avatar = Utils.Utils._defaultAvatar;
+                            }
+                            else
+                            {
+                                avatar = Utils.Utils.BinaryToImage(user.Avatar);
+                            }
+
+                            DataGridManagementEmployeeList.Items.Add(new UI.UsersList(user, avatar, Utils.Utils._roles));
+                        });
+                    }
+                    
+                    ProgressBarManagementEmployeeList.Visibility = Visibility.Collapsed;
+                    DataGridManagementEmployeeList.Visibility = Visibility.Visible;
+                });
+            }).Start();
+        }
+        private void SetPagesEmployeesList(int countEmployees)
+        {
+            ButtonManagementEmployeePageBack.IsEnabled = ButtonManagementEmployeePageNext.IsEnabled = true;
+            _employeesListTotalPages = (int)Math.Ceiling((decimal)countEmployees / _listPageSize);
+            TextBlockManagementEmployeeTotalPage.Text = $"Всего страниц: {_employeesListTotalPages}";
+            TextBoxManagementEmployeePage.Text = "1";
+            _employeesListCurrentPage = 1;
+            ButtonUsersListPageBack.IsEnabled = false;
+            if (countEmployees <= _listPageSize)
+            {
+                ButtonManagementEmployeePageNext.IsEnabled = false;
+            }
+        }
+        private void SetPagesUsersList(int countUsers)
         {
             ButtonUsersListPageBack.IsEnabled = ButtonUsersListPageNext.IsEnabled = true;
-            _usersListTotalPages = (int)Math.Ceiling((decimal)count / _usersListPageSize);
+            _usersListTotalPages = (int)Math.Ceiling((decimal)countUsers / _listPageSize);
             TextBlockUsersTotalPage.Text = $"Всего страниц: {_usersListTotalPages}";
             TextBoxUsersPage.Text = "1";
             _usersListCurrentPage = 1;
             ButtonUsersListPageBack.IsEnabled = false;
-            if (count <= _usersListPageSize)
+            if (countUsers <= _listPageSize)
             {
                 ButtonUsersListPageNext.IsEnabled = false;
             }
@@ -289,12 +365,12 @@ namespace CandlesCompany.UI
                                 avatar = Utils.Utils.BinaryToImage(user.Avatar);
                             }
 
-                            DataGridManagementUsersList.Items.Add(new UI.UsersList(user.Id, $"{user.Last_Name} {user.First_Name} {user.Middle_Name}", user.Email, avatar));
+                            DataGridManagementUsersList.Items.Add(new UI.UsersList(user, avatar));
                         });
                     }
                     else
                     {
-                        _usersList.Skip(_usersListPageSize * _usersListCurrentPage).Take(_usersListPageSize).ToList().ForEach(user =>
+                        _usersList.Skip(_listPageSize * _usersListCurrentPage).Take(_listPageSize).ToList().ForEach(user =>
                         {
                             BitmapImage avatar = null;
                             if (user.Avatar == null)
@@ -306,7 +382,7 @@ namespace CandlesCompany.UI
                                 avatar = Utils.Utils.BinaryToImage(user.Avatar);
                             }
 
-                            DataGridManagementUsersList.Items.Add(new UI.UsersList(user.Id, $"{user.Last_Name} {user.First_Name} {user.Middle_Name}", user.Email, avatar));
+                            DataGridManagementUsersList.Items.Add(new UI.UsersList(user, avatar));
                         });
                     }
                 });
@@ -387,13 +463,125 @@ namespace CandlesCompany.UI
                             avatar = Utils.Utils.BinaryToImage(user.Avatar);
                         }
 
-                        DataGridManagementUsersList.Items.Add(new UI.UsersList(user.Id, $"{user.Last_Name} {user.First_Name} {user.Middle_Name}", user.Email, avatar));
+                        DataGridManagementUsersList.Items.Add(new UI.UsersList(user, avatar));
                     });
                     ButtonUsersSearch.IsEnabled = true;
                     ProgressBarUsersList.Visibility = Visibility.Collapsed;
                     DataGridManagementUsersList.Visibility = Visibility.Visible;
 
-                    SetPages(_usersList.Count()-1);
+                    SetPagesUsersList(_usersList.Count()-1);
+                });
+            }).Start();
+        }
+        private async void ButtonDataGridManagementEmployeeRemove_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = sender as Button;
+            Users user = button.Tag as Users;
+
+            MessageBoxResult result = MessageBox.Show($"Вы действительно хотите снять с должности \"{user.Roles.Name}\" сотрудника \"{user.Last_Name} {user.First_Name}\"", "Подтверждение",
+                MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+            if (result == MessageBoxResult.No) { return; }
+
+            MessageBox.Show($"Вы сняли с должности \"{user.Roles.Name}\" сотрудника \"{user.Last_Name} {user.First_Name}\"!", "Успешно",
+                MessageBoxButton.OK, MessageBoxImage.Information);
+
+            DBManager.ChangeRoleById(user.Id, "Пользователь");
+
+            DataGridManagementEmployeeList.Items.Clear();
+
+            _employeesList = await DBManager.GetEmployees(_employeesListCurrentPage);
+            _employeesList.ForEach(employee =>
+            {
+                BitmapImage avatar = null;
+                if (employee.Avatar == null)
+                {
+                    avatar = Utils.Utils._defaultAvatar;
+                }
+                else
+                {
+                    avatar = Utils.Utils.BinaryToImage(employee.Avatar);
+                }
+
+                DataGridManagementEmployeeList.Items.Add(new UI.UsersList(employee, avatar, Utils.Utils._roles));
+            });
+        }
+        private T FindParent<T>(DependencyObject dependencyObject) where T : DependencyObject
+        {
+            DependencyObject parent = VisualTreeHelper.GetParent(dependencyObject);
+
+            if (parent == null) return null;
+
+            T parentT = parent as T;
+            return parentT ?? FindParent<T>(parent);
+        }
+        private void ButtonManagementEmployeePageBack_Click(object sender, RoutedEventArgs e)
+        {
+            _employeesListCurrentPage -= 1;
+            if (_employeesListCurrentPage <= 1)
+            {
+                ButtonManagementEmployeePageBack.IsEnabled = false;
+            }
+
+            ButtonManagementEmployeePageNext.IsEnabled = true;
+            TextBoxManagementEmployeePage.Text = _employeesListCurrentPage.ToString();
+            ReloadWindowManagementEmployeeList();
+        }
+        private void ButtonManagementEmployeePageNext_Click(object sender, RoutedEventArgs e)
+        {
+            _employeesListCurrentPage += 1;
+            if (_employeesListCurrentPage >= _employeesListTotalPages)
+            {
+                ButtonManagementEmployeePageNext.IsEnabled = false;
+            }
+
+            ButtonManagementEmployeePageBack.IsEnabled = true;
+            TextBoxManagementEmployeePage.Text = _employeesListCurrentPage.ToString();
+            ReloadWindowManagementEmployeeList();
+        }
+        private void ButtonManagementEmployeeSearch_Click(object sender, RoutedEventArgs e)
+        {
+            new Thread(delegate ()
+            {
+                Dispatcher.InvokeAsync(async () =>
+                {
+                    ProgressBarManagementEmployeeList.Visibility = Visibility.Visible;
+                    DataGridManagementEmployeeList.Visibility = Visibility.Collapsed;
+                    string search = TextBoxManagementEmployeeSearch.Text;
+                    if (search.Length == 0)
+                    {
+                        _isSearchEmployeesList = false;
+                        ReloadWindowManagementUserList();
+                        ProgressBarUsersList.Visibility = Visibility.Collapsed;
+                        DataGridManagementUsersList.Visibility = Visibility.Visible;
+                        return;
+                    }
+
+                    _isSearchEmployeesList = true;
+                    ButtonManagementEmployeeSearch.IsEnabled = false;
+                    DataGridManagementEmployeeList.Items.Clear();
+
+                    _employeesList.Clear();
+                    _employeesList = await DBManager.FindEmployees(search);
+                    _employeesList.ForEach(user =>
+                    {
+                        BitmapImage avatar = null;
+                        if (user.Avatar == null)
+                        {
+                            avatar = Utils.Utils._defaultAvatar;
+                        }
+                        else
+                        {
+                            avatar = Utils.Utils.BinaryToImage(user.Avatar);
+                        }
+
+                        DataGridManagementEmployeeList.Items.Add(new UI.UsersList(user, avatar));
+                    });
+                    ButtonManagementEmployeeSearch.IsEnabled = true;
+                    ProgressBarManagementEmployeeList.Visibility = Visibility.Collapsed;
+                    DataGridManagementEmployeeList.Visibility = Visibility.Visible;
+
+                    SetPagesUsersList(_employeesList.Count() - 1);
                 });
             }).Start();
         }

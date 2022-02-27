@@ -67,7 +67,7 @@ namespace CandlesCompany
         }
         public async static Task<List<Users>> GetUsersForPage(int page)
         {
-            return await db.Users.Where(x => x.Id_Role == 6).Select(x => x).OrderBy(x => x.Id).Skip(50 * page).Take(50).ToListAsync();
+            return await db.Users.Where(x => x.Id_Role == 6).Select(x => x).OrderBy(x => x.Id).Skip(50 * (page - 1)).Take(50).ToListAsync();
         }
         public async static Task<List<Users>> FindUsers(string value)
         {
@@ -87,9 +87,20 @@ namespace CandlesCompany
         {
             return db.Users.Where(x => x.Id_Role == 5).Select(x => x).ToList();
         }
-        public static List<Users> GetEmployees(int startIdRole = 1, int endIdRole = 6)
+        public async static Task<List<Users>> GetEmployees(int page, int startIdRole = 1, int endIdRole = 6)
         {
-            return db.Users.Where(x => x.Id_Role > startIdRole && x.Id_Role < endIdRole).Select(x => x).ToList();
+            return await db.Users.Where(x => x.Id_Role > startIdRole && x.Id_Role < endIdRole).OrderBy(x => x.Id).Skip(50 * (page - 1)).Take(50).ToListAsync();
+        }
+        public async static Task<List<Users>> FindEmployees(string value)
+        {
+            List<Users> users = new List<Users>();
+            users.AddRange(await db.Users.Where(x => (x.Roles.Id > 1 && x.Roles.Id < 6) && (x.First_Name.Contains(value) || x.First_Name.Contains(value) || x.Middle_Name.Contains(value)))
+                .Select(x => x).Distinct().Take(500).ToListAsync());
+            return users;
+        }
+        public static int GetEmployeesCount(int startIdRole = 1, int endIdRole = 6)
+        {
+            return db.Users.Where(x => x.Id_Role > startIdRole && x.Id_Role < endIdRole).Count();
         }
         public static byte[] GetImageItem(int id)
         {

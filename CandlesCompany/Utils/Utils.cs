@@ -19,6 +19,7 @@ namespace CandlesCompany.Utils
         public static BitmapImage _defaultImage { get; set; }
         public static BitmapImage _defaultAvatar { get; set; }
         public static List<Order_Address> _Addresses { get; set; }
+        public static List<string> _roles { get; set; }
         public static byte[] ImageToBinary(Image image)
         {
             MemoryStream stream = new MemoryStream();

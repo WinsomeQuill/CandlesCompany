@@ -343,47 +343,172 @@
                                 </StackPanel>
                             </TabItem.Header>
                             <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="242*"/>
-                                    <ColumnDefinition Width="242*"/>
-                                    <ColumnDefinition Width="242*"/>
-                                </Grid.ColumnDefinitions>
                                 <Grid.RowDefinitions>
-                                    <RowDefinition Height="60"/>
-                                    <RowDefinition Height="85*"/>
-                                    <RowDefinition Height="114*"/>
+                                    <RowDefinition Height="50"/>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="50"/>
                                 </Grid.RowDefinitions>
 
-                                <TextBlock Style="{StaticResource MaterialDesignHeadline4TextBlock}"
-                                           Text="Управление сотрудниками"
-                                           HorizontalAlignment="Center"
-                                           VerticalAlignment="Center"
-                                           Grid.Row="0"
-                                           Grid.Column="0"
-                                           Grid.ColumnSpan="3"/>
+                                <Grid Grid.Row="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="300"/>
+                                        <ColumnDefinition Width="1*"/>
+                                    </Grid.ColumnDefinitions>
 
-                                <Button x:Name="ButtonManagementAddEmployee"
-                                        Content="_Добавить сотрудника"
-                                        Grid.Column="0"
-                                        Grid.Row="1"
-                                        Margin="30,0,30,0"
-                                        Click="ButtonManagementAddEmployee_Click"/>
+                                    <TextBox x:Name="TextBoxManagementEmployeeSearch"
+                                             Grid.Column="0"
+                                             materialDesign:HintAssist.Hint="Поиск"
+                                             materialDesign:HintAssist.IsFloating="True"
+                                             VerticalAlignment="Center"
+                                             Margin="10,0,10,0"/>
 
-                                <Button x:Name="ButtonManagementChangeEmployee"
-                                        Content="_Изменить сотрудника"
-                                        Grid.Column="1"
-                                        Grid.Row="1"
-                                        Margin="30,0,30,0"
-                                        Click="ButtonManagementChangeEmployee_Click"/>
+                                    <Button x:Name="ButtonManagementEmployeeSearch"
+                                            Grid.Column="1"
+                                            Content="_Поиск"
+                                            HorizontalAlignment="Left"
+                                            Width="200"
+                                            Margin="10,0,0,0"
+                                            Click="ButtonManagementEmployeeSearch_Click"/>
+                                </Grid>
 
-                                <Button x:Name="ButtonManagementRemoveEmployee"
-                                        Content="_Удалить сотрудника"
-                                        Grid.Column="2"
-                                        Grid.Row="1"
-                                        Margin="30,0,30,0"
-                                        Cursor="Hand"
-                                        Click="ButtonManagementRemoveEmployee_Click"/>
+                                <ProgressBar x:Name="ProgressBarManagementEmployeeList"
+                                             Grid.Row="1"
+                                             HorizontalAlignment="Center"
+                                             VerticalAlignment="Center"
+                                             Width="50"
+                                             Height="50"
+                                             Style="{StaticResource MaterialDesignCircularProgressBar}"
+                                             Value="0"
+                                             IsIndeterminate="True"
+                                             Visibility="Collapsed"/>
 
+                                <DataGrid x:Name="DataGridManagementEmployeeList"
+                                          Grid.Row="1"
+                                          IsReadOnly="True">
+                                    <DataGrid.ContextMenu>
+                                        <ContextMenu>
+                                            
+                                        </ContextMenu>
+                                    </DataGrid.ContextMenu>
+                                    <DataGrid.Columns>
+                                        <DataGridTemplateColumn Header="Номер аккаунта">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding UserID}"
+                                                               VerticalAlignment="Center"
+                                                               Style="{StaticResource MaterialDesignDataGridTextColumnStyle}"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                        <DataGridTemplateColumn Header="ФИО" MinWidth="220" Width="230" MaxWidth="270">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="40"/>
+                                                            <ColumnDefinition Width="210" MinWidth="100" MaxWidth="400"/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <Ellipse Width="40"
+                                                                 Height="40"
+                                                                 Grid.Column="0">
+                                                            <Ellipse.Fill>
+                                                                <ImageBrush ImageSource="{Binding UserAvatar}"/>
+                                                            </Ellipse.Fill>
+                                                        </Ellipse>
+
+                                                        <TextBlock Style="{StaticResource MaterialDesignDataGridTextColumnStyle}"
+                                                                   Text="{Binding UserName}"
+                                                                   Grid.Column="1"
+                                                                   Margin="10,0,0,0"
+                                                                   HorizontalAlignment="Left"
+                                                                   VerticalAlignment="Center"/>
+                                                    </Grid>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                        <DataGridTemplateColumn Header="Почта">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding UserEmail}"
+                                                               VerticalAlignment="Center"
+                                                               Style="{StaticResource MaterialDesignDataGridTextColumnStyle}"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                        <DataGridTemplateColumn>
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="1*"/>
+                                                            <ColumnDefinition Width="1*"/>
+                                                        </Grid.ColumnDefinitions>
+
+                                                        <Button x:Name="ButtonDataGridManagementEmployeeRemove"
+                                                                Grid.Column="0"
+                                                                Content="_Удалить сотрудника"
+                                                                VerticalAlignment="Center"
+                                                                Margin="10,0,10,0"
+                                                                Tag="{Binding User}"
+                                                                Click="ButtonDataGridManagementEmployeeRemove_Click"/>
+
+                                                        <ComboBox Grid.Column="1"
+                                                                  materialDesign:HintAssist.Hint="Должность"
+                                                                  Margin="10,0,10,0"
+                                                                  ItemsSource="{Binding ComboBoxRoles}"
+                                                                  SelectedIndex="0"/>
+                                                    </Grid>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+
+                                <Grid Grid.Row="2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="20*"/>
+                                        <ColumnDefinition Width="12*" MinWidth="200"/>
+                                        <ColumnDefinition Width="20*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Button x:Name="ButtonManagementEmployeePageBack"
+                                            Grid.Column="0"
+                                            Content="_Предыдущая страница"
+                                            HorizontalAlignment="Right"
+                                            VerticalAlignment="Center"
+                                            Width="200"
+                                            Margin="0,0,10,0"
+                                            Click="ButtonManagementEmployeePageBack_Click"/>
+
+                                    <Grid Grid.Column="1">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="18*"/>
+                                            <ColumnDefinition Width="140"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <TextBox x:Name="TextBoxManagementEmployeePage"
+                                                 Grid.Column="0"
+                                                 materialDesign:HintAssist.Hint="Номер страницы"
+                                                 materialDesign:HintAssist.IsFloating="True"
+                                                 VerticalAlignment="Center"
+                                                 Margin="10,0,10,0"/>
+
+                                        <TextBlock x:Name="TextBlockManagementEmployeeTotalPage"
+                                                   Grid.Column="1"
+                                                   Text="Total: %Count%"
+                                                   HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center"/>
+                                    </Grid>
+
+                                    <Button x:Name="ButtonManagementEmployeePageNext"
+                                            Grid.Column="2"
+                                            Content="_Следующая страница"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Width="200"
+                                            Margin="10,0,0,0"
+                                            Click="ButtonManagementEmployeePageNext_Click"/>
+                                </Grid>
                             </Grid>
                         </TabItem>
                         <TabItem Width="100">

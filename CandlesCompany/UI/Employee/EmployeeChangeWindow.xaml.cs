@@ -28,7 +28,7 @@ namespace CandlesCompany.UI.Employee
 
         private void Init()
         {
-            DBManager.GetRoles().ForEach(role =>
+            /*DBManager.GetRoles().ForEach(role =>
             {
                 ComboBoxEmployeeChangeRole.Items.Add(role);
             });
@@ -48,7 +48,7 @@ namespace CandlesCompany.UI.Employee
             if (ComboBoxEmployeeChangeRole.Items.Count <= 0 || ComboBoxEmployeeChangeEmail.Items.Count <= 0)
             {
                 ButtonEmployeeChange.IsEnabled = false;
-            }
+            }*/
         }
 
         private void ButtonEmployeeChange_Click(object sender, RoutedEventArgs e)

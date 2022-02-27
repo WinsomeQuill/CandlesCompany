@@ -24,7 +24,7 @@ namespace CandlesCompany.UI.Employee
         public EmployeeAddWindow()
         {
             InitializeComponent();
-            Init();
+            //Init();
         }
 
         private void Init()

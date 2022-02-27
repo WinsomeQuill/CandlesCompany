@@ -28,7 +28,7 @@ namespace CandlesCompany.UI.Employee
 
         private void Init()
         {
-            new Thread(delegate ()
+            /*new Thread(delegate ()
             {
                 Dispatcher.Invoke(delegate ()
                 {
@@ -52,7 +52,7 @@ namespace CandlesCompany.UI.Employee
                         ButtonEmployeeRemove.IsEnabled = false;
                     }
                 });
-            }).Start();
+            }).Start();*/
         }
 
         private void ButtonEmployeeRemove_Click(object sender, RoutedEventArgs e)
