@@ -90,6 +90,7 @@ namespace CandlesCompany.UI
 
                             DataGridManagementEmployeeList.Items.Add(new UI.UsersList(user, avatar, Utils.Utils._roles));
                         });
+                        SetPagesEmployeesList(DBManager.GetEmployeesCount());
                     }
                     else
                     {
@@ -107,6 +108,7 @@ namespace CandlesCompany.UI
 
                             DataGridManagementEmployeeList.Items.Add(new UI.UsersList(user, avatar, Utils.Utils._roles));
                         });
+                        SetPagesEmployeesList(_employeesList.Count() - 1);
                     }
 
                     ProgressBarManagementEmployeeList.Visibility = Visibility.Collapsed;
@@ -173,7 +175,24 @@ namespace CandlesCompany.UI
             _employeesListTotalPages = (int)Math.Ceiling((decimal)countEmployees / _listPageSize);
             TextBlockManagementEmployeeTotalPage.Text = $"Всего страниц: {_employeesListTotalPages}";
             TextBoxManagementEmployeesPage.Text = _employeesListCurrentPage.ToString();
-            ButtonManagementEmployeePageBack.IsEnabled = false;
+            if (_employeesListCurrentPage == 1)
+            {
+                ButtonManagementEmployeePageBack.IsEnabled = false;
+            }
+            else
+            {
+                ButtonManagementEmployeePageBack.IsEnabled = true;
+            }
+
+            if (_employeesListCurrentPage >= _employeesListTotalPages)
+            {
+                ButtonManagementEmployeePageNext.IsEnabled = false;
+            }
+            else
+            {
+                ButtonManagementEmployeePageNext.IsEnabled = true;
+            }
+
             if (countEmployees <= _listPageSize)
             {
                 ButtonManagementEmployeePageNext.IsEnabled = false;
