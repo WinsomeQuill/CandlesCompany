@@ -28,8 +28,8 @@ namespace CandlesCompany.UI
     {
         private int _listPageSize { get; set; } = 50;
 
-        private int _usersListCurrentPage { get; set; }
-        private int _employeesListCurrentPage { get; set; }
+        private int _usersListCurrentPage { get; set; } = 1;
+        private int _employeesListCurrentPage { get; set; } = 1;
 
         private int _usersListTotalPages { get; set; }
         private int _employeesListTotalPages { get; set; }
@@ -141,6 +141,7 @@ namespace CandlesCompany.UI
 
                             DataGridManagementUsersList.Items.Add(new UI.UsersList(user, avatar));
                         });
+                        SetPagesUsersList(DBManager.GetUsersCount());
                     }
                     else
                     {
@@ -158,6 +159,7 @@ namespace CandlesCompany.UI
 
                             DataGridManagementUsersList.Items.Add(new UI.UsersList(user, avatar));
                         });
+                        SetPagesUsersList(_usersList.Count() - 1);
                     }
 
                     ProgressBarUsersList.Visibility = Visibility.Collapsed;
@@ -170,8 +172,7 @@ namespace CandlesCompany.UI
             ButtonManagementEmployeePageBack.IsEnabled = ButtonManagementEmployeePageNext.IsEnabled = true;
             _employeesListTotalPages = (int)Math.Ceiling((decimal)countEmployees / _listPageSize);
             TextBlockManagementEmployeeTotalPage.Text = $"Всего страниц: {_employeesListTotalPages}";
-            TextBoxManagementEmployeesPage.Text = "1";
-            _employeesListCurrentPage = 1;
+            TextBoxManagementEmployeesPage.Text = _employeesListCurrentPage.ToString();
             ButtonManagementEmployeePageBack.IsEnabled = false;
             if (countEmployees <= _listPageSize)
             {
@@ -183,9 +184,25 @@ namespace CandlesCompany.UI
             ButtonUsersListPageBack.IsEnabled = ButtonUsersListPageNext.IsEnabled = true;
             _usersListTotalPages = (int)Math.Ceiling((decimal)countUsers / _listPageSize);
             TextBlockUsersTotalPage.Text = $"Всего страниц: {_usersListTotalPages}";
-            TextBoxUsersPage.Text = "1";
-            _usersListCurrentPage = 1;
-            ButtonUsersListPageBack.IsEnabled = false;
+            TextBoxUsersPage.Text = _usersListCurrentPage.ToString();
+            if (_usersListCurrentPage == 1)
+            {
+                ButtonUsersListPageBack.IsEnabled = false;
+            }
+            else
+            {
+                ButtonUsersListPageBack.IsEnabled = true;
+            }
+
+            if (_usersListCurrentPage >= _usersListTotalPages)
+            {
+                ButtonUsersListPageNext.IsEnabled = false;
+            }
+            else
+            {
+                ButtonUsersListPageNext.IsEnabled = true;
+            }
+
             if (countUsers <= _listPageSize)
             {
                 ButtonUsersListPageNext.IsEnabled = false;
@@ -400,25 +417,11 @@ namespace CandlesCompany.UI
         private void ButtonUsersListPageBack_Click(object sender, RoutedEventArgs e)
         {
             _usersListCurrentPage -= 1;
-            if (_usersListCurrentPage <= 1)
-            {
-                ButtonUsersListPageBack.IsEnabled = false;
-            }
-
-            ButtonUsersListPageNext.IsEnabled = true;
-            TextBoxUsersPage.Text = _usersListCurrentPage.ToString();
             ReloadWindowManagementUserList();
         }
         private void ButtonUsersListPageNext_Click(object sender, RoutedEventArgs e)
         {
             _usersListCurrentPage += 1;
-            if (_usersListCurrentPage >= _usersListTotalPages)
-            {
-                ButtonUsersListPageNext.IsEnabled = false;
-            }
-
-            ButtonUsersListPageBack.IsEnabled = true;
-            TextBoxUsersPage.Text = _usersListCurrentPage.ToString();
             ReloadWindowManagementUserList();
         }
         private void ButtonUsersSearch_Click(object sender, RoutedEventArgs e)
@@ -559,37 +562,43 @@ namespace CandlesCompany.UI
         }
         private void TextBoxManagementEmployeesPage_KeyDown(object sender, KeyEventArgs e)
         {
-            string text = TextBoxManagementEmployeesPage.Text;
-            if (!new Regex(@"^[0-9]+$").IsMatch(text))
+            if (e.Key == Key.Enter)
             {
-                return;
-            }
+                string text = TextBoxManagementEmployeesPage.Text;
+                if (!new Regex(@"^[0-9]+$").IsMatch(text))
+                {
+                    return;
+                }
 
-            _employeesListCurrentPage = Convert.ToInt32(text);
-            if (_employeesListCurrentPage >= _employeesListTotalPages)
-            {
-                _employeesListCurrentPage = _employeesListTotalPages;
-                TextBoxManagementEmployeesPage.Text = $"{_employeesListCurrentPage}";
-            }
+                _employeesListCurrentPage = Convert.ToInt32(text);
+                if (_employeesListCurrentPage >= _employeesListTotalPages)
+                {
+                    _employeesListCurrentPage = _employeesListTotalPages;
+                    TextBoxManagementEmployeesPage.Text = $"{_employeesListCurrentPage}";
+                }
 
-            ReloadWindowManagementEmployeeList();
+                ReloadWindowManagementEmployeeList();
+            }
         }
         private void TextBoxUsersPage_KeyDown(object sender, KeyEventArgs e)
         {
-            string text = TextBoxUsersPage.Text;
-            if (!new Regex(@"^[0-9]+$").IsMatch(text))
+            if (e.Key == Key.Enter)
             {
-                return;
-            }
+                string text = TextBoxUsersPage.Text;
+                if (!new Regex(@"^[0-9]+$").IsMatch(text))
+                {
+                    return;
+                }
 
-            _usersListCurrentPage = Convert.ToInt32(text);
-            if (_usersListCurrentPage >= _usersListTotalPages)
-            {
-                _usersListCurrentPage = _usersListTotalPages;
-                TextBoxUsersPage.Text = $"{_usersListCurrentPage}";
-            }
+                _usersListCurrentPage = Convert.ToInt32(text);
+                if (_usersListCurrentPage >= _usersListTotalPages)
+                {
+                    _usersListCurrentPage = _usersListTotalPages;
+                    TextBoxUsersPage.Text = $"{_usersListCurrentPage}";
+                }
 
-            ReloadWindowManagementUserList();
+                ReloadWindowManagementUserList();
+            }
         }
         private void DataGridManagementUsersListMenuRefresh_Click(object sender, RoutedEventArgs e)
         {
