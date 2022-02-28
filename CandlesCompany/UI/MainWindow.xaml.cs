@@ -348,8 +348,10 @@ namespace CandlesCompany.UI
             {
                 Dispatcher.InvokeAsync(async () =>
                 {
+                    ProgressBarUsersList.Visibility = Visibility.Visible;
+                    DataGridManagementUsersList.Visibility = Visibility.Collapsed;
+
                     DataGridManagementUsersList.Items.Clear();
-                    
                     if (!_isSearchUsersList)
                     {
                         _usersList = await DBManager.GetUsersForPage(_usersListCurrentPage);
@@ -370,7 +372,7 @@ namespace CandlesCompany.UI
                     }
                     else
                     {
-                        _usersList.Skip(_listPageSize * _usersListCurrentPage).Take(_listPageSize).ToList().ForEach(user =>
+                        _usersList.Skip(_listPageSize * (_usersListCurrentPage - 1)).Take(50).ToList().ForEach(user =>
                         {
                             BitmapImage avatar = null;
                             if (user.Avatar == null)
@@ -385,6 +387,9 @@ namespace CandlesCompany.UI
                             DataGridManagementUsersList.Items.Add(new UI.UsersList(user, avatar));
                         });
                     }
+
+                    ProgressBarUsersList.Visibility = Visibility.Collapsed;
+                    DataGridManagementUsersList.Visibility = Visibility.Visible;
                 });
             }).Start();
         }
@@ -416,23 +421,13 @@ namespace CandlesCompany.UI
             TextBoxUsersPage.Text = _usersListCurrentPage.ToString();
             ReloadWindowManagementUserList();
         }
-        private void TextBoxUsersPage_DragEnter(object sender, DragEventArgs e)
-        {
-            string text = TextBoxUsersPage.Text;
-            if (!new Regex(@"^[0-9]+$").IsMatch(text))
-            {
-                return;
-            }
-
-            _usersListCurrentPage = Convert.ToInt32(text);
-            ReloadWindowManagementUserList();
-        }
         private void ButtonUsersSearch_Click(object sender, RoutedEventArgs e)
         {
             new Thread(delegate ()
             {
                 Dispatcher.InvokeAsync(async () =>
                 {
+                    _isSearchUsersList = true;
                     ProgressBarUsersList.Visibility = Visibility.Visible;
                     DataGridManagementUsersList.Visibility = Visibility.Collapsed;
                     string search = TextBoxUsersSearch.Text;
@@ -440,36 +435,19 @@ namespace CandlesCompany.UI
                     {
                         _isSearchUsersList = false;
                         ReloadWindowManagementUserList();
-                        ProgressBarUsersList.Visibility = Visibility.Collapsed;
-                        DataGridManagementUsersList.Visibility = Visibility.Visible;
                         return;
                     }
 
-                    _isSearchUsersList = true;
                     ButtonUsersSearch.IsEnabled = false;
                     DataGridManagementUsersList.Items.Clear();
 
                     _usersList.Clear();
                     _usersList = await DBManager.FindUsers(search);
-                    _usersList.ForEach(user =>
-                    {
-                        BitmapImage avatar = null;
-                        if (user.Avatar == null)
-                        {
-                            avatar = Utils.Utils._defaultAvatar;
-                        }
-                        else
-                        {
-                            avatar = Utils.Utils.BinaryToImage(user.Avatar);
-                        }
-
-                        DataGridManagementUsersList.Items.Add(new UI.UsersList(user, avatar));
-                    });
+                    ReloadWindowManagementUserList();
                     ButtonUsersSearch.IsEnabled = true;
-                    ProgressBarUsersList.Visibility = Visibility.Collapsed;
-                    DataGridManagementUsersList.Visibility = Visibility.Visible;
+                    
 
-                    SetPagesUsersList(_usersList.Count()-1);
+                    SetPagesUsersList(_usersList.Count() - 1);
                 });
             }).Start();
         }
@@ -600,6 +578,45 @@ namespace CandlesCompany.UI
                 DBManager.ChangeRoleById(user.Id, comboBox.SelectedItem.ToString());
                 ReloadWindowManagementEmployeeList();
             }
+        }
+        private void TextBoxManagementEmployeePage_KeyDown(object sender, KeyEventArgs e)
+        {
+            string text = TextBoxUsersPage.Text;
+            if (!new Regex(@"^[0-9]+$").IsMatch(text))
+            {
+                return;
+            }
+
+            if (_employeesListCurrentPage >= _employeesListTotalPages)
+            {
+                _employeesListCurrentPage = _employeesListTotalPages;
+                ReloadWindowManagementEmployeeList();
+                return;
+            }
+
+            _employeesListCurrentPage = Convert.ToInt32(text);
+            ReloadWindowManagementEmployeeList();
+        }
+        private void TextBoxUsersPage_KeyDown(object sender, KeyEventArgs e)
+        {
+            string text = TextBoxUsersPage.Text;
+            if (!new Regex(@"^[0-9]+$").IsMatch(text))
+            {
+                return;
+            }
+
+            _usersListCurrentPage = Convert.ToInt32(text);
+            if (_usersListCurrentPage >= _usersListTotalPages)
+            {
+                _usersListCurrentPage = _usersListTotalPages;
+                TextBoxUsersPage.Text = $"{_usersListCurrentPage}";
+            }
+
+            ReloadWindowManagementUserList();
+        }
+        private void DataGridManagementUsersListMenuRefresh_Click(object sender, RoutedEventArgs e)
+        {
+            ReloadWindowManagementUserList();
         }
     }
 }

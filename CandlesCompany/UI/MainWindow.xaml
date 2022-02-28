@@ -495,7 +495,8 @@
                                                  materialDesign:HintAssist.Hint="Номер страницы"
                                                  materialDesign:HintAssist.IsFloating="True"
                                                  VerticalAlignment="Center"
-                                                 Margin="10,0,10,0"/>
+                                                 Margin="10,0,10,0"
+                                                 KeyDown="TextBoxManagementEmployeePage_KeyDown"/>
 
                                         <TextBlock x:Name="TextBlockManagementEmployeeTotalPage"
                                                    Grid.Column="1"
@@ -630,9 +631,9 @@
                                           IsReadOnly="True">
                                     <DataGrid.ContextMenu>
                                         <ContextMenu>
-                                            <MenuItem x:Name="DataGridManagementMenuItemRefresh"
-                                                      Header="Обновить"
-                                                      Click="DataGridManagementMenuItemRefresh_Click"/>
+                                            <MenuItem x:Name="DataGridManagementUsersListMenuRefresh"
+                                                      Header="Обновить из базы данных"
+                                                      Click="DataGridManagementUsersListMenuRefresh_Click"/>
                                         </ContextMenu>
                                     </DataGrid.ContextMenu>
                                     <DataGrid.Columns>
@@ -711,7 +712,7 @@
                                                  materialDesign:HintAssist.IsFloating="True"
                                                  VerticalAlignment="Center"
                                                  Margin="10,0,10,0"
-                                                 DragEnter="TextBoxUsersPage_DragEnter"/>
+                                                 KeyDown="TextBoxUsersPage_KeyDown"/>
 
                                         <TextBlock x:Name="TextBlockUsersTotalPage"
                                                    Grid.Column="1"
