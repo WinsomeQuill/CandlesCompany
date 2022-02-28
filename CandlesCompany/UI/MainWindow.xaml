@@ -387,7 +387,9 @@
                                           IsReadOnly="True">
                                     <DataGrid.ContextMenu>
                                         <ContextMenu>
-                                            
+                                            <MenuItem x:Name="DataGridManagementEmployeesListRefresh"
+                                                      Header="Обновить из базы данных"
+                                                      Click="DataGridManagementEmployeesListRefresh_Click"/>
                                         </ContextMenu>
                                     </DataGrid.ContextMenu>
                                     <DataGrid.Columns>
@@ -490,13 +492,13 @@
                                             <ColumnDefinition Width="140"/>
                                         </Grid.ColumnDefinitions>
 
-                                        <TextBox x:Name="TextBoxManagementEmployeePage"
+                                        <TextBox x:Name="TextBoxManagementEmployeesPage"
                                                  Grid.Column="0"
                                                  materialDesign:HintAssist.Hint="Номер страницы"
                                                  materialDesign:HintAssist.IsFloating="True"
                                                  VerticalAlignment="Center"
                                                  Margin="10,0,10,0"
-                                                 KeyDown="TextBoxManagementEmployeePage_KeyDown"/>
+                                                 KeyDown="TextBoxManagementEmployeesPage_KeyDown"/>
 
                                         <TextBlock x:Name="TextBlockManagementEmployeeTotalPage"
                                                    Grid.Column="1"

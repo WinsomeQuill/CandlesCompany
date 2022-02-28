@@ -70,9 +70,9 @@ namespace CandlesCompany.UI
                 Dispatcher.InvokeAsync(async () =>
                 {
                     ProgressBarManagementEmployeeList.Visibility = Visibility.Visible;
-                    DataGridManagementEmployeeList.Visibility= Visibility.Collapsed;
-                    DataGridManagementEmployeeList.Items.Clear();
+                    DataGridManagementEmployeeList.Visibility = Visibility.Collapsed;
 
+                    DataGridManagementEmployeeList.Items.Clear();
                     if (!_isSearchEmployeesList)
                     {
                         _employeesList = await DBManager.GetEmployees(_employeesListCurrentPage);
@@ -93,7 +93,7 @@ namespace CandlesCompany.UI
                     }
                     else
                     {
-                        _employeesList.Skip(_listPageSize * (_employeesListCurrentPage - 1)).Take(_listPageSize).ToList().ForEach(user =>
+                        _employeesList.Skip(_listPageSize * (_employeesListCurrentPage - 1)).Take(50).ToList().ForEach(user =>
                         {
                             BitmapImage avatar = null;
                             if (user.Avatar == null)
@@ -108,9 +108,60 @@ namespace CandlesCompany.UI
                             DataGridManagementEmployeeList.Items.Add(new UI.UsersList(user, avatar, Utils.Utils._roles));
                         });
                     }
-                    
+
                     ProgressBarManagementEmployeeList.Visibility = Visibility.Collapsed;
                     DataGridManagementEmployeeList.Visibility = Visibility.Visible;
+                });
+            }).Start();
+        }
+        public void ReloadWindowManagementUserList()
+        {
+            new Thread(delegate ()
+            {
+                Dispatcher.InvokeAsync(async () =>
+                {
+                    ProgressBarUsersList.Visibility = Visibility.Visible;
+                    DataGridManagementUsersList.Visibility = Visibility.Collapsed;
+
+                    DataGridManagementUsersList.Items.Clear();
+                    if (!_isSearchUsersList)
+                    {
+                        _usersList = await DBManager.GetUsersForPage(_usersListCurrentPage);
+                        _usersList.ForEach(user =>
+                        {
+                            BitmapImage avatar = null;
+                            if (user.Avatar == null)
+                            {
+                                avatar = Utils.Utils._defaultAvatar;
+                            }
+                            else
+                            {
+                                avatar = Utils.Utils.BinaryToImage(user.Avatar);
+                            }
+
+                            DataGridManagementUsersList.Items.Add(new UI.UsersList(user, avatar));
+                        });
+                    }
+                    else
+                    {
+                        _usersList.Skip(_listPageSize * (_usersListCurrentPage - 1)).Take(50).ToList().ForEach(user =>
+                        {
+                            BitmapImage avatar = null;
+                            if (user.Avatar == null)
+                            {
+                                avatar = Utils.Utils._defaultAvatar;
+                            }
+                            else
+                            {
+                                avatar = Utils.Utils.BinaryToImage(user.Avatar);
+                            }
+
+                            DataGridManagementUsersList.Items.Add(new UI.UsersList(user, avatar));
+                        });
+                    }
+
+                    ProgressBarUsersList.Visibility = Visibility.Collapsed;
+                    DataGridManagementUsersList.Visibility = Visibility.Visible;
                 });
             }).Start();
         }
@@ -119,7 +170,7 @@ namespace CandlesCompany.UI
             ButtonManagementEmployeePageBack.IsEnabled = ButtonManagementEmployeePageNext.IsEnabled = true;
             _employeesListTotalPages = (int)Math.Ceiling((decimal)countEmployees / _listPageSize);
             TextBlockManagementEmployeeTotalPage.Text = $"Всего страниц: {_employeesListTotalPages}";
-            TextBoxManagementEmployeePage.Text = "1";
+            TextBoxManagementEmployeesPage.Text = "1";
             _employeesListCurrentPage = 1;
             ButtonManagementEmployeePageBack.IsEnabled = false;
             if (countEmployees <= _listPageSize)
@@ -342,57 +393,6 @@ namespace CandlesCompany.UI
                 });
             });
         }
-        public void ReloadWindowManagementUserList()
-        {
-            new Thread(delegate ()
-            {
-                Dispatcher.InvokeAsync(async () =>
-                {
-                    ProgressBarUsersList.Visibility = Visibility.Visible;
-                    DataGridManagementUsersList.Visibility = Visibility.Collapsed;
-
-                    DataGridManagementUsersList.Items.Clear();
-                    if (!_isSearchUsersList)
-                    {
-                        _usersList = await DBManager.GetUsersForPage(_usersListCurrentPage);
-                        _usersList.ForEach(user =>
-                        {
-                            BitmapImage avatar = null;
-                            if (user.Avatar == null)
-                            {
-                                avatar = Utils.Utils._defaultAvatar;
-                            }
-                            else
-                            {
-                                avatar = Utils.Utils.BinaryToImage(user.Avatar);
-                            }
-
-                            DataGridManagementUsersList.Items.Add(new UI.UsersList(user, avatar));
-                        });
-                    }
-                    else
-                    {
-                        _usersList.Skip(_listPageSize * (_usersListCurrentPage - 1)).Take(50).ToList().ForEach(user =>
-                        {
-                            BitmapImage avatar = null;
-                            if (user.Avatar == null)
-                            {
-                                avatar = Utils.Utils._defaultAvatar;
-                            }
-                            else
-                            {
-                                avatar = Utils.Utils.BinaryToImage(user.Avatar);
-                            }
-
-                            DataGridManagementUsersList.Items.Add(new UI.UsersList(user, avatar));
-                        });
-                    }
-
-                    ProgressBarUsersList.Visibility = Visibility.Collapsed;
-                    DataGridManagementUsersList.Visibility = Visibility.Visible;
-                });
-            }).Start();
-        }
         private void DataGridManagementMenuItemRefresh_Click(object sender, RoutedEventArgs e)
         {
             ReloadWindowManagementUserList();
@@ -439,14 +439,11 @@ namespace CandlesCompany.UI
                     }
 
                     ButtonUsersSearch.IsEnabled = false;
-                    DataGridManagementUsersList.Items.Clear();
-
                     _usersList.Clear();
                     _usersList = await DBManager.FindUsers(search);
                     ReloadWindowManagementUserList();
                     ButtonUsersSearch.IsEnabled = true;
                     
-
                     SetPagesUsersList(_usersList.Count() - 1);
                 });
             }).Start();
@@ -507,7 +504,7 @@ namespace CandlesCompany.UI
             }
 
             ButtonManagementEmployeePageNext.IsEnabled = true;
-            TextBoxManagementEmployeePage.Text = _employeesListCurrentPage.ToString();
+            TextBoxManagementEmployeesPage.Text = _employeesListCurrentPage.ToString();
             ReloadWindowManagementEmployeeList();
         }
         private void ButtonManagementEmployeePageNext_Click(object sender, RoutedEventArgs e)
@@ -519,7 +516,7 @@ namespace CandlesCompany.UI
             }
 
             ButtonManagementEmployeePageBack.IsEnabled = true;
-            TextBoxManagementEmployeePage.Text = _employeesListCurrentPage.ToString();
+            TextBoxManagementEmployeesPage.Text = _employeesListCurrentPage.ToString();
             ReloadWindowManagementEmployeeList();
         }
         private void ButtonManagementEmployeeSearch_Click(object sender, RoutedEventArgs e)
@@ -528,43 +525,24 @@ namespace CandlesCompany.UI
             {
                 Dispatcher.InvokeAsync(async () =>
                 {
+                    _isSearchEmployeesList = true;
                     ProgressBarManagementEmployeeList.Visibility = Visibility.Visible;
                     DataGridManagementEmployeeList.Visibility = Visibility.Collapsed;
                     string search = TextBoxManagementEmployeeSearch.Text;
                     if (search.Length == 0)
                     {
                         _isSearchEmployeesList = false;
-                        ReloadWindowManagementUserList();
-                        ProgressBarUsersList.Visibility = Visibility.Collapsed;
-                        DataGridManagementUsersList.Visibility = Visibility.Visible;
+                        ReloadWindowManagementEmployeeList();
                         return;
                     }
 
-                    _isSearchEmployeesList = true;
                     ButtonManagementEmployeeSearch.IsEnabled = false;
-                    DataGridManagementEmployeeList.Items.Clear();
-
                     _employeesList.Clear();
                     _employeesList = await DBManager.FindEmployees(search);
-                    _employeesList.ForEach(user =>
-                    {
-                        BitmapImage avatar = null;
-                        if (user.Avatar == null)
-                        {
-                            avatar = Utils.Utils._defaultAvatar;
-                        }
-                        else
-                        {
-                            avatar = Utils.Utils.BinaryToImage(user.Avatar);
-                        }
-
-                        DataGridManagementEmployeeList.Items.Add(new UI.UsersList(user, avatar, Utils.Utils._roles));
-                    });
+                    ReloadWindowManagementEmployeeList();
                     ButtonManagementEmployeeSearch.IsEnabled = true;
-                    ProgressBarManagementEmployeeList.Visibility = Visibility.Collapsed;
-                    DataGridManagementEmployeeList.Visibility = Visibility.Visible;
 
-                    SetPagesUsersList(_employeesList.Count() - 1);
+                    SetPagesEmployeesList(_employeesList.Count() - 1);
                 });
             }).Start();
         }
@@ -579,22 +557,21 @@ namespace CandlesCompany.UI
                 ReloadWindowManagementEmployeeList();
             }
         }
-        private void TextBoxManagementEmployeePage_KeyDown(object sender, KeyEventArgs e)
+        private void TextBoxManagementEmployeesPage_KeyDown(object sender, KeyEventArgs e)
         {
-            string text = TextBoxUsersPage.Text;
+            string text = TextBoxManagementEmployeesPage.Text;
             if (!new Regex(@"^[0-9]+$").IsMatch(text))
             {
                 return;
             }
 
+            _employeesListCurrentPage = Convert.ToInt32(text);
             if (_employeesListCurrentPage >= _employeesListTotalPages)
             {
                 _employeesListCurrentPage = _employeesListTotalPages;
-                ReloadWindowManagementEmployeeList();
-                return;
+                TextBoxManagementEmployeesPage.Text = $"{_employeesListCurrentPage}";
             }
 
-            _employeesListCurrentPage = Convert.ToInt32(text);
             ReloadWindowManagementEmployeeList();
         }
         private void TextBoxUsersPage_KeyDown(object sender, KeyEventArgs e)
@@ -617,6 +594,10 @@ namespace CandlesCompany.UI
         private void DataGridManagementUsersListMenuRefresh_Click(object sender, RoutedEventArgs e)
         {
             ReloadWindowManagementUserList();
+        }
+        private void DataGridManagementEmployeesListRefresh_Click(object sender, RoutedEventArgs e)
+        {
+            ReloadWindowManagementEmployeeList();
         }
     }
 }
