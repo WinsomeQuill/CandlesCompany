@@ -674,12 +674,17 @@
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
                                         </DataGridTemplateColumn>
-                                        <DataGridTemplateColumn Header="Почта">
+                                        <DataGridTextColumn Header="Почта" Binding="{Binding UserEmail}"/>
+                                        <DataGridTemplateColumn Header="Назначить на должность">
                                             <DataGridTemplateColumn.CellTemplate>
                                                 <DataTemplate>
-                                                    <TextBlock Text="{Binding UserEmail}"
-                                                               VerticalAlignment="Center"
-                                                               Style="{StaticResource MaterialDesignDataGridTextColumnStyle}"/>
+                                                    <Grid Tag="{Binding User}">
+                                                        <ComboBox x:Name="ComboBoxManagementUsersListSetRole"
+                                                                  Grid.Column="1"
+                                                                  ItemsSource="{Binding Roles}"
+                                                                  Margin="10,0,10,0"
+                                                                  SelectionChanged="ComboBoxManagementUsersListSetRole_SelectionChanged"/>
+                                                    </Grid>
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
                                         </DataGridTemplateColumn>

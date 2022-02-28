@@ -418,8 +418,7 @@ namespace CandlesCompany.UI
         }
         private void ComboBoxManagementEmployeesRoles_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            ComboBox comboBox = sender as ComboBox;
-            if (comboBox != null)
+            if (sender is ComboBox comboBox)
             {
                 Grid grid = comboBox.Parent as Grid;
                 Users user = grid.Tag as Users;
@@ -478,7 +477,7 @@ namespace CandlesCompany.UI
                                 avatar = Utils.Utils.BinaryToImage(user.Avatar);
                             }
 
-                            DataGridManagementUsersList.Items.Add(new UI.UsersList(user, avatar));
+                            DataGridManagementUsersList.Items.Add(new UI.UsersList(user, avatar, Utils.Utils._roles));
                         });
                         SetPagesUsersList(DBManager.GetUsersCount());
                     }
@@ -496,7 +495,7 @@ namespace CandlesCompany.UI
                                 avatar = Utils.Utils.BinaryToImage(user.Avatar);
                             }
 
-                            DataGridManagementUsersList.Items.Add(new UI.UsersList(user, avatar));
+                            DataGridManagementUsersList.Items.Add(new UI.UsersList(user, avatar, Utils.Utils._roles));
                         });
                         SetPagesUsersList(_usersList.Count() - 1);
                     }
@@ -569,6 +568,16 @@ namespace CandlesCompany.UI
                     ButtonManagementUsersSearch.IsEnabled = true;
                 });
             }).Start();
+        }
+        private void ComboBoxManagementUsersListSetRole_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (sender is ComboBox comboBox)
+            {
+                Grid grid = comboBox.Parent as Grid;
+                Users user = grid.Tag as Users;
+                DBManager.ChangeRoleById(user.Id, comboBox.SelectedItem.ToString());
+                ReloadWindowManagementUsersList();
+            }
         }
         private void TextBoxManagementUsersPage_KeyDown(object sender, KeyEventArgs e)
         {
