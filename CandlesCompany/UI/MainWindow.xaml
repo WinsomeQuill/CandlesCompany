@@ -141,6 +141,13 @@
                               CanUserAddRows="False"
                               CanUserDeleteRows="False"
                               ItemsSource="{Binding OrderList}">
+                        <DataGrid.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem x:Name="DatGridOrdersListRefresh"
+                                          Header="Обновить"
+                                          Click="DatGridOrdersListRefresh_Click"/>
+                            </ContextMenu>
+                        </DataGrid.ContextMenu>
                         <DataGrid.Columns>
                             <DataGridTemplateColumn Header="Номер заказа">
                                 <DataGridTemplateColumn.CellTemplate>
@@ -757,6 +764,7 @@
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="50"/>
                                     <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="50"/>
                                 </Grid.RowDefinitions>
 
                                 <Grid Grid.Row="0">
@@ -764,35 +772,59 @@
                                         <ColumnDefinition Width="300"/>
                                         <ColumnDefinition Width="300"/>
                                         <ColumnDefinition Width="300"/>
+                                        <ColumnDefinition Width="300"/>
                                         <ColumnDefinition Width="1*"/>
                                     </Grid.ColumnDefinitions>
 
-                                    <TextBox x:Name="TextBoxAddAddress"
-                                             Grid.Column="0"
+                                    <TextBox x:Name="TextBoxManagementAddressesListAdd"
+                                             Grid.Column="3"
                                              materialDesign:HintAssist.Hint="Новый адрес"
                                              materialDesign:HintAssist.IsFloating="True"
                                              VerticalAlignment="Center"
                                              Margin="10,0,10,0"/>
 
-                                    <Button x:Name="ButtonAddAddresses"
+                                    <Button x:Name="ButtonManagementAddressesListSearch"
                                             Grid.Column="1"
+                                            Content="_Поиск"
+                                            Margin="20,0,20,0"
+                                            Click="ButtonManagementAddressesListSearch_Click"/>
+
+                                    <Button x:Name="ButtonManagementAddressesListAdd"
+                                            Grid.Column="2"
                                             Content="_Добавить адрес"
                                             Margin="20,0,20,0"
-                                            Click="ButtonAddAddresses_Click"/>
+                                            Click="ButtonManagementAddressesListAdd_Click"/>
 
-                                    <TextBox x:Name="TextBoxSearchAddress"
-                                             Grid.Column="2"
-                                             Grid.ColumnSpan="2"
+                                    <TextBox x:Name="TextBoxManagementAddressesListSearch"
+                                             Grid.Column="0"
                                              materialDesign:HintAssist.Hint="Поиск адреса"
                                              materialDesign:HintAssist.IsFloating="True"
                                              Margin="10,0,10,0"
-                                             VerticalAlignment="Center"
-                                             TextChanged="TextBoxSearchAddress_TextChanged"/>
+                                             VerticalAlignment="Center"/>
                                 </Grid>
 
-                                <DataGrid x:Name="DataGridAddressesList"
+                                <ProgressBar x:Name="ProgressBarManagementAddressesList"
+                                             Grid.Row="1"
+                                             HorizontalAlignment="Center"
+                                             VerticalAlignment="Center"
+                                             Width="50"
+                                             Height="50"
+                                             Style="{StaticResource MaterialDesignCircularProgressBar}"
+                                             Value="0"
+                                             IsIndeterminate="True"
+                                             Visibility="Collapsed"/>
+
+                                <DataGrid x:Name="DataGridManagementAddressesList"
                                           IsReadOnly="True"
-                                          Grid.Row="1">
+                                          Grid.Row="1"
+                                          Grid.RowSpan="2">
+                                    <DataGrid.ContextMenu>
+                                        <ContextMenu>
+                                            <MenuItem x:Name="DataGridManagementAddressesListMenuRefresh"
+                                                      Header="Обновить из базы данных"
+                                                      Click="DataGridManagementAddressesListMenuRefresh_Click"/>
+                                        </ContextMenu>
+                                    </DataGrid.ContextMenu>
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Header="Номер" Binding="{Binding Id}"/>
                                         <DataGridTemplateColumn Header="Адрес пункта доставки">
@@ -809,18 +841,70 @@
                                                                    Style="{StaticResource MaterialDesignDataGridTextColumnStyle}"
                                                                    VerticalAlignment="Center"/>
 
-                                                        <Button x:Name="ButtonAddressListSelected"
+                                                        <Button x:Name="ButtonManagementAddressesListRemove"
                                                                 Content="Удалить"
                                                                 Grid.Column="1"
                                                                 Tag="{Binding Id}"
                                                                 Width="100"
-                                                                Click="ButtonAddressListSelected_Click"/>
+                                                                Click="ButtonManagementAddressesListRemove_Click"/>
                                                     </Grid>
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
                                         </DataGridTemplateColumn>
                                     </DataGrid.Columns>
                                 </DataGrid>
+
+                                <Grid Grid.Row="2"
+                                      Visibility="Collapsed">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="20*"/>
+                                        <ColumnDefinition Width="12*" MinWidth="200"/>
+                                        <ColumnDefinition Width="20*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Button x:Name="ButtonManagementAddressesListPageBack"
+                                            Grid.Column="0"
+                                            Content="_Предыдущая страница"
+                                            HorizontalAlignment="Right"
+                                            VerticalAlignment="Center"
+                                            Width="200"
+                                            Margin="0,0,10,0"
+                                            Visibility="Collapsed"
+                                            Click="ButtonManagementAddressesListPageBack_Click"/>
+
+                                    <Grid Grid.Column="1"
+                                          Visibility="Collapsed">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="18*"/>
+                                            <ColumnDefinition Width="140"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <TextBox x:Name="TextBoxManagementAddressesListPage"
+                                                 Grid.Column="0"
+                                                 materialDesign:HintAssist.Hint="Номер страницы"
+                                                 materialDesign:HintAssist.IsFloating="True"
+                                                 VerticalAlignment="Center"
+                                                 Margin="10,0,10,0"
+                                                 Visibility="Collapsed"
+                                                 KeyDown="TextBoxManagementAddressesListPage_KeyDown"/>
+
+                                        <TextBlock x:Name="TextBlockManagementAddressesListTotalPage"
+                                                   Grid.Column="1"
+                                                   Text="Total: %Count%"
+                                                   HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center"/>
+                                    </Grid>
+
+                                    <Button x:Name="ButtonManagementAddressesListPageNext"
+                                            Grid.Column="2"
+                                            Content="_Следующая страница"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Width="200"
+                                            Margin="10,0,0,0"
+                                            Visibility="Collapsed"
+                                            Click="ButtonManagementAddressesListPageNext_Click"/>
+                                </Grid>
                             </Grid>
                         </TabItem>
                     </TabControl>

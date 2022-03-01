@@ -67,6 +67,11 @@ namespace CandlesCompany.UI.Custom.Orders
                     ProgressBarAnimation = false;
                     ProgressBarValue = 100;
                     break;
+                case 5: //Заказ отменен из-за удаленного адреса доставки
+                    ProgressBarForeground = "#db0f0f";
+                    Status = "Отменен";
+                    ProgressBarAnimation = true;
+                    break;
             }
         }
     }

@@ -18,7 +18,7 @@ namespace CandlesCompany.Utils
         public static DataGrid _dataGridOrdersList { get; set; }
         public static BitmapImage _defaultImage { get; set; }
         public static BitmapImage _defaultAvatar { get; set; }
-        public static List<Order_Address> _Addresses { get; set; }
+        public static List<Order_Address> _addresses { get; set; }
         public static List<string> _roles { get; set; }
         public static byte[] ImageToBinary(Image image)
         {

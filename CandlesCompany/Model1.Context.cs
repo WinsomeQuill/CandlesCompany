@@ -28,6 +28,7 @@ namespace CandlesCompany
         public virtual DbSet<Candles> Candles { get; set; }
         public virtual DbSet<Candles_Order> Candles_Order { get; set; }
         public virtual DbSet<Candles_Sale_Percent> Candles_Sale_Percent { get; set; }
+        public virtual DbSet<Order_Address> Order_Address { get; set; }
         public virtual DbSet<Order_Status> Order_Status { get; set; }
         public virtual DbSet<Orders> Orders { get; set; }
         public virtual DbSet<Roles> Roles { get; set; }
@@ -35,6 +36,5 @@ namespace CandlesCompany
         public virtual DbSet<Type_Candle> Type_Candle { get; set; }
         public virtual DbSet<Users> Users { get; set; }
         public virtual DbSet<Users_Baskets> Users_Baskets { get; set; }
-        public virtual DbSet<Order_Address> Order_Address { get; set; }
     }
 }

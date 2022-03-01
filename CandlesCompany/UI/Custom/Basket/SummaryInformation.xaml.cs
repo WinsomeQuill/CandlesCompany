@@ -83,6 +83,7 @@ namespace CandlesCompany.UI.Custom.Basket
                         MessageBox.Show("Не удалось создать заказ! Проверьте данные!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                         return;
                     }
+                    Reset();
                     MessageBox.Show("Ваш заказ упешно создан! Подробнее смотрите в раделе \"Заказы\"!", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
                 });
             });
@@ -90,6 +91,10 @@ namespace CandlesCompany.UI.Custom.Basket
         private void ComboBoxSummaryInformationAddress_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ComboBoxItem item = ComboBoxSummaryInformationAddress.SelectedItem as ComboBoxItem;
+            if (item == null)
+            {
+                return;
+            }
             _address = item.Tag as Order_Address;
         }
     }

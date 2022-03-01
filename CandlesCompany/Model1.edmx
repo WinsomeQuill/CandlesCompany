@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="Хранилище candlesModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="Хранилище candlesModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Candles">
           <Key>
             <PropertyRef Name="Id" />
@@ -58,7 +58,7 @@
           <Property Name="Id_Candles_Order" Type="int" Nullable="false" />
           <Property Name="Price" Type="decimal" Precision="10" Scale="2" Nullable="false" />
           <Property Name="Id_Status" Type="int" Nullable="false" />
-          <Property Name="Id_Address" Type="int" Nullable="false" />
+          <Property Name="Id_Address" Type="int" />
           <Property Name="Date" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="Roles">
@@ -158,7 +158,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Orders_Order_Address">
-          <End Role="Order_Address" Type="Self.Order_Address" Multiplicity="1" />
+          <End Role="Order_Address" Type="Self.Order_Address" Multiplicity="0..1" />
           <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Order_Address">
@@ -282,7 +282,8 @@
             <End Role="Users" EntitySet="Users" />
           </AssociationSet>
         </EntityContainer>
-      </Schema></edmx:StorageModels>
+      </Schema>
+    </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="candlesModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -323,6 +324,14 @@
           <Property Name="DateEnd" Type="DateTime" Nullable="false" Precision="3" />
           <NavigationProperty Name="Candles_Order" Relationship="Self.FK_Candles_Order_Candles_Sale_Percent" FromRole="Candles_Sale_Percent" ToRole="Candles_Order" />
         </EntityType>
+        <EntityType Name="Order_Address">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Address" Type="String" MaxLength="170" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Orders" Relationship="Self.FK_Orders_Order_Address" FromRole="Order_Address" ToRole="Orders" />
+        </EntityType>
         <EntityType Name="Order_Status">
           <Key>
             <PropertyRef Name="Id" />
@@ -340,12 +349,12 @@
           <Property Name="Id_Candles_Order" Type="Int32" Nullable="false" />
           <Property Name="Price" Type="Decimal" Precision="10" Scale="2" Nullable="false" />
           <Property Name="Id_Status" Type="Int32" Nullable="false" />
-          <Property Name="Id_Address" Type="Int32" Nullable="false" />
+          <Property Name="Id_Address" Type="Int32" />
           <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
           <NavigationProperty Name="Candles_Order" Relationship="Self.FK_Orders_Candles_Order" FromRole="Orders" ToRole="Candles_Order" />
+          <NavigationProperty Name="Order_Address" Relationship="Self.FK_Orders_Order_Address" FromRole="Orders" ToRole="Order_Address" />
           <NavigationProperty Name="Order_Status" Relationship="Self.FK_Orders_Order_Status" FromRole="Orders" ToRole="Order_Status" />
           <NavigationProperty Name="Users" Relationship="Self.FK_Orders_Users1" FromRole="Orders" ToRole="Users" />
-          <NavigationProperty Name="Order_Address" Relationship="candlesModel.FK_Orders_Order_Address" FromRole="Orders" ToRole="Order_Address" />
         </EntityType>
         <EntityType Name="Roles">
           <Key>
@@ -462,6 +471,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Orders_Order_Address">
+          <End Role="Order_Address" Type="Self.Order_Address" Multiplicity="0..1" />
+          <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Order_Address">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Orders">
+              <PropertyRef Name="Id_Address" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Orders_Order_Status">
           <End Role="Order_Status" Type="Self.Order_Status" Multiplicity="1" />
           <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
@@ -514,6 +535,7 @@
           <EntitySet Name="Candles" EntityType="Self.Candles" />
           <EntitySet Name="Candles_Order" EntityType="Self.Candles_Order" />
           <EntitySet Name="Candles_Sale_Percent" EntityType="Self.Candles_Sale_Percent" />
+          <EntitySet Name="Order_Address" EntityType="Self.Order_Address" />
           <EntitySet Name="Order_Status" EntityType="Self.Order_Status" />
           <EntitySet Name="Orders" EntityType="Self.Orders" />
           <EntitySet Name="Roles" EntityType="Self.Roles" />
@@ -541,6 +563,10 @@
             <End Role="Candles_Order" EntitySet="Candles_Order" />
             <End Role="Orders" EntitySet="Orders" />
           </AssociationSet>
+          <AssociationSet Name="FK_Orders_Order_Address" Association="Self.FK_Orders_Order_Address">
+            <End Role="Order_Address" EntitySet="Order_Address" />
+            <End Role="Orders" EntitySet="Orders" />
+          </AssociationSet>
           <AssociationSet Name="FK_Orders_Order_Status" Association="Self.FK_Orders_Order_Status">
             <End Role="Order_Status" EntitySet="Order_Status" />
             <End Role="Orders" EntitySet="Orders" />
@@ -557,32 +583,7 @@
             <End Role="Users" EntitySet="Users" />
             <End Role="Users_Baskets" EntitySet="Users_Baskets" />
           </AssociationSet>
-          <EntitySet Name="Order_Address" EntityType="candlesModel.Order_Address" />
-          <AssociationSet Name="FK_Orders_Order_Address" Association="candlesModel.FK_Orders_Order_Address">
-            <End Role="Order_Address" EntitySet="Order_Address" />
-            <End Role="Orders" EntitySet="Orders" />
-          </AssociationSet>
         </EntityContainer>
-        <EntityType Name="Order_Address">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Address" Type="String" Nullable="false" MaxLength="170" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Orders" Relationship="candlesModel.FK_Orders_Order_Address" FromRole="Order_Address" ToRole="Orders" />
-        </EntityType>
-        <Association Name="FK_Orders_Order_Address">
-          <End Type="candlesModel.Order_Address" Role="Order_Address" Multiplicity="1" />
-          <End Type="candlesModel.Orders" Role="Orders" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Order_Address">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Orders">
-              <PropertyRef Name="Id_Address" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -619,6 +620,14 @@
                 <ScalarProperty Name="Sale_Percent" ColumnName="Sale_Percent" />
                 <ScalarProperty Name="DateStart" ColumnName="DateStart" />
                 <ScalarProperty Name="DateEnd" ColumnName="DateEnd" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Order_Address">
+            <EntityTypeMapping TypeName="candlesModel.Order_Address">
+              <MappingFragment StoreEntitySet="Order_Address">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -693,14 +702,6 @@
                 <ScalarProperty Name="Id_User" ColumnName="Id_User" />
                 <ScalarProperty Name="Id_Candles" ColumnName="Id_Candles" />
                 <ScalarProperty Name="Count" ColumnName="Count" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Order_Address">
-            <EntityTypeMapping TypeName="candlesModel.Order_Address">
-              <MappingFragment StoreEntitySet="Order_Address">
-                <ScalarProperty Name="Address" ColumnName="Address" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -19,12 +19,12 @@ namespace CandlesCompany
         public int Id_Candles_Order { get; set; }
         public decimal Price { get; set; }
         public int Id_Status { get; set; }
-        public int Id_Address { get; set; }
+        public Nullable<int> Id_Address { get; set; }
         public System.DateTime Date { get; set; }
     
         public virtual Candles_Order Candles_Order { get; set; }
+        public virtual Order_Address Order_Address { get; set; }
         public virtual Order_Status Order_Status { get; set; }
         public virtual Users Users { get; set; }
-        public virtual Order_Address Order_Address { get; set; }
     }
 }

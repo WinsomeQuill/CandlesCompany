@@ -39,6 +39,7 @@ namespace CandlesCompany.UI
 
         private bool _isSearchUsersList = false;
         private bool _isSearchEmployeesList = false;
+        private bool _isSearchAddressesList = false;
         public MainWindow()
         {
             InitializeComponent();
@@ -50,15 +51,14 @@ namespace CandlesCompany.UI
 
             CatalogInit();
             BasketInit();
-            OrdersInit();
+            ReloadOrdersList();
             ProfileInit();
             SelectedItemInit();
             SummaryInformationInit();
 
             ReloadWindowManagementUsersList();
             ReloadWindowManagementEmployeesList();
-            AddressesListReload();
-
+            ReloadWindowManagementAddressesList();
         }
         private void SummaryInformationInit()
         {
@@ -66,6 +66,7 @@ namespace CandlesCompany.UI
             GridBasketItems.Children.Add(Utils.Utils._summaryInformation);
             Utils.Utils._summaryInformation.SetValue(Grid.ColumnProperty, 1);
             Utils.Utils._summaryInformation.SetValue(Grid.RowProperty, 0);
+            ReloadComboBoxSummaryInformationAddress();
         }
         private void SelectedItemInit()
         {
@@ -82,27 +83,6 @@ namespace CandlesCompany.UI
             TextBlockProfileEmail.Text = $"Эл. почта: {UserCache._email}";
             TextBlockProfileRole.Text = $"Должность: {UserCache._role.Name}";
             ImageBrushProfileAvatar.ImageSource = UserCache._avatar;
-        }
-        private void OrdersInit()
-        {
-            new Thread(delegate ()
-            {
-                Dispatcher.Invoke(delegate ()
-                {
-                    DBManager.GetOrders(UserCache._id).ForEach(o =>
-                    {
-                        DataGridOrdersList.Items.Add(new Custom.Orders.OrderList(
-                            o.Id,
-                            o.Date,
-                            o.Candles_Order.Candles.Name,
-                            (double)o.Price,
-                            o.Candles_Order.Count,
-                            o.Order_Status.Id,
-                            o.Order_Address.Address
-                        ));
-                    });
-                });
-            }).Start();
         }
         private void BasketInit()
         {
@@ -135,27 +115,7 @@ namespace CandlesCompany.UI
             }).Start();
         }
 
-        private void AddressesListReload()
-        {
-            DataGridAddressesList.Items.Clear();
-            Utils.Utils._summaryInformation.ComboBoxSummaryInformationAddress.Items.Clear();
-            Task.Run(async () =>
-            {
-                Utils.Utils._Addresses = DBManager.GetAddresses();
-                await Dispatcher.InvokeAsync(() =>
-                {
-                    Utils.Utils._Addresses.ForEach((address) =>
-                    {
-                        DataGridAddressesList.Items.Add(address);
-                        Utils.Utils._summaryInformation.ComboBoxSummaryInformationAddress.Items.Add(new ComboBoxItem
-                        {
-                            Content = $"{address.Address}",
-                            Tag = address
-                        });
-                    });
-                });
-            });
-        }
+
         private void ButtonManagementAddItem_Click(object sender, RoutedEventArgs e)
         {
             new Item.ItemAddWindow().Show();
@@ -187,63 +147,6 @@ namespace CandlesCompany.UI
             }
             ImageBrushProfileAvatar.ImageSource = Utils.Utils._defaultAvatar;
             DBManager.RemoveAvatarUser();
-        }
-        private void TextBoxSearchAddress_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            string search = TextBoxSearchAddress.Text;
-
-            if (search.Length == 0)
-            {
-                AddressesListReload();
-                return;
-            }
-
-            DataGridAddressesList.Items.Clear();
-            Task.Run(async () =>
-            {
-                await Dispatcher.InvokeAsync(() =>
-                {
-                    Utils.Utils._Addresses.ForEach(address =>
-                    {
-                        if (address.Address.Contains(search))
-                        {
-                            DataGridAddressesList.Items.Add(address);
-                        }
-                    });
-                });
-            });
-        }
-        private void ButtonAddressListSelected_Click(object sender, RoutedEventArgs e)
-        {
-            Button button = (Button)sender;
-            DBManager.RemoveAddress((int)button.Tag);
-            AddressesListReload();
-        }
-        private void ButtonAddAddresses_Click(object sender, RoutedEventArgs e)
-        {
-            string address = TextBoxAddAddress.Text;
-
-            if (address.Length == 0)
-            {
-                MessageBox.Show("Пустой адрес!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-
-            if (address.Length < 5)
-            {
-                MessageBox.Show("Слишмко короткий адрес!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-
-            Task.Run(async () =>
-            {
-                await Dispatcher.InvokeAsync(() =>
-                {
-                    DBManager.AddAddresses(address);
-                    AddressesListReload();
-                    MessageBox.Show("Вы добавили новый адрес!", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
-                });
-            });
         }
 
 
@@ -602,6 +505,171 @@ namespace CandlesCompany.UI
         private void DataGridManagementUsersListMenuRefresh_Click(object sender, RoutedEventArgs e)
         {
             ReloadWindowManagementUsersList();
+        }
+
+
+        private void ReloadWindowManagementAddressesList()
+        {
+            new Thread(delegate ()
+            {
+                Dispatcher.InvokeAsync(async () =>
+                {
+                    ProgressBarManagementAddressesList.Visibility = Visibility.Visible;
+                    DataGridManagementAddressesList.Visibility = Visibility.Collapsed;
+
+                    DataGridManagementAddressesList.Items.Clear();
+                    Utils.Utils._summaryInformation.ComboBoxSummaryInformationAddress.Items.Clear();
+                    if (!_isSearchAddressesList)
+                    {
+                        Utils.Utils._addresses = await DBManager.GetAddresses();
+                        Utils.Utils._addresses.ForEach(address =>
+                        {
+                            DataGridManagementAddressesList.Items.Add(address);
+                        });
+                    }
+                    else
+                    {
+                        Utils.Utils._addresses.ForEach(address =>
+                        {
+                            if (address.Address.Contains(TextBoxManagementAddressesListSearch.Text))
+                            {
+                                DataGridManagementAddressesList.Items.Add(address);
+                            }
+                        });
+                    }
+
+                    ProgressBarManagementAddressesList.Visibility = Visibility.Collapsed;
+                    DataGridManagementAddressesList.Visibility = Visibility.Visible;
+                });
+            }).Start();
+        }
+        private void ReloadComboBoxSummaryInformationAddress()
+        {
+            new Task(async () =>
+            {
+                await Dispatcher.InvokeAsync(async () =>
+                {
+                    if (Utils.Utils._summaryInformation.ComboBoxSummaryInformationAddress.Items.Count != 0)
+                    {
+                        Utils.Utils._summaryInformation.ComboBoxSummaryInformationAddress.Items.Clear();
+                    }
+
+                    Utils.Utils._addresses = await DBManager.GetAddresses();
+                    Utils.Utils._addresses.ForEach(address =>
+                    {
+                        Utils.Utils._summaryInformation.ComboBoxSummaryInformationAddress.Items.Add(new ComboBoxItem
+                        {
+                            Content = $"{address.Address}",
+                            Tag = address
+                        });
+                    });
+                });
+            }).Start();
+        }
+        private void ButtonManagementAddressesListRemove_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = (Button)sender;
+            DBManager.RemoveAddress((int)button.Tag);
+            ReloadWindowManagementAddressesList();
+            ReloadComboBoxSummaryInformationAddress();
+        }
+        private void ButtonManagementAddressesListAdd_Click(object sender, RoutedEventArgs e)
+        {
+            string address = TextBoxManagementAddressesListAdd.Text;
+
+            if (address.Length == 0)
+            {
+                MessageBox.Show("Пустой адрес!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            if (address.Length < 5)
+            {
+                MessageBox.Show("Слишмко короткий адрес!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            Task.Run(async () =>
+            {
+                await Dispatcher.InvokeAsync(() =>
+                {
+                    Order_Address result = DBManager.AddAddresses(address);
+                    Utils.Utils._addresses.Add(result);
+                    ReloadWindowManagementAddressesList();
+                    ReloadComboBoxSummaryInformationAddress();
+                    TextBoxManagementAddressesListAdd.Text = String.Empty;
+                    MessageBox.Show("Вы добавили новый адрес!", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
+                });
+            });
+        }
+        private void DataGridManagementAddressesListMenuRefresh_Click(object sender, RoutedEventArgs e)
+        {
+            ReloadWindowManagementAddressesList();
+        }
+        private void ButtonManagementAddressesListPageBack_Click(object sender, RoutedEventArgs e) // ?
+        {
+
+        }
+        private void TextBoxManagementAddressesListPage_KeyDown(object sender, KeyEventArgs e) // ?
+        {
+
+        }
+        private void ButtonManagementAddressesListPageNext_Click(object sender, RoutedEventArgs e) // ?
+        {
+
+        }
+        private void ButtonManagementAddressesListSearch_Click(object sender, RoutedEventArgs e)
+        {
+            new Thread(delegate ()
+            {
+                Dispatcher.InvokeAsync(() =>
+                {
+                    _isSearchAddressesList = true;
+                    ButtonManagementAddressesListSearch.IsEnabled = false;
+                    ProgressBarManagementAddressesList.Visibility = Visibility.Visible;
+                    DataGridManagementAddressesList.Visibility = Visibility.Collapsed;
+                    string search = TextBoxManagementAddressesListSearch.Text;
+                    if (search.Length == 0)
+                    {
+                        _isSearchAddressesList = false;
+                    }
+
+                    ReloadWindowManagementAddressesList();
+                    ButtonManagementAddressesListSearch.IsEnabled = true;
+                });
+            }).Start();
+        }
+
+
+        private void ReloadOrdersList()
+        {
+            new Thread(delegate ()
+            {
+                Dispatcher.Invoke(delegate ()
+                {
+                    if (DataGridOrdersList.Items.Count != 0)
+                    {
+                        DataGridOrdersList.Items.Clear();
+                    }
+
+                    DBManager.GetOrders(UserCache._id).ForEach(o =>
+                    {
+                        DataGridOrdersList.Items.Add(new Custom.Orders.OrderList(
+                            o.Id,
+                            o.Date,
+                            o.Candles_Order.Candles.Name,
+                            (double)o.Price,
+                            o.Candles_Order.Count,
+                            o.Order_Status.Id,
+                            o.Order_Address == null ? "Адрес удален" : o.Order_Address.Address.ToString()
+                        ));
+                    });
+                });
+            }).Start();
+        }
+        private void DatGridOrdersListRefresh_Click(object sender, RoutedEventArgs e)
+        {
+            ReloadOrdersList();
         }
     }
 }

@@ -44,9 +44,9 @@ namespace CandlesCompany.UI.Custom.Basket
                 count += 1;
                 TextBoxBasketItemCount.Text = $"{count}";
                 _count = count;
-                Utils.Utils._summaryInformation.AddCount(1);
-                Utils.Utils._summaryInformation.AddPrice((double)_candle.Price);
+                
                 SetPriceFormat(_count);
+                AddItem();
                 DBManager.UpdateCandlesBasket(Cache.UserCache._id, _candle, _count);
                 CountCheck();
             }
@@ -63,8 +63,7 @@ namespace CandlesCompany.UI.Custom.Basket
                 count -= 1;
                 TextBoxBasketItemCount.Text = $"{count}";
                 _count = count;
-                Utils.Utils._summaryInformation.TakeCount(1);
-                Utils.Utils._summaryInformation.TakePrice((double)_candle.Price);
+                TakeItem();
                 DBManager.UpdateCandlesBasket(Cache.UserCache._id, _candle, _count);
                 SetPriceFormat(_count);
                 CountCheck();
@@ -120,13 +119,48 @@ namespace CandlesCompany.UI.Custom.Basket
                 }
             }
         }
-        private void TextBoxBasketItemCount_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            CountCheck();
-        }
         private void SetPriceFormat(int count)
         {
             TextBlockBasketItemPrice.Text = $"Цена в рублях: {_candle.Price * count}";
+        }
+        private void TextBoxBasketItemCount_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                string text = TextBoxBasketItemCount.Text;
+                if (!new Regex(@"^[0-9]+$").IsMatch(text))
+                {
+                    text = "1";
+                }
+
+                int count = Convert.ToInt32(text);
+                if (count < 1)
+                {
+                    count = 1;
+                }
+
+                if (count > _candle.Count)
+                {
+                    count = _candle.Count;
+                }
+
+                TakeItem(_count);
+                _count = count;
+                AddItem(_count);
+                DBManager.UpdateCandlesBasket(Cache.UserCache._id, _candle, _count);
+                SetPriceFormat(_count);
+                CountCheck();
+            }
+        }
+        private void AddItem(int count = 1)
+        {
+            Utils.Utils._summaryInformation.AddCount(count);
+            Utils.Utils._summaryInformation.AddPrice((double)_candle.Price * count);
+        }
+        private void TakeItem(int count = 1)
+        {
+            Utils.Utils._summaryInformation.TakeCount(count);
+            Utils.Utils._summaryInformation.TakePrice((double)_candle.Price * count);
         }
     }
 }

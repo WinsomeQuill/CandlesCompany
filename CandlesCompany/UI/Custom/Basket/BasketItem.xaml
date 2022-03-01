@@ -64,7 +64,7 @@
                  Grid.Row="1"
                  Grid.Column="2"
                  Grid.RowSpan="2"
-                 TextChanged="TextBoxBasketItemCount_TextChanged"/>
+                 KeyDown="TextBoxBasketItemCount_KeyDown"/>
 
         <Button x:Name="ButtonBasketItemCountPlus"
                 Style="{StaticResource MaterialDesignFloatingActionButton}"

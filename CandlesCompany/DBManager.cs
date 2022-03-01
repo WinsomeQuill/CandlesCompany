@@ -87,9 +87,9 @@ namespace CandlesCompany
         {
             return db.Users.Where(x => x.Id_Role == 5).Select(x => x).ToList();
         }
-        public async static Task<List<Users>> GetEmployees(int page, int startIdRole = 1, int endIdRole = 6)
+        public async static Task<List<Users>> GetEmployees(int page, int start_id_role = 1, int end_id_role = 6)
         {
-            return await db.Users.Where(x => x.Id_Role > startIdRole && x.Id_Role < endIdRole).OrderBy(x => x.Id).Skip(50 * (page - 1)).Take(50).ToListAsync();
+            return await db.Users.Where(x => x.Id_Role > start_id_role && x.Id_Role < end_id_role).OrderBy(x => x.Id).Skip(50 * (page - 1)).Take(50).ToListAsync();
         }
         public async static Task<List<Users>> FindEmployees(string value)
         {
@@ -98,9 +98,9 @@ namespace CandlesCompany
                 .Select(x => x).Distinct().Take(500).ToListAsync());
             return users;
         }
-        public static int GetEmployeesCount(int startIdRole = 1, int endIdRole = 6)
+        public static int GetEmployeesCount(int start_id_role = 1, int end_id_role = 6)
         {
-            return db.Users.Where(x => x.Id_Role > startIdRole && x.Id_Role < endIdRole).Count();
+            return db.Users.Where(x => x.Id_Role > start_id_role && x.Id_Role < end_id_role).Count();
         }
         public static byte[] GetImageItem(int id)
         {
@@ -176,12 +176,12 @@ namespace CandlesCompany
         {
             return db.Orders.Where(x => x.Id_User == id_user).ToList();
         }
-        public static Orders AddOrder(int id_user, int candle_id, int count, double price, Order_Address address)
+        public static Orders AddOrder(int id_user, int id_candle, int count, double price, Order_Address address)
         {
             Candles_Order candles_Order = new Candles_Order
             {
                 Count = count,
-                Id_Candles = candle_id,
+                Id_Candles = id_candle,
             };
 
             db.Candles_Order.Add(candles_Order);
@@ -215,24 +215,32 @@ namespace CandlesCompany
             user.Avatar = image;
             db.SaveChanges();
         }
-        public static void AddAddresses(string name)
+        public static Order_Address AddAddresses(string name)
         {
             Order_Address address = new Order_Address
             {
                 Address = name,
             };
 
-            db.Order_Address.Add(address);
+            Order_Address result = db.Order_Address.Add(address);
             db.SaveChanges();
+            return result;
         }
-        public static List<Order_Address> GetAddresses()
+        public async static Task<List<Order_Address>> GetAddresses()
         {
-            return db.Order_Address.Select(x => x).ToList();
+            return await db.Order_Address.Select(x => x).ToListAsync();
         }
-        public static void RemoveAddress(int id)
+        public static void RemoveAddress(int id_address)
         {
-            Order_Address a = db.Order_Address.Where(x => x.Id == id).SingleOrDefault();
-            db.Order_Address.Remove(a);
+            List<Orders> orders = db.Orders.Where(x => x.Id_Address == id_address).ToList();
+            orders.ForEach(o =>
+            {
+                o.Id_Status = 5;
+                o.Id_Address = null;
+            });
+
+            Order_Address order_address = db.Order_Address.Where(x => x.Id == id_address).SingleOrDefault();
+            db.Order_Address.Remove(order_address);
             db.SaveChanges();
         }
     }

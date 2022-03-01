@@ -4,10 +4,11 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="9016d86d4f304237815b08db1a92f764" Name="Diagram1">
+      <Diagram DiagramId="2824ff8dd45b4d409c7814d44a434628" Name="Diagram1">
         <EntityTypeShape EntityType="candlesModel.Candles" Width="1.5" PointX="3" PointY="4.25" IsExpanded="true" />
         <EntityTypeShape EntityType="candlesModel.Candles_Order" Width="1.5" PointX="5.25" PointY="4.5" IsExpanded="true" />
         <EntityTypeShape EntityType="candlesModel.Candles_Sale_Percent" Width="1.5" PointX="3" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="candlesModel.Order_Address" Width="1.5" PointX="5.25" PointY="7.75" IsExpanded="true" />
         <EntityTypeShape EntityType="candlesModel.Order_Status" Width="1.5" PointX="5.25" PointY="10.125" IsExpanded="true" />
         <EntityTypeShape EntityType="candlesModel.Orders" Width="1.5" PointX="7.5" PointY="4.125" IsExpanded="true" />
         <EntityTypeShape EntityType="candlesModel.Roles" Width="1.5" PointX="0.75" PointY="9.625" IsExpanded="true" />
@@ -20,12 +21,11 @@
         <AssociationConnector Association="candlesModel.FK_Users_Baskets_Candles" ManuallyRouted="false" />
         <AssociationConnector Association="candlesModel.FK_Candles_Order_Candles_Sale_Percent" ManuallyRouted="false" />
         <AssociationConnector Association="candlesModel.FK_Orders_Candles_Order" ManuallyRouted="false" />
+        <AssociationConnector Association="candlesModel.FK_Orders_Order_Address" ManuallyRouted="false" />
         <AssociationConnector Association="candlesModel.FK_Orders_Order_Status" ManuallyRouted="false" />
         <AssociationConnector Association="candlesModel.FK_Orders_Users1" ManuallyRouted="false" />
         <AssociationConnector Association="candlesModel.FK_Users_Roles" ManuallyRouted="false" />
         <AssociationConnector Association="candlesModel.FK_Users_Baskets_Users" ManuallyRouted="false" />
-        <EntityTypeShape EntityType="candlesModel.Order_Address" Width="1.5" PointX="7.375" PointY="0.875" />
-        <AssociationConnector Association="candlesModel.FK_Orders_Order_Address" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
