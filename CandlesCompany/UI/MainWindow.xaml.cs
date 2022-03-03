@@ -26,20 +26,24 @@ namespace CandlesCompany.UI
     /// </summary>
     public partial class MainWindow : Window
     {
-        private int _listPageSize { get; set; } = 50;
+        private int _listPageSize { get; } = 25;
 
         private int _usersListCurrentPage { get; set; } = 1;
         private int _employeesListCurrentPage { get; set; } = 1;
+        private int _ordersListCurrentPage { get; set; } = 1;
 
         private int _usersListTotalPages { get; set; }
         private int _employeesListTotalPages { get; set; }
+        private int _ordersListTotalPages { get; set; }
 
         private List<Users> _usersList = new List<Users>();
         private List<Users> _employeesList = new List<Users>();
+        private List<Orders> _ordersList { get; set; } = new List<Orders>();
 
         private bool _isSearchUsersList = false;
         private bool _isSearchEmployeesList = false;
         private bool _isSearchAddressesList = false;
+        private bool _isSearchOrdersList = false;
         public MainWindow()
         {
             InitializeComponent();
@@ -59,6 +63,7 @@ namespace CandlesCompany.UI
             ReloadWindowManagementUsersList();
             ReloadWindowManagementEmployeesList();
             ReloadWindowManagementAddressesList();
+            ReloadWindowManagementOrdersList();
         }
         private void SummaryInformationInit()
         {
@@ -162,7 +167,7 @@ namespace CandlesCompany.UI
                     DataGridManagementEmployeesList.Items.Clear();
                     if (!_isSearchEmployeesList)
                     {
-                        _employeesList = await DBManager.GetEmployees(_employeesListCurrentPage);
+                        _employeesList = await DBManager.GetEmployees(_employeesListCurrentPage, 1, 6, _listPageSize);
                         _employeesList.ForEach(user =>
                         {
                             BitmapImage avatar = null;
@@ -181,7 +186,7 @@ namespace CandlesCompany.UI
                     }
                     else
                     {
-                        _employeesList.Skip(_listPageSize * (_employeesListCurrentPage - 1)).Take(50).ToList().ForEach(user =>
+                        _employeesList.Skip(_listPageSize * (_employeesListCurrentPage - 1)).Take(_listPageSize).ToList().ForEach(user =>
                         {
                             BitmapImage avatar = null;
                             if (user.Avatar == null)
@@ -253,7 +258,7 @@ namespace CandlesCompany.UI
 
                 DataGridManagementEmployeesList.Items.Clear();
 
-                _employeesList = await DBManager.GetEmployees(_employeesListCurrentPage);
+                _employeesList = await DBManager.GetEmployees(_employeesListCurrentPage, 1, 6, _listPageSize);
                 _employeesList.ForEach(employee =>
                 {
                     BitmapImage avatar = null;
@@ -339,7 +344,14 @@ namespace CandlesCompany.UI
                     return;
                 }
 
-                _employeesListCurrentPage = Convert.ToInt32(text);
+                int page = Convert.ToInt32(text);
+                if (_employeesListCurrentPage == page)
+                {
+                    return;
+                }
+
+                _employeesListCurrentPage = page;
+
                 if (_employeesListCurrentPage >= _employeesListTotalPages)
                 {
                     _employeesListCurrentPage = _employeesListTotalPages;
@@ -367,7 +379,7 @@ namespace CandlesCompany.UI
                     DataGridManagementUsersList.Items.Clear();
                     if (!_isSearchUsersList)
                     {
-                        _usersList = await DBManager.GetUsersForPage(_usersListCurrentPage);
+                        _usersList = await DBManager.GetUsersForPage(_usersListCurrentPage, _listPageSize);
                         _usersList.ForEach(user =>
                         {
                             BitmapImage avatar = null;
@@ -386,7 +398,7 @@ namespace CandlesCompany.UI
                     }
                     else
                     {
-                        _usersList.Skip(_listPageSize * (_usersListCurrentPage - 1)).Take(50).ToList().ForEach(user =>
+                        _usersList.Skip(_listPageSize * (_usersListCurrentPage - 1)).Take(_listPageSize).ToList().ForEach(user =>
                         {
                             BitmapImage avatar = null;
                             if (user.Avatar == null)
@@ -492,7 +504,14 @@ namespace CandlesCompany.UI
                     return;
                 }
 
-                _usersListCurrentPage = Convert.ToInt32(text);
+                int page = Convert.ToInt32(text);
+                if (_usersListCurrentPage == page)
+                {
+                    return;
+                }
+
+                _usersListCurrentPage = page;
+
                 if (_usersListCurrentPage >= _usersListTotalPages)
                 {
                     _usersListCurrentPage = _usersListTotalPages;
@@ -654,15 +673,7 @@ namespace CandlesCompany.UI
 
                     DBManager.GetOrders(UserCache._id).ForEach(o =>
                     {
-                        DataGridOrdersList.Items.Add(new Custom.Orders.OrderList(
-                            o.Id,
-                            o.Date,
-                            o.Candles_Order.Candles.Name,
-                            (double)o.Price,
-                            o.Candles_Order.Count,
-                            o.Order_Status.Id,
-                            o.Order_Address == null ? "Адрес удален" : o.Order_Address.Address.ToString()
-                        ));
+                        DataGridOrdersList.Items.Add(new Custom.Orders.OrderList(o));
                     });
                 });
             }).Start();
@@ -670,6 +681,150 @@ namespace CandlesCompany.UI
         private void DatGridOrdersListRefresh_Click(object sender, RoutedEventArgs e)
         {
             ReloadOrdersList();
+        }
+
+        
+        private void SetPagesOrdersList(int countOrders)
+        {
+            ButtonManagementOrdersPageBack.IsEnabled = ButtonManagementOrdersPageNext.IsEnabled = true;
+            _ordersListTotalPages = (int)Math.Ceiling((decimal)countOrders / _listPageSize);
+            TextBlockManagementOrdersTotalPage.Text = $"Всего страниц: {_ordersListTotalPages}";
+            TextBoxManagementOrdersPage.Text = _ordersListCurrentPage.ToString();
+            if (_ordersListCurrentPage == 1)
+            {
+                ButtonManagementOrdersPageBack.IsEnabled = false;
+            }
+            else
+            {
+                ButtonManagementOrdersPageBack.IsEnabled = true;
+            }
+
+            if (_ordersListCurrentPage >= _ordersListTotalPages)
+            {
+                ButtonManagementOrdersPageNext.IsEnabled = false;
+            }
+            else
+            {
+                ButtonManagementOrdersPageNext.IsEnabled = true;
+            }
+
+            if (countOrders <= _listPageSize)
+            {
+                ButtonManagementOrdersPageNext.IsEnabled = false;
+            }
+        }
+        private void ReloadWindowManagementOrdersList()
+        {
+            new Thread(delegate ()
+            {
+                Dispatcher.InvokeAsync(async () =>
+                {
+                    ProgressBarManagementOrdersList.Visibility = Visibility.Visible;
+                    DataGridManagementOrdersList.Visibility= Visibility.Collapsed;
+
+                    DataGridManagementOrdersList.Items.Clear();
+                    List<string> orders_statutes = await DBManager.GetStatusList();
+                    if (!_isSearchOrdersList)
+                    {
+                        
+                        _ordersList.Clear();
+                        _ordersList = await DBManager.GetOrdersForPage(_ordersListCurrentPage, _listPageSize);
+                        _ordersList.ForEach(o =>
+                        {
+                            DataGridManagementOrdersList.Items.Add(new UI.Custom.Orders.OrderList(o, o.Users, orders_statutes));
+                        });
+                        SetPagesOrdersList(await DBManager.GetOrdersCount());
+                    }
+                    else
+                    {
+                        _ordersList.Skip(_listPageSize * (_ordersListCurrentPage - 1)).Take(_listPageSize).ToList().ForEach(o =>
+                        {
+                            DataGridManagementOrdersList.Items.Add(new UI.Custom.Orders.OrderList(o, o.Users, orders_statutes));
+                        });
+                        SetPagesOrdersList(_ordersList.Count() - 1);
+                    }
+
+                    ProgressBarManagementOrdersList.Visibility = Visibility.Collapsed;
+                    DataGridManagementOrdersList.Visibility = Visibility.Visible;
+                    GC.Collect();
+                });
+            }).Start();
+        }
+        private void DataGridManagementOrdersListRefresh_Click(object sender, RoutedEventArgs e)
+        {
+            ReloadWindowManagementOrdersList();
+        }
+        private void ComboBoxManagementOrdersStatus_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (sender is ComboBox comboBox)
+            {
+                Grid grid = comboBox.Parent as Grid;
+                Orders order = grid.Tag as Orders;
+                DBManager.ChangeOrderStatus(order.Id, comboBox.SelectedItem.ToString());
+                ReloadWindowManagementOrdersList();
+            }
+        }
+        private void ButtonManagementOrdersPageBack_Click(object sender, RoutedEventArgs e)
+        {
+            _ordersListCurrentPage -= 1;
+            ReloadWindowManagementOrdersList();
+        }
+        private void ButtonManagementOrdersPageNext_Click(object sender, RoutedEventArgs e)
+        {
+            _ordersListCurrentPage += 1;
+            ReloadWindowManagementOrdersList();
+        }
+        private void TextBoxManagementOrdersPage_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                string text = TextBoxManagementOrdersPage.Text;
+                if (!new Regex(@"^[0-9]+$").IsMatch(text))
+                {
+                    return;
+                }
+
+                int page = Convert.ToInt32(text);
+                if (_ordersListCurrentPage == page)
+                {
+                    return;
+                }
+
+                _ordersListCurrentPage = page;
+
+                if (_ordersListCurrentPage >= _ordersListTotalPages)
+                {
+                    _ordersListCurrentPage = _ordersListTotalPages;
+                    TextBoxManagementUsersPage.Text = $"{_ordersListCurrentPage}";
+                }
+
+                ReloadWindowManagementOrdersList();
+            }
+        }
+        private void ButtonManagementOrdersSearch_Click(object sender, RoutedEventArgs e)
+        {
+            new Task(async () =>
+            {
+                await Dispatcher.InvokeAsync(async () =>
+                {
+                    _isSearchOrdersList = true;
+                    ProgressBarManagementOrdersList.Visibility = Visibility.Visible;
+                    DataGridManagementOrdersList.Visibility = Visibility.Collapsed;
+                    string search = TextBoxManagementOrdersSearch.Text;
+                    if (search.Length == 0)
+                    {
+                        _isSearchOrdersList = false;
+                        ReloadWindowManagementOrdersList();
+                        return;
+                    }
+
+                    ButtonManagementOrdersSearch.IsEnabled = false;
+                    _ordersList.Clear();
+                    _ordersList = await DBManager.FindOrders(search);
+                    ReloadWindowManagementOrdersList();
+                    ButtonManagementOrdersSearch.IsEnabled = true;
+                });
+            }).Start();
         }
     }
 }

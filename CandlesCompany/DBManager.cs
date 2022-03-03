@@ -65,9 +65,9 @@ namespace CandlesCompany
         {
             return db.Users.Count();
         }
-        public async static Task<List<Users>> GetUsersForPage(int page)
+        public async static Task<List<Users>> GetUsersForPage(int page, int count = 50)
         {
-            return await db.Users.Where(x => x.Id_Role == 6).Select(x => x).OrderBy(x => x.Id).Skip(50 * (page - 1)).Take(50).ToListAsync();
+            return await db.Users.Where(x => x.Id_Role == 6).Select(x => x).OrderBy(x => x.Id).Skip(count * (page - 1)).Take(count).ToListAsync();
         }
         public async static Task<List<Users>> FindUsers(string value)
         {
@@ -87,9 +87,9 @@ namespace CandlesCompany
         {
             return db.Users.Where(x => x.Id_Role == 5).Select(x => x).ToList();
         }
-        public async static Task<List<Users>> GetEmployees(int page, int start_id_role = 1, int end_id_role = 6)
+        public async static Task<List<Users>> GetEmployees(int page, int start_id_role = 1, int end_id_role = 6, int count = 50)
         {
-            return await db.Users.Where(x => x.Id_Role > start_id_role && x.Id_Role < end_id_role).OrderBy(x => x.Id).Skip(50 * (page - 1)).Take(50).ToListAsync();
+            return await db.Users.Where(x => x.Id_Role > start_id_role && x.Id_Role < end_id_role).OrderBy(x => x.Id).Skip(count * (page - 1)).Take(count).ToListAsync();
         }
         public async static Task<List<Users>> FindEmployees(string value)
         {
@@ -175,6 +175,28 @@ namespace CandlesCompany
         public static List<Orders> GetOrders(int id_user)
         {
             return db.Orders.Where(x => x.Id_User == id_user).ToList();
+        }
+        public async static Task<List<Orders>> GetOrdersForPage(int page, int count = 50)
+        {
+            return await db.Orders.Select(x => x).OrderBy(x => x.Id).Skip(count * (page - 1)).Take(count).ToListAsync();
+        }
+        public async static Task<List<Orders>> FindOrders(string name_candle)
+        {
+            return await db.Orders.Where(x => x.Candles_Order.Candles.Name.Contains(name_candle)).Select(x => x).Distinct().Take(250).ToListAsync();
+        }
+        public static void ChangeOrderStatus(int id_order, string status)
+        {
+            Orders order = db.Orders.Where(x => x.Id == id_order).Select(x => x).SingleOrDefault();
+            order.Id_Status = db.Order_Status.Where(x => x.Name == status).Select(x => x.Id).SingleOrDefault();
+            db.SaveChangesAsync();
+        }
+        public static async Task<int> GetOrdersCount()
+        {
+            return await db.Orders.CountAsync();
+        }
+        public async static Task<List<string>> GetStatusList()
+        {
+            return await db.Order_Status.Select(x => x.Name).ToListAsync();
         }
         public static Orders AddOrder(int id_user, int id_candle, int count, double price, Order_Address address)
         {

@@ -32,19 +32,26 @@ namespace CandlesCompany.UI.Custom.Orders
         public bool ProgressBarAnimation { get; set; } //вкл/выкл анимацию progressbar в DataGrid
         public string ProgressBarForeground { get; set; } //цвет бегущей полосы в progressbar в DataGrid
         public string Address { get; set; } //адрес доставки
-        public OrderList(int order_id, DateTime dateCreated, string name, double totalPrice, int count, int orderStatusId, string address)
+        public string UserName { get; set; } //ФИО заказчика
+        public string UserEmail { get; set; } //Email заказчика
+        public BitmapImage UserAvatar { get; set; } //аватарка заказчика
+        public int UserID { get; set; } //ID заказчика
+        public List<string> OrderStatuses { get; set; }
+        public CandlesCompany.Orders Order { get; set; }
+        public OrderList(CandlesCompany.Orders order)
         {
             InitializeComponent();
-            OrderID = order_id;
-            DateCreated = dateCreated;
-            NameItem = name;
-            TotalPrice = totalPrice;
-            CountPrice = totalPrice / count;
-            Count = count;
+            Order = order;
+            OrderID = order.Id;
+            DateCreated = order.Date;
+            NameItem = order.Candles_Order.Candles.Name;
+            TotalPrice = (double)order.Price;
+            Count = order.Candles_Order.Count;
+            CountPrice = TotalPrice / Count;
             FormatOrderID = $"№{OrderID}";
-            Address = address;
+            Address = order.Order_Address == null ? "Адрес удален" : order.Order_Address.Address;
 
-            switch (orderStatusId)
+            switch (order.Order_Status.Id)
             {
                 case 1: //Новый заказ
                     ProgressBarForeground = "#0096ff";
@@ -67,7 +74,57 @@ namespace CandlesCompany.UI.Custom.Orders
                     ProgressBarAnimation = false;
                     ProgressBarValue = 100;
                     break;
-                case 5: //Заказ отменен из-за удаленного адреса доставки
+                case 5: //Заказ отменен
+                    ProgressBarForeground = "#db0f0f";
+                    Status = "Отменен";
+                    ProgressBarAnimation = true;
+                    break;
+            }
+        }
+        public OrderList(CandlesCompany.Orders order, Users user, List<string> order_Statuses)
+        {
+            InitializeComponent();
+            Order = order;
+            OrderID = order.Id;
+            DateCreated = order.Date;
+            NameItem = order.Candles_Order.Candles.Name;
+            TotalPrice = (double)order.Price;
+            Count = order.Candles_Order.Count;
+            CountPrice = TotalPrice / Count;
+            FormatOrderID = $"№{OrderID}";
+            Address = order.Order_Address == null ? "Адрес удален" : order.Order_Address.Address;
+            UserID = user.Id;
+            OrderStatuses = order_Statuses;
+            UserEmail = user.Email;
+
+            UserName = $"{user.Last_Name} {user.First_Name} {user.Middle_Name}";
+
+            _ = user.Avatar == null ? UserAvatar = Utils.Utils._defaultAvatar : UserAvatar = Utils.Utils.BinaryToImage(user.Avatar);
+
+            switch (order.Order_Status.Id)
+            {
+                case 1: //Новый заказ
+                    ProgressBarForeground = "#0096ff";
+                    Status = "Новый";
+                    ProgressBarAnimation = true;
+                    break;
+                case 2: //Заказ обрабатывается
+                    ProgressBarForeground = "#ffe600";
+                    Status = "В работе";
+                    ProgressBarAnimation = true;
+                    break;
+                case 3: //Заказ доставлен
+                    ProgressBarForeground = "#ffa000";
+                    Status = "Доставлен";
+                    ProgressBarAnimation = true;
+                    break;
+                case 4: //Клиент забрал заказ
+                    ProgressBarForeground = "#00ff55";
+                    Status = "Забран";
+                    ProgressBarAnimation = false;
+                    ProgressBarValue = 100;
+                    break;
+                case 5: //Заказ отменен
                     ProgressBarForeground = "#db0f0f";
                     Status = "Отменен";
                     ProgressBarAnimation = true;

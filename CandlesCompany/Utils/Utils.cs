@@ -74,15 +74,7 @@ namespace CandlesCompany.Utils
             foreach (UI.Custom.Basket.BasketItem item in _listViewBasket.Items)
             {
                 Orders order = DBManager.AddOrder(Cache.UserCache._id, item._candle.Id, item._count, (double)item._candle.Price * item._count, _summaryInformation._address);
-                _dataGridOrdersList.Items.Add(new UI.Custom.Orders.OrderList(
-                    order.Id,
-                    order.Date,
-                    order.Candles_Order.Candles.Name,
-                    (double)order.Price,
-                    order.Candles_Order.Count,
-                    1,
-                    order.Order_Address.Address
-                ));
+                _dataGridOrdersList.Items.Add(new UI.Custom.Orders.OrderList(order));
                 DBManager.RemoveCandlesBasket(Cache.UserCache._id, item._candle);
             }
             _listViewBasket.Items.Clear();
