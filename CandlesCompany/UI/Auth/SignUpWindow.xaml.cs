@@ -34,7 +34,7 @@ namespace CandlesCompany.UI.Auth
         {
             Task.Run(async () =>
             {
-                await Dispatcher.InvokeAsync(() =>
+                await Dispatcher.InvokeAsync(async () =>
                 {
                     string email = TextBoxSignUpEmail.Text;
                     string pass = PasswordBoxSignUp.Password;
@@ -42,7 +42,7 @@ namespace CandlesCompany.UI.Auth
                     string last_name = TextBoxSignUpLastName.Text;
                     string middle_name = TextBoxSignUpMiddleName.Text;
 
-                    if (DBManager.ExistUser(email))
+                    if (await DBManager.ExistUser(email))
                     {
                         MessageBox.Show("Данный Email уже зарегестрирован!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                         return;

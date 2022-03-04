@@ -33,7 +33,8 @@ namespace CandlesCompany.UI.Employee
             {
                 Dispatcher.InvokeAsync(async () =>
                 {
-                    DBManager.GetRoles().ForEach(role =>
+                    List<string> roles = await DBManager.GetRoles();
+                    roles.ForEach(role =>
                     {
                         ComboBoxEmployeeAddRole.Items.Add(role);
                     });

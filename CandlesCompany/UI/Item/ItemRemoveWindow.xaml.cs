@@ -29,14 +29,15 @@ namespace CandlesCompany.UI.Item
         {
             new Thread(delegate ()
             {
-                Dispatcher.Invoke(delegate ()
+                Dispatcher.Invoke(async () =>
                 {
                     if (ComboBoxItemRemoveSelectItem.Items.Count != 0)
                     {
                         ComboBoxItemRemoveSelectItem.Items.Clear();
                     }
 
-                    DBManager.GetCandles().ForEach(c =>
+                    List<Candles> candles = await DBManager.GetCandles();
+                    candles.ForEach(c =>
                     {
                         ComboBoxItemRemoveSelectItem.Items.Add(new ComboBoxItem { Content = c.Name, Tag = c });
                     });

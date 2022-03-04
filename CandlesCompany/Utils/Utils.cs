@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 
@@ -64,7 +65,7 @@ namespace CandlesCompany.Utils
                 _summaryInformation.AddPrice((double)item.Key.Price);
             }
         }
-        public static bool BasketToOrders()
+        public async static Task<bool> BasketToOrders()
         {
             if (_summaryInformation._address == null)
             {
@@ -73,7 +74,7 @@ namespace CandlesCompany.Utils
 
             foreach (UI.Custom.Basket.BasketItem item in _listViewBasket.Items)
             {
-                Orders order = DBManager.AddOrder(Cache.UserCache._id, item._candle.Id, item._count, (double)item._candle.Price * item._count, _summaryInformation._address);
+                Orders order = await DBManager.AddOrder(Cache.UserCache._id, item._candle.Id, item._count, (double)item._candle.Price * item._count, _summaryInformation._address);
                 _dataGridOrdersList.Items.Add(new UI.Custom.Orders.OrderList(order));
                 DBManager.RemoveCandlesBasket(Cache.UserCache._id, item._candle);
             }

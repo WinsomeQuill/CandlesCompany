@@ -46,24 +46,30 @@ namespace CandlesCompany.UI
         private bool _isSearchOrdersList = false;
         public MainWindow()
         {
-            InitializeComponent();
-            Utils.Utils._mainWindow = this;
-            Utils.Utils._defaultImage = new BitmapImage(new Uri(@"pack://application:,,,/CandlesCompany;component/Resources/Images/Items/notfound.png"));
-            Utils.Utils._listViewBasket = ListViewBasket;
-            Utils.Utils._dataGridOrdersList = DataGridOrdersList;
-            Utils.Utils._roles = DBManager.GetRoles();
+            new Task(async () =>
+            {
+                await Dispatcher.InvokeAsync(async () =>
+                {
+                    InitializeComponent();
+                    Utils.Utils._mainWindow = this;
+                    Utils.Utils._defaultImage = new BitmapImage(new Uri(@"pack://application:,,,/CandlesCompany;component/Resources/Images/Items/notfound.png"));
+                    Utils.Utils._listViewBasket = ListViewBasket;
+                    Utils.Utils._dataGridOrdersList = DataGridOrdersList;
+                    Utils.Utils._roles = await DBManager.GetRoles();
 
-            CatalogInit();
-            BasketInit();
-            ReloadOrdersList();
-            ProfileInit();
-            SelectedItemInit();
-            SummaryInformationInit();
+                    CatalogInit();
+                    BasketInit();
+                    ReloadOrdersList();
+                    ProfileInit();
+                    SelectedItemInit();
+                    SummaryInformationInit();
 
-            ReloadWindowManagementUsersList();
-            ReloadWindowManagementEmployeesList();
-            ReloadWindowManagementAddressesList();
-            ReloadWindowManagementOrdersList();
+                    ReloadWindowManagementUsersList();
+                    ReloadWindowManagementEmployeesList();
+                    ReloadWindowManagementAddressesList();
+                    ReloadWindowManagementOrdersList();
+                });
+            }).Start();
         }
         private void SummaryInformationInit()
         {
@@ -93,9 +99,10 @@ namespace CandlesCompany.UI
         {
             new Thread(delegate ()
             {
-                Dispatcher.InvokeAsync(delegate ()
+                Dispatcher.InvokeAsync(async () =>
                 {
-                    foreach(var item in DBManager.GetCandlesBasket(UserCache._id))
+                    Dictionary<Candles, int> basket = await DBManager.GetCandlesBasket(UserCache._id);
+                    foreach (var item in basket)
                     {
                         Candles candle = item.Key;
                         UserCache.Basket.Add(candle, item.Value);
@@ -182,7 +189,7 @@ namespace CandlesCompany.UI
 
                             DataGridManagementEmployeesList.Items.Add(new UI.UsersList(user, avatar, Utils.Utils._roles));
                         });
-                        SetPagesEmployeesList(DBManager.GetEmployeesCount());
+                        SetPagesEmployeesList(await DBManager.GetEmployeesCount());
                     }
                     else
                     {
@@ -394,7 +401,7 @@ namespace CandlesCompany.UI
 
                             DataGridManagementUsersList.Items.Add(new UI.UsersList(user, avatar, Utils.Utils._roles));
                         });
-                        SetPagesUsersList(DBManager.GetUsersCount());
+                        SetPagesUsersList(await DBManager.GetUsersCount());
                     }
                     else
                     {
@@ -610,9 +617,9 @@ namespace CandlesCompany.UI
 
             Task.Run(async () =>
             {
-                await Dispatcher.InvokeAsync(() =>
+                await Dispatcher.InvokeAsync(async () =>
                 {
-                    Order_Address result = DBManager.AddAddresses(address);
+                    Order_Address result = await DBManager.AddAddresses(address);
                     Utils.Utils._addresses.Add(result);
                     ReloadWindowManagementAddressesList();
                     ReloadComboBoxSummaryInformationAddress();
@@ -664,14 +671,15 @@ namespace CandlesCompany.UI
         {
             new Thread(delegate ()
             {
-                Dispatcher.Invoke(delegate ()
+                Dispatcher.InvokeAsync(async () =>
                 {
                     if (DataGridOrdersList.Items.Count != 0)
                     {
                         DataGridOrdersList.Items.Clear();
                     }
 
-                    DBManager.GetOrders(UserCache._id).ForEach(o =>
+                    List<Orders> orders = await DBManager.GetOrders(UserCache._id);
+                    orders.ForEach(o =>
                     {
                         DataGridOrdersList.Items.Add(new Custom.Orders.OrderList(o));
                     });

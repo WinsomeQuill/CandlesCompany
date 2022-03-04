@@ -76,9 +76,9 @@ namespace CandlesCompany.UI.Custom.Basket
         {
             Task.Run(() =>
             {
-                Dispatcher.InvokeAsync(() =>
+                Dispatcher.InvokeAsync(async () =>
                 {
-                    if (!Utils.Utils.BasketToOrders())
+                    if (!await Utils.Utils.BasketToOrders())
                     {
                         MessageBox.Show("Не удалось создать заказ! Проверьте данные!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                         return;

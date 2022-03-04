@@ -31,9 +31,10 @@ namespace CandlesCompany.UI.Item
         {
             new Thread(delegate ()
             {
-                Dispatcher.Invoke(delegate ()
+                Dispatcher.Invoke(async () =>
                 {
-                    DBManager.GetTypeCandles().ForEach(c =>
+                    List<Type_Candle> types = await DBManager.GetTypeCandles();
+                    types.ForEach(c =>
                     {
                         ComboBoxItemAddType.Items.Add(new ComboBoxItem { Content = c.Name, Tag = c });
                     });

@@ -31,14 +31,15 @@ namespace CandlesCompany.UI.Item
         {
             new Thread(delegate ()
             {
-                Dispatcher.Invoke(delegate ()
+                Dispatcher.Invoke(async () =>
                 {
                     if (ComboBoxItemChangeSelectItem.Items.Count != 0)
                     {
                         ComboBoxItemChangeSelectItem.Items.Clear();
                     }
 
-                    DBManager.GetCandles().ForEach(c =>
+                    List<Candles> candles = await DBManager.GetCandles();
+                    candles.ForEach(c =>
                     {
                         ComboBoxItemChangeSelectItem.Items.Add(new ComboBoxItem { Content = c.Name, Tag = c });
                     });
@@ -57,14 +58,15 @@ namespace CandlesCompany.UI.Item
 
             new Thread(delegate ()
             {
-                Dispatcher.Invoke(delegate ()
+                Dispatcher.Invoke(async () =>
                 {
                     if (ComboBoxItemChangeType.Items.Count != 0)
                     {
                         ComboBoxItemChangeType.Items.Clear();
                     }
 
-                    DBManager.GetTypeCandles().ForEach(c =>
+                    List<Type_Candle> types = await DBManager.GetTypeCandles();
+                    types.ForEach(c =>
                     {
                         ComboBoxItemChangeType.Items.Add(new ComboBoxItem { Content = c.Name, Tag = c });
                     });
