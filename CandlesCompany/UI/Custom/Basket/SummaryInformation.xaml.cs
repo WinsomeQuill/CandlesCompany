@@ -84,6 +84,7 @@ namespace CandlesCompany.UI.Custom.Basket
                         return;
                     }
                     Reset();
+                    Cache.UserCache.Basket.Clear();
                     MessageBox.Show("Ваш заказ упешно создан! Подробнее смотрите в раделе \"Заказы\"!", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
                 });
             });

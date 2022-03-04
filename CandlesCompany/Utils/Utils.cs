@@ -56,6 +56,17 @@ namespace CandlesCompany.Utils
         }
         public static void ReloadWindowBasket()
         {
+            if (Cache.UserCache.Basket.Count() == 0)
+            {
+                _mainWindow.ListViewBasket.Visibility = System.Windows.Visibility.Collapsed;
+                _mainWindow.TextBlockBasket.Visibility = System.Windows.Visibility.Visible;
+            }
+            else
+            {
+                _mainWindow.ListViewBasket.Visibility = System.Windows.Visibility.Visible;
+                _mainWindow.TextBlockBasket.Visibility = System.Windows.Visibility.Collapsed;
+            }
+
             _mainWindow.ListViewBasket.Items.Clear();
             _summaryInformation.Reset();
             foreach (var item in Cache.UserCache.Basket)
@@ -72,6 +83,8 @@ namespace CandlesCompany.Utils
                 return false;
             }
 
+            _mainWindow.ListViewBasket.Visibility = System.Windows.Visibility.Collapsed;
+            _mainWindow.TextBlockBasket.Visibility = System.Windows.Visibility.Visible;
             foreach (UI.Custom.Basket.BasketItem item in _listViewBasket.Items)
             {
                 Orders order = await DBManager.AddOrder(Cache.UserCache._id, item._candle.Id, item._count, (double)item._candle.Price * item._count, _summaryInformation._address);
@@ -88,6 +101,8 @@ namespace CandlesCompany.Utils
         }
         public async static Task AddItemInBasket(Candles candle)
         {
+            _mainWindow.ListViewBasket.Visibility = System.Windows.Visibility.Visible;
+            _mainWindow.TextBlockBasket.Visibility = System.Windows.Visibility.Collapsed;
             _mainWindow.ListViewBasket.Items.Add(new UI.Custom.Basket.BasketItem(candle));
             await DBManager.AddCandlesBasket(Cache.UserCache._id, candle);
             _summaryInformation.AddCount(1);
