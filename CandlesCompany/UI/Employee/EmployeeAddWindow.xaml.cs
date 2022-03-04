@@ -59,12 +59,12 @@ namespace CandlesCompany.UI.Employee
             }).Start();
         }
 
-        private void ButtonEmployeeAdd_Click(object sender, RoutedEventArgs e)
+        private async void ButtonEmployeeAdd_Click(object sender, RoutedEventArgs e)
         {
             Users user = (Users)(ComboBoxEmployeeAdd.SelectedItem as ComboBoxItem).Tag;
             string role = ComboBoxEmployeeAddRole.SelectedItem.ToString();
 
-            DBManager.ChangeRoleById(user.Id, role);
+            await DBManager.ChangeRoleById(user.Id, role);
             MessageBox.Show($"Вы назначили пользователя \"{user.Last_Name} {user.First_Name}\" на должность \"{role}\"!", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
             ComboBoxEmployeeAddRole.Items.Clear();
             ComboBoxEmployeeAdd.Items.Clear();

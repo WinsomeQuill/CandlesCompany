@@ -50,34 +50,35 @@ namespace CandlesCompany.UI.Custom.Orders
             CountPrice = TotalPrice / Count;
             FormatOrderID = $"№{OrderID}";
             Address = order.Order_Address == null ? "Адрес удален" : order.Order_Address.Address;
+            Status = order.Order_Status == null ? "Новый" : order.Order_Status.Name;
 
-            switch (order.Order_Status.Id)
+            switch (order.Order_Status == null ? 1 : order.Order_Status.Id)
             {
                 case 1: //Новый заказ
                     ProgressBarForeground = "#0096ff";
-                    Status = "Новый";
                     ProgressBarAnimation = true;
                     break;
                 case 2: //Заказ обрабатывается
                     ProgressBarForeground = "#ffe600";
-                    Status = "В работе";
                     ProgressBarAnimation = true;
                     break;
-                case 3: //Заказ доставлен
+                case 3: //Заказ в пути
                     ProgressBarForeground = "#ffa000";
-                    Status = "Доставлен";
                     ProgressBarAnimation = true;
                     break;
-                case 4: //Клиент забрал заказ
-                    ProgressBarForeground = "#00ff55";
-                    Status = "Забран";
+                case 4: //Заказ ожидает в пункте выдачи
+                    ProgressBarForeground = "#00bd87";
+                    ProgressBarAnimation = true;
+                    break;
+                case 5: //Заказ забран
+                    ProgressBarForeground = "#5bc746";
                     ProgressBarAnimation = false;
                     ProgressBarValue = 100;
                     break;
-                case 5: //Заказ отменен
-                    ProgressBarForeground = "#db0f0f";
-                    Status = "Отменен";
-                    ProgressBarAnimation = true;
+                case 6: //Заказ отменен
+                    ProgressBarForeground = "#c43f3f";
+                    ProgressBarAnimation = false;
+                    ProgressBarValue = 100;
                     break;
             }
         }
@@ -96,38 +97,39 @@ namespace CandlesCompany.UI.Custom.Orders
             UserID = user.Id;
             OrderStatuses = order_Statuses;
             UserEmail = user.Email;
+            Status = order.Order_Status == null ? "Новый" : order.Order_Status.Name;
 
             UserName = $"{user.Last_Name} {user.First_Name} {user.Middle_Name}";
 
             _ = user.Avatar == null ? UserAvatar = Utils.Utils._defaultAvatar : UserAvatar = Utils.Utils.BinaryToImage(user.Avatar);
 
-            switch (order.Order_Status.Id)
+            switch (order.Order_Status == null ? 1 : order.Order_Status.Id)
             {
                 case 1: //Новый заказ
                     ProgressBarForeground = "#0096ff";
-                    Status = "Новый";
                     ProgressBarAnimation = true;
                     break;
                 case 2: //Заказ обрабатывается
                     ProgressBarForeground = "#ffe600";
-                    Status = "В работе";
                     ProgressBarAnimation = true;
                     break;
-                case 3: //Заказ доставлен
+                case 3: //Заказ в пути
                     ProgressBarForeground = "#ffa000";
-                    Status = "Доставлен";
                     ProgressBarAnimation = true;
                     break;
-                case 4: //Клиент забрал заказ
-                    ProgressBarForeground = "#00ff55";
-                    Status = "Забран";
+                case 4: //Заказ ожидает в пункте выдачи
+                    ProgressBarForeground = "#00bd87";
+                    ProgressBarAnimation = true;
+                    break;
+                case 5: //Заказ забран
+                    ProgressBarForeground = "#5bc746";
                     ProgressBarAnimation = false;
                     ProgressBarValue = 100;
                     break;
-                case 5: //Заказ отменен
-                    ProgressBarForeground = "#db0f0f";
-                    Status = "Отменен";
-                    ProgressBarAnimation = true;
+                case 6: //Заказ отменен
+                    ProgressBarForeground = "#c43f3f";
+                    ProgressBarAnimation = false;
+                    ProgressBarValue = 100;
                     break;
             }
         }

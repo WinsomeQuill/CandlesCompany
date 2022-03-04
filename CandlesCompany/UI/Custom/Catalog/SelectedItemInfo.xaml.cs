@@ -26,7 +26,7 @@ namespace CandlesCompany.UI.Custom.Catalog
         {
             InitializeComponent();
         }
-        private void ButtonCatalogSelectedItemBuy_Click(object sender, RoutedEventArgs e)
+        private async void ButtonCatalogSelectedItemBuy_Click(object sender, RoutedEventArgs e)
         {
             if (_candle == null)
             {
@@ -40,7 +40,7 @@ namespace CandlesCompany.UI.Custom.Catalog
                 return;
             }
 
-            Utils.Utils.AddItemInBasket(_candle);
+            await Utils.Utils.AddItemInBasket(_candle);
             ButtonCatalogSelectedItemBuy.IsEnabled = false;
             ButtonCatalogSelectedItemBuy.Content = "В корзине";
         }

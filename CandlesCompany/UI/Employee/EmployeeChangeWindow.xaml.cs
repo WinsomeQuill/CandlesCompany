@@ -51,7 +51,7 @@ namespace CandlesCompany.UI.Employee
             }*/
         }
 
-        private void ButtonEmployeeChange_Click(object sender, RoutedEventArgs e)
+        private async void ButtonEmployeeChange_Click(object sender, RoutedEventArgs e)
         {
             Users user = (Users)(ComboBoxEmployeeChangeEmail.SelectedItem as ComboBoxItem).Tag;
             string role = ComboBoxEmployeeChangeRole.SelectedItem.ToString();
@@ -62,7 +62,7 @@ namespace CandlesCompany.UI.Employee
                 return;
             }
 
-            DBManager.ChangeRoleById(user.Id, role);
+            await DBManager.ChangeRoleById(user.Id, role);
             MessageBox.Show($"Вы изменили сотруднику \"{user.Last_Name} {user.First_Name}\" должность на \"{role}\"!", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
             ComboBoxEmployeeChangeEmail.Items.Clear();
             ComboBoxEmployeeChangeRole.Items.Clear();

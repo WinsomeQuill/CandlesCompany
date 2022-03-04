@@ -55,7 +55,7 @@ namespace CandlesCompany.UI.Employee
             }).Start();*/
         }
 
-        private void ButtonEmployeeRemove_Click(object sender, RoutedEventArgs e)
+        private async void ButtonEmployeeRemove_Click(object sender, RoutedEventArgs e)
         {
             Users user = (Users)(ComboBoxEmployeeRemove.SelectedItem as ComboBoxItem).Tag;
             MessageBoxResult result = MessageBox.Show($"Вы действительно хотите снять с должности \"{user.Roles.Name}\" сотрудника \"{user.Last_Name} {user.First_Name}\"", "Подтверждение",
@@ -66,7 +66,7 @@ namespace CandlesCompany.UI.Employee
             MessageBox.Show($"Вы сняли с должности \"{user.Roles.Name}\" сотрудника \"{user.Last_Name} {user.First_Name}\"!", "Успешно", 
                 MessageBoxButton.OK, MessageBoxImage.Information);
 
-            DBManager.ChangeRoleById(user.Id, "Пользователь");
+            await DBManager.ChangeRoleById(user.Id, "Пользователь");
             ComboBoxEmployeeRemove.Items.Clear();
             Init();
         }

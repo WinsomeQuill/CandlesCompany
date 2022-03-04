@@ -76,7 +76,7 @@ namespace CandlesCompany.Utils
             {
                 Orders order = await DBManager.AddOrder(Cache.UserCache._id, item._candle.Id, item._count, (double)item._candle.Price * item._count, _summaryInformation._address);
                 _dataGridOrdersList.Items.Add(new UI.Custom.Orders.OrderList(order));
-                DBManager.RemoveCandlesBasket(Cache.UserCache._id, item._candle);
+                await DBManager.RemoveCandlesBasket(Cache.UserCache._id, item._candle);
             }
             _listViewBasket.Items.Clear();
 
@@ -86,10 +86,10 @@ namespace CandlesCompany.Utils
         {
             return Cache.UserCache.Basket.ContainsKey(candle);
         }
-        public static void AddItemInBasket(Candles candle)
+        public async static Task AddItemInBasket(Candles candle)
         {
             _mainWindow.ListViewBasket.Items.Add(new UI.Custom.Basket.BasketItem(candle));
-            DBManager.AddCandlesBasket(Cache.UserCache._id, candle);
+            await DBManager.AddCandlesBasket(Cache.UserCache._id, candle);
             _summaryInformation.AddCount(1);
             _summaryInformation.AddPrice((double)candle.Price);
         }

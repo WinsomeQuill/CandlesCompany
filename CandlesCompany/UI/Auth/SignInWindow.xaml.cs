@@ -36,47 +36,41 @@ namespace CandlesCompany.UI.Auth
             string email = TextBoxSignInEmail.Text;
             string pass = PasswordBoxSignIn.Password;
 
-            await Task.Run(async () =>
+            ButtonSignInJoin.IsEnabled = PasswordBoxSignIn.IsEnabled = TextBoxSignInEmail.IsEnabled = ButtonSignInRegistered.IsEnabled = false;
+            ProgressBarSignInLoading.Visibility = Visibility.Visible;
+            if (!await DBManager.Join(email, pass))
             {
-                await Dispatcher.InvokeAsync(async () =>
-                {
-                    ButtonSignInJoin.IsEnabled = PasswordBoxSignIn.IsEnabled = TextBoxSignInEmail.IsEnabled = ButtonSignInRegistered.IsEnabled = false;
-                    ProgressBarSignInLoading.Visibility = Visibility.Visible;
-                    if (!await DBManager.Join(email, pass))
-                    {
-                        ButtonSignInJoin.IsEnabled = PasswordBoxSignIn.IsEnabled = TextBoxSignInEmail.IsEnabled = ButtonSignInRegistered.IsEnabled = true;
-                        ProgressBarSignInLoading.Visibility = Visibility.Collapsed;
-                        MessageBox.Show("Неверный логин или пароль!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-                        return;
-                    }
+                ButtonSignInJoin.IsEnabled = PasswordBoxSignIn.IsEnabled = TextBoxSignInEmail.IsEnabled = ButtonSignInRegistered.IsEnabled = true;
+                ProgressBarSignInLoading.Visibility = Visibility.Collapsed;
+                MessageBox.Show("Неверный логин или пароль!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
 
-                    ProgressBarSignInLoading.Visibility = Visibility.Collapsed;
-                    Utils.Utils._defaultAvatar = new BitmapImage(new Uri(@"pack://application:,,,/CandlesCompany;component/Resources/Images/Users/default_avatar.png"));
-                    Users user = await DBManager.UserInfo(email);
+            ProgressBarSignInLoading.Visibility = Visibility.Collapsed;
+            Utils.Utils._defaultAvatar = new BitmapImage(new Uri(@"pack://application:,,,/CandlesCompany;component/Resources/Images/Users/default_avatar.png"));
+            Users user = await DBManager.UserInfo(email);
 
-                    BitmapImage avatar = null;
-                    if (user.Avatar == null)
-                    {
-                        avatar = Utils.Utils._defaultAvatar;
-                    }
-                    else
-                    {
-                        avatar = Utils.Utils.BinaryToImage(user.Avatar);
-                    }
+            BitmapImage avatar = null;
+            if (user.Avatar == null)
+            {
+                avatar = Utils.Utils._defaultAvatar;
+            }
+            else
+            {
+                avatar = Utils.Utils.BinaryToImage(user.Avatar);
+            }
 
-                    UserCache._id = user.Id;
-                    UserCache._first_name = user.First_Name;
-                    UserCache._last_name = user.Last_Name;
-                    UserCache._middle_name = user.Middle_Name;
-                    UserCache._phone = user.Phone;
-                    UserCache._email = user.Email;
-                    UserCache._role = user.Roles;
-                    UserCache._avatar = avatar;
+            UserCache._id = user.Id;
+            UserCache._first_name = user.First_Name;
+            UserCache._last_name = user.Last_Name;
+            UserCache._middle_name = user.Middle_Name;
+            UserCache._phone = user.Phone;
+            UserCache._email = user.Email;
+            UserCache._role = user.Roles;
+            UserCache._avatar = avatar;
 
-                    new MainWindow().Show();
-                    Close();
-                });
-            });
+            new MainWindow().Show();
+            Close();
         }
     }
 }

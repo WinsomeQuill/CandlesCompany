@@ -238,7 +238,15 @@
 
                     <ListView x:Name="ListViewBasket"
                               HorizontalContentAlignment="Center"
-                              Grid.Column="0"/>
+                              Grid.Column="0"
+                              Visibility="Visible"/>
+
+                    <TextBlock x:Name="TextBlockBasket"
+                               Style="{StaticResource MaterialDesignHeadline3TextBlock}"
+                               Grid.Column="0"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               Visibility="Hidden"/>
                 </Grid>
             </TabItem>
             <TabItem>
@@ -869,8 +877,7 @@
                                             VerticalAlignment="Center"
                                             Width="200"
                                             Margin="0,0,10,0"
-                                            Visibility="Collapsed"
-                                            Click="ButtonManagementAddressesListPageBack_Click"/>
+                                            Visibility="Collapsed"/>
 
                                     <Grid Grid.Column="1"
                                           Visibility="Collapsed">
@@ -885,8 +892,7 @@
                                                  materialDesign:HintAssist.IsFloating="True"
                                                  VerticalAlignment="Center"
                                                  Margin="10,0,10,0"
-                                                 Visibility="Collapsed"
-                                                 KeyDown="TextBoxManagementAddressesListPage_KeyDown"/>
+                                                 Visibility="Collapsed"/>
 
                                         <TextBlock x:Name="TextBlockManagementAddressesListTotalPage"
                                                    Grid.Column="1"
@@ -902,8 +908,7 @@
                                             VerticalAlignment="Center"
                                             Width="200"
                                             Margin="10,0,0,0"
-                                            Visibility="Collapsed"
-                                            Click="ButtonManagementAddressesListPageNext_Click"/>
+                                            Visibility="Collapsed"/>
                                 </Grid>
                             </Grid>
                         </TabItem>

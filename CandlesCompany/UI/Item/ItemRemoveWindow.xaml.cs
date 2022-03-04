@@ -27,9 +27,9 @@ namespace CandlesCompany.UI.Item
         }
         private void Init()
         {
-            new Thread(delegate ()
+            new Task(async () =>
             {
-                Dispatcher.Invoke(async () =>
+                await Dispatcher.InvokeAsync(async () =>
                 {
                     if (ComboBoxItemRemoveSelectItem.Items.Count != 0)
                     {
@@ -50,24 +50,18 @@ namespace CandlesCompany.UI.Item
                 });
             }).Start();
         }
-        private void ButtonItemRemoveSave_Click(object sender, RoutedEventArgs e)
+        private async void ButtonItemRemoveSave_Click(object sender, RoutedEventArgs e)
         {
-            new Thread(delegate ()
-            {
-                Dispatcher.Invoke(delegate ()
-                {
-                    ComboBoxItem item = ComboBoxItemRemoveSelectItem.SelectedItem as ComboBoxItem;
-                    Candles candle = item.Tag as Candles;
-                    MessageBoxResult result =  MessageBox.Show($"Вы действительно хотите удалить товар \"{candle.Name}\"", "Подтверждени",
-                        MessageBoxButton.YesNo, MessageBoxImage.Question);
+            ComboBoxItem item = ComboBoxItemRemoveSelectItem.SelectedItem as ComboBoxItem;
+            Candles candle = item.Tag as Candles;
+            MessageBoxResult result =  MessageBox.Show($"Вы действительно хотите удалить товар \"{candle.Name}\"", "Подтверждени",
+                MessageBoxButton.YesNo, MessageBoxImage.Question);
 
-                    if (result == MessageBoxResult.No) { return; }
+            if (result == MessageBoxResult.No) { return; }
 
-                    MessageBox.Show($"Вы удалили товар \"{candle.Name}\"!", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
-                    DBManager.RemoveItem(candle.Id);
-                    Init();
-                });
-            }).Start();
+            MessageBox.Show($"Вы удалили товар \"{candle.Name}\"!", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
+            await DBManager.RemoveItem(candle.Id);
+            Init();
         }
     }
 }

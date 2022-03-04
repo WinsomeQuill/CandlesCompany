@@ -59,9 +59,9 @@ namespace CandlesCompany.UI.Item
         }
         private void ButtonItemAddSave_Click(object sender, RoutedEventArgs e)
         {
-            new Thread(delegate ()
+            new Thread(async () =>
             {
-                Dispatcher.Invoke(delegate ()
+                await Dispatcher.InvokeAsync(async () =>
                 {
                     if (!new Regex("^[0-9]+$").IsMatch(TextBoxItemAddCount.Text))
                     {
@@ -122,7 +122,7 @@ namespace CandlesCompany.UI.Item
                     }
 
 
-                    DBManager.AddItem(type_Candle.Id, name, description, count, price, image);
+                    await DBManager.AddItem(type_Candle.Id, name, description, count, price, image);
                     MessageBox.Show($"Вы добавили товар \"{name}\"!", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
                 });
             }).Start();

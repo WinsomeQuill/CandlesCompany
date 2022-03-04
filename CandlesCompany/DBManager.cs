@@ -22,7 +22,7 @@ namespace CandlesCompany
         {
             return await db.Users.Where(x => x.Email == email).Select(x => x.Id).FirstOrDefaultAsync() != 0;
         }
-        public async static void Registration(string email, string pass, string first_name, string last_name, string middle_name = null)
+        public async static Task Registration(string email, string pass, string first_name, string last_name, string middle_name = null)
         {
             Users user = new Users
             {
@@ -49,13 +49,14 @@ namespace CandlesCompany
         {
             return await db.Roles.Where(x => x.Id != 1 && x.Id != 6).Select(x => x.Name).ToListAsync();
         }
-        public async static void ChangeRoleById(int id, string role)
+        public async static Task ChangeRoleById(int id, string role)
         {
             Users user = await db.Users.SingleOrDefaultAsync(x => x.Id == id);
+            if (user.Roles.Name == role) { return; }
             user.Id_Role = await db.Roles.Where(x => x.Name == role).Select(x => x.Id).FirstOrDefaultAsync();
             await db.SaveChangesAsync();
         }
-        public async static void ChangeRoleById(string email, string role)
+        public async static Task ChangeRoleById(string email, string role)
         {
             Users user = await db.Users.SingleOrDefaultAsync(x => x.Email == email);
             user.Id_Role = await db.Roles.Where(x => x.Name == role).Select(x => x.Id).FirstOrDefaultAsync();
@@ -114,7 +115,7 @@ namespace CandlesCompany
         {
             return await db.Type_Candle.Select(x => x).ToListAsync();
         }
-        public async static void UpdateItem(int id, int id_type, string name, string description, int count, double price, byte[] image)
+        public async static Task UpdateItem(int id, int id_type, string name, string description, int count, double price, byte[] image)
         {
             Candles candle = await db.Candles.SingleOrDefaultAsync(x => x.Id == id);
             candle.Image = image;
@@ -125,7 +126,7 @@ namespace CandlesCompany
             candle.Id_Type_Candle = id_type;
             await db.SaveChangesAsync();
         }
-        public async static void AddItem(int id_type, string name, string description, int count, double price, byte[] image)
+        public async static Task AddItem(int id_type, string name, string description, int count, double price, byte[] image)
         {
             Candles candle = new Candles
             {
@@ -139,7 +140,7 @@ namespace CandlesCompany
             db.Candles.Add(candle);
             await db.SaveChangesAsync();
         }
-        public async static void RemoveItem(int id)
+        public async static Task RemoveItem(int id)
         {
             Candles candle = await db.Candles.Where(x => x.Id == id).SingleOrDefaultAsync();
             db.Candles.Remove(candle);
@@ -149,13 +150,13 @@ namespace CandlesCompany
         {
             return await db.Users_Baskets.Where(x => x.Id_User == id_user && x.Candles.Id == x.Id_Candles).ToDictionaryAsync(x => x.Candles, x => x.Count);
         }
-        public async static void AddCandlesBasket(int id_user, Candles candle)
+        public async static Task AddCandlesBasket(int id_user, Candles candle)
         {
             db.Users_Baskets.Add(new Users_Baskets { Id_Candles = candle.Id, Id_User = id_user, Count = 1 });
             await db.SaveChangesAsync();
             UserCache.Basket.Add(candle, 1);
         }
-        public async static void UpdateCandlesBasket(int id_user, Candles candle, int count)
+        public async static Task UpdateCandlesBasket(int id_user, Candles candle, int count)
         {
             Users_Baskets basket = await db.Users_Baskets.Where(x => x.Id_User == id_user && x.Id_Candles == candle.Id).SingleOrDefaultAsync();
             basket.Count = count;
@@ -163,7 +164,7 @@ namespace CandlesCompany
             UserCache.Basket.Remove(candle);
             UserCache.Basket.Add(candle, count);
         }
-        public async static void RemoveCandlesBasket(int id_user, Candles candle)
+        public async static Task RemoveCandlesBasket(int id_user, Candles candle)
         {
             Users_Baskets basket = await db.Users_Baskets.Where(x => x.Id_User == id_user && x.Id_Candles == candle.Id).SingleOrDefaultAsync();
             db.Users_Baskets.Remove(basket);
@@ -182,9 +183,13 @@ namespace CandlesCompany
         {
             return await db.Orders.Where(x => x.Candles_Order.Candles.Name.Contains(name_candle)).Select(x => x).Distinct().Take(250).ToListAsync();
         }
-        public async static void ChangeOrderStatus(int id_order, string status)
+        public async static Task ChangeOrderStatus(int id_order, string status)
         {
             Orders order = await db.Orders.Where(x => x.Id == id_order).Select(x => x).SingleOrDefaultAsync();
+            if (order.Order_Status.Name == status)
+            {
+                return;
+            }
             order.Id_Status = await db.Order_Status.Where(x => x.Name == status).Select(x => x.Id).SingleOrDefaultAsync();
             await db.SaveChangesAsync();
         }
@@ -221,14 +226,14 @@ namespace CandlesCompany
             await db.SaveChangesAsync();
             return order;
         }
-        public async static void RemoveAvatarUser()
+        public async static Task RemoveAvatarUser()
         {
             Users user = await db.Users.Where(x => x.Id == UserCache._id).SingleOrDefaultAsync();
             UserCache._avatar = null;
             user.Avatar = null;
             await db.SaveChangesAsync();
         }
-        public async static void SetAvatarUser(byte[] image)
+        public async static Task SetAvatarUser(byte[] image)
         {
             Users user = await db.Users.Where(x => x.Id == UserCache._id).SingleOrDefaultAsync();
             UserCache._avatar = Utils.Utils.BinaryToImage(image);
@@ -250,7 +255,7 @@ namespace CandlesCompany
         {
             return await db.Order_Address.Select(x => x).ToListAsync();
         }
-        public async static void RemoveAddress(int id_address)
+        public async static Task RemoveAddress(int id_address)
         {
             List<Orders> orders = await db.Orders.Where(x => x.Id_Address == id_address).ToListAsync();
             orders.ForEach(o =>

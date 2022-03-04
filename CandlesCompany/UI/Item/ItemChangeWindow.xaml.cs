@@ -121,9 +121,9 @@ namespace CandlesCompany.UI.Item
         }
         private void ButtonItemChangeSave_Click(object sender, RoutedEventArgs e)
         {
-            new Thread(delegate ()
+            new Task(async () =>
             {
-                Dispatcher.Invoke(delegate ()
+                await Dispatcher.InvokeAsync(async () =>
                 {
                     if (!new Regex("^[0-9]+$").IsMatch(TextBoxItemChangeCount.Text))
                     {
@@ -187,7 +187,7 @@ namespace CandlesCompany.UI.Item
                         return;
                     }
 
-                    DBManager.UpdateItem(id, type_Candle.Id, name, description, count, price, image);
+                    await DBManager.UpdateItem(id, type_Candle.Id, name, description, count, price, image);
                     MessageBox.Show($"Вы обновили товар \"{candle.Name}\"!", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
                     Init();
                 });
