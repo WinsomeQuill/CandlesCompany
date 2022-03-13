@@ -60,17 +60,30 @@ namespace CandlesCompany.UI
                 TabItemAdmin.Visibility = Visibility.Collapsed;
             }
 
-            Parallel.Invoke(async () =>
-            {
-                await Dispatcher.InvokeAsync(async () =>
+            Parallel.Invoke(
+                () =>
                 {
-                    Utils.Utils._roles = await DBManager.GetRoles();
-                    await SummaryInformationInit();
-                    await BasketInit();
-                    await CatalogInit();
-                    await ReloadOrdersList();
+                    new Thread(async () =>
+                    {
+                        await Dispatcher.InvokeAsync(async () =>
+                        {
+                            Utils.Utils._roles = await DBManager.GetRoles();
+                        });
+                    }).Start();
+                },
+                () =>
+                {
+                    new Thread(async () =>
+                    {
+                        await Dispatcher.InvokeAsync(async () =>
+                        {
+                            await SummaryInformationInit();
+                            await BasketInit();
+                            await CatalogInit();
+                            await ReloadOrdersList();
+                        });
+                    }).Start();
                 });
-            });
 
             Parallel.Invoke(
                 async () =>
