@@ -4,78 +4,78 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="Хранилище candlesModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl" Alias="Self" Namespace="Хранилище candlesModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012">
         <EntityType Name="Candles">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Name" Type="nvarchar" MaxLength="60" Nullable="false" />
-          <Property Name="Description" Type="nvarchar" MaxLength="250" Nullable="false" />
-          <Property Name="Price" Type="decimal" Precision="10" Scale="2" Nullable="false" />
-          <Property Name="Id_Type_Candle" Type="int" Nullable="false" />
-          <Property Name="Count" Type="int" Nullable="false" />
+          <Property Name="Id" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="Name" Nullable="false" MaxLength="60" Type="nvarchar" />
+          <Property Name="Description" Nullable="false" MaxLength="250" Type="nvarchar" />
+          <Property Name="Price" Nullable="false" Precision="10" Scale="2" Type="decimal" />
+          <Property Name="Id_Type_Candle" Nullable="false" Type="int" />
+          <Property Name="Count" Nullable="false" Type="int" />
           <Property Name="Image" Type="image" />
         </EntityType>
         <EntityType Name="Candles_Order">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Count" Type="int" Nullable="false" />
+          <Property Name="Id" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="Count" Nullable="false" Type="int" />
           <Property Name="Id_Candles_Sale_Percent" Type="int" />
-          <Property Name="Id_Candles" Type="int" Nullable="false" />
+          <Property Name="Id_Candles" Nullable="false" Type="int" />
         </EntityType>
         <EntityType Name="Candles_Sale_Percent">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Sale_Percent" Type="int" Nullable="false" />
-          <Property Name="DateStart" Type="datetime" Nullable="false" />
-          <Property Name="DateEnd" Type="datetime" Nullable="false" />
+          <Property Name="Id" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="Sale_Percent" Nullable="false" Type="int" />
+          <Property Name="DateStart" Nullable="false" Type="datetime" />
+          <Property Name="DateEnd" Nullable="false" Type="datetime" />
         </EntityType>
         <EntityType Name="Order_Address">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Address" Type="nvarchar" MaxLength="170" Nullable="false" />
+          <Property Name="Id" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="Address" Nullable="false" MaxLength="170" Type="nvarchar" />
         </EntityType>
         <EntityType Name="Order_Status">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Id" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="Name" Nullable="false" MaxLength="50" Type="nvarchar" />
         </EntityType>
         <EntityType Name="Orders">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Id_User" Type="int" Nullable="false" />
-          <Property Name="Id_Candles_Order" Type="int" Nullable="false" />
-          <Property Name="Price" Type="decimal" Precision="10" Scale="2" Nullable="false" />
-          <Property Name="Id_Status" Type="int" Nullable="false" />
+          <Property Name="Id" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="Id_User" Nullable="false" Type="int" />
+          <Property Name="Id_Candles_Order" Nullable="false" Type="int" />
+          <Property Name="Price" Nullable="false" Precision="10" Scale="2" Type="decimal" />
+          <Property Name="Id_Status" Nullable="false" Type="int" />
           <Property Name="Id_Address" Type="int" />
-          <Property Name="Date" Type="datetime" Nullable="false" />
+          <Property Name="Date" Nullable="false" Type="datetime" />
         </EntityType>
         <EntityType Name="Roles">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="Priority" Type="int" Nullable="false" />
+          <Property Name="Id" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="Name" Nullable="false" MaxLength="50" Type="nvarchar" />
+          <Property Name="Priority" Nullable="false" Type="int" />
         </EntityType>
         <EntityType Name="sysdiagrams">
           <Key>
             <PropertyRef Name="diagram_id" />
           </Key>
-          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="principal_id" Type="int" Nullable="false" />
-          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Nullable="false" MaxLength="128" Type="nvarchar" />
+          <Property Name="principal_id" Nullable="false" Type="int" />
+          <Property Name="diagram_id" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
           <Property Name="version" Type="int" />
           <Property Name="definition" Type="varbinary(max)" />
         </EntityType>
@@ -83,35 +83,49 @@
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Name" Type="nvarchar" MaxLength="90" Nullable="false" />
+          <Property Name="Id" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="Name" Nullable="false" MaxLength="90" Type="nvarchar" />
         </EntityType>
         <EntityType Name="Users">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="First_Name" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="Last_Name" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="Middle_Name" Type="nvarchar" MaxLength="50" />
-          <Property Name="Id_Role" Type="int" Nullable="false" />
-          <Property Name="Phone" Type="nvarchar" MaxLength="11" />
-          <Property Name="Email" Type="nvarchar" MaxLength="170" Nullable="false" />
-          <Property Name="Password" Type="nvarchar" MaxLength="36" Nullable="false" />
+          <Property Name="Id" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="First_Name" Nullable="false" MaxLength="50" Type="nvarchar" />
+          <Property Name="Last_Name" Nullable="false" MaxLength="50" Type="nvarchar" />
+          <Property Name="Middle_Name" MaxLength="50" Type="nvarchar" />
+          <Property Name="Id_Role" Nullable="false" Type="int" />
+          <Property Name="Phone" MaxLength="11" Type="nvarchar" />
+          <Property Name="Email" Nullable="false" MaxLength="170" Type="nvarchar" />
+          <Property Name="Password" Nullable="false" MaxLength="36" Type="nvarchar" />
           <Property Name="Avatar" Type="image" />
         </EntityType>
         <EntityType Name="Users_Baskets">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Id_User" Type="int" Nullable="false" />
-          <Property Name="Id_Candles" Type="int" Nullable="false" />
-          <Property Name="Count" Type="int" Nullable="false" />
+          <Property Name="Id" Nullable="false" StoreGeneratedPattern="Identity" Type="int" />
+          <Property Name="Id_User" Nullable="false" Type="int" />
+          <Property Name="Id_Candles" Nullable="false" Type="int" />
+          <Property Name="Count" Nullable="false" Type="int" />
+        </EntityType>
+        <!--Ошибки, обнаруженные при создании:
+предупреждение 6002: В таблице или представлении "candles.dbo.Users_Block" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
+        <EntityType Name="Users_Block">
+          <Key>
+            <PropertyRef Name="Id_Users" />
+            <PropertyRef Name="DateStart" />
+            <PropertyRef Name="Id_Admin" />
+            <PropertyRef Name="Reason" />
+          </Key>
+          <Property Name="Id_Users" Nullable="false" Type="int" />
+          <Property Name="DateStart" Nullable="false" Type="datetime" />
+          <Property Name="Id_Admin" Nullable="false" Type="int" />
+          <Property Name="Reason" Nullable="false" MaxLength="250" Type="nvarchar" />
         </EntityType>
         <Association Name="FK_Candles_Order_Candles">
-          <End Role="Candles" Type="Self.Candles" Multiplicity="1" />
-          <End Role="Candles_Order" Type="Self.Candles_Order" Multiplicity="*" />
+          <End Type="Self.Candles" Multiplicity="1" Role="Candles" />
+          <End Type="Self.Candles_Order" Multiplicity="*" Role="Candles_Order" />
           <ReferentialConstraint>
             <Principal Role="Candles">
               <PropertyRef Name="Id" />
@@ -122,8 +136,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Candles_Order_Candles_Sale_Percent">
-          <End Role="Candles_Sale_Percent" Type="Self.Candles_Sale_Percent" Multiplicity="0..1" />
-          <End Role="Candles_Order" Type="Self.Candles_Order" Multiplicity="*" />
+          <End Type="Self.Candles_Sale_Percent" Multiplicity="0..1" Role="Candles_Sale_Percent" />
+          <End Type="Self.Candles_Order" Multiplicity="*" Role="Candles_Order" />
           <ReferentialConstraint>
             <Principal Role="Candles_Sale_Percent">
               <PropertyRef Name="Id" />
@@ -134,8 +148,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Candles_Type_Candle">
-          <End Role="Type_Candle" Type="Self.Type_Candle" Multiplicity="1" />
-          <End Role="Candles" Type="Self.Candles" Multiplicity="*" />
+          <End Type="Self.Type_Candle" Multiplicity="1" Role="Type_Candle" />
+          <End Type="Self.Candles" Multiplicity="*" Role="Candles" />
           <ReferentialConstraint>
             <Principal Role="Type_Candle">
               <PropertyRef Name="Id" />
@@ -146,8 +160,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Orders_Candles_Order">
-          <End Role="Candles_Order" Type="Self.Candles_Order" Multiplicity="1" />
-          <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
+          <End Type="Self.Candles_Order" Multiplicity="1" Role="Candles_Order" />
+          <End Type="Self.Orders" Multiplicity="*" Role="Orders" />
           <ReferentialConstraint>
             <Principal Role="Candles_Order">
               <PropertyRef Name="Id" />
@@ -158,8 +172,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Orders_Order_Address">
-          <End Role="Order_Address" Type="Self.Order_Address" Multiplicity="0..1" />
-          <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
+          <End Type="Self.Order_Address" Multiplicity="0..1" Role="Order_Address" />
+          <End Type="Self.Orders" Multiplicity="*" Role="Orders" />
           <ReferentialConstraint>
             <Principal Role="Order_Address">
               <PropertyRef Name="Id" />
@@ -170,8 +184,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Orders_Order_Status">
-          <End Role="Order_Status" Type="Self.Order_Status" Multiplicity="1" />
-          <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
+          <End Type="Self.Order_Status" Multiplicity="1" Role="Order_Status" />
+          <End Type="Self.Orders" Multiplicity="*" Role="Orders" />
           <ReferentialConstraint>
             <Principal Role="Order_Status">
               <PropertyRef Name="Id" />
@@ -182,8 +196,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Orders_Users1">
-          <End Role="Users" Type="Self.Users" Multiplicity="1" />
-          <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
+          <End Type="Self.Users" Multiplicity="1" Role="Users" />
+          <End Type="Self.Orders" Multiplicity="*" Role="Orders" />
           <ReferentialConstraint>
             <Principal Role="Users">
               <PropertyRef Name="Id" />
@@ -194,8 +208,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Users_Baskets_Candles">
-          <End Role="Candles" Type="Self.Candles" Multiplicity="1" />
-          <End Role="Users_Baskets" Type="Self.Users_Baskets" Multiplicity="*" />
+          <End Type="Self.Candles" Multiplicity="1" Role="Candles" />
+          <End Type="Self.Users_Baskets" Multiplicity="*" Role="Users_Baskets" />
           <ReferentialConstraint>
             <Principal Role="Candles">
               <PropertyRef Name="Id" />
@@ -206,8 +220,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Users_Baskets_Users">
-          <End Role="Users" Type="Self.Users" Multiplicity="1" />
-          <End Role="Users_Baskets" Type="Self.Users_Baskets" Multiplicity="*" />
+          <End Type="Self.Users" Multiplicity="1" Role="Users" />
+          <End Type="Self.Users_Baskets" Multiplicity="*" Role="Users_Baskets" />
           <ReferentialConstraint>
             <Principal Role="Users">
               <PropertyRef Name="Id" />
@@ -217,9 +231,33 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Users_Block_Users">
+          <End Type="Self.Users" Multiplicity="1" Role="Users" />
+          <End Type="Self.Users_Block" Multiplicity="*" Role="Users_Block" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Users_Block">
+              <PropertyRef Name="Id_Users" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Users_Block_Users1">
+          <End Type="Self.Users" Multiplicity="1" Role="Users" />
+          <End Type="Self.Users_Block" Multiplicity="*" Role="Users_Block" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Users_Block">
+              <PropertyRef Name="Id_Admin" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Users_Roles">
-          <End Role="Roles" Type="Self.Roles" Multiplicity="1" />
-          <End Role="Users" Type="Self.Users" Multiplicity="*" />
+          <End Type="Self.Roles" Multiplicity="1" Role="Roles" />
+          <End Type="Self.Users" Multiplicity="*" Role="Users" />
           <ReferentialConstraint>
             <Principal Role="Roles">
               <PropertyRef Name="Id" />
@@ -241,49 +279,64 @@
           <EntitySet Name="Type_Candle" EntityType="Self.Type_Candle" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users_Baskets" EntityType="Self.Users_Baskets" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Users_Block" EntityType="Self.Users_Block" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [Users_Block].[Id_Users] AS [Id_Users], 
+    [Users_Block].[DateStart] AS [DateStart], 
+    [Users_Block].[Id_Admin] AS [Id_Admin], 
+    [Users_Block].[Reason] AS [Reason]
+    FROM [dbo].[Users_Block] AS [Users_Block]</DefiningQuery>
+          </EntitySet>
           <AssociationSet Name="FK_Candles_Order_Candles" Association="Self.FK_Candles_Order_Candles">
-            <End Role="Candles" EntitySet="Candles" />
-            <End Role="Candles_Order" EntitySet="Candles_Order" />
+            <End EntitySet="Candles" Role="Candles" />
+            <End EntitySet="Candles_Order" Role="Candles_Order" />
           </AssociationSet>
           <AssociationSet Name="FK_Candles_Order_Candles_Sale_Percent" Association="Self.FK_Candles_Order_Candles_Sale_Percent">
-            <End Role="Candles_Sale_Percent" EntitySet="Candles_Sale_Percent" />
-            <End Role="Candles_Order" EntitySet="Candles_Order" />
+            <End EntitySet="Candles_Sale_Percent" Role="Candles_Sale_Percent" />
+            <End EntitySet="Candles_Order" Role="Candles_Order" />
           </AssociationSet>
           <AssociationSet Name="FK_Candles_Type_Candle" Association="Self.FK_Candles_Type_Candle">
-            <End Role="Type_Candle" EntitySet="Type_Candle" />
-            <End Role="Candles" EntitySet="Candles" />
+            <End EntitySet="Type_Candle" Role="Type_Candle" />
+            <End EntitySet="Candles" Role="Candles" />
           </AssociationSet>
           <AssociationSet Name="FK_Orders_Candles_Order" Association="Self.FK_Orders_Candles_Order">
-            <End Role="Candles_Order" EntitySet="Candles_Order" />
-            <End Role="Orders" EntitySet="Orders" />
+            <End EntitySet="Candles_Order" Role="Candles_Order" />
+            <End EntitySet="Orders" Role="Orders" />
           </AssociationSet>
           <AssociationSet Name="FK_Orders_Order_Address" Association="Self.FK_Orders_Order_Address">
-            <End Role="Order_Address" EntitySet="Order_Address" />
-            <End Role="Orders" EntitySet="Orders" />
+            <End EntitySet="Order_Address" Role="Order_Address" />
+            <End EntitySet="Orders" Role="Orders" />
           </AssociationSet>
           <AssociationSet Name="FK_Orders_Order_Status" Association="Self.FK_Orders_Order_Status">
-            <End Role="Order_Status" EntitySet="Order_Status" />
-            <End Role="Orders" EntitySet="Orders" />
+            <End EntitySet="Order_Status" Role="Order_Status" />
+            <End EntitySet="Orders" Role="Orders" />
           </AssociationSet>
           <AssociationSet Name="FK_Orders_Users1" Association="Self.FK_Orders_Users1">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="Orders" EntitySet="Orders" />
+            <End EntitySet="Users" Role="Users" />
+            <End EntitySet="Orders" Role="Orders" />
           </AssociationSet>
           <AssociationSet Name="FK_Users_Baskets_Candles" Association="Self.FK_Users_Baskets_Candles">
-            <End Role="Candles" EntitySet="Candles" />
-            <End Role="Users_Baskets" EntitySet="Users_Baskets" />
+            <End EntitySet="Candles" Role="Candles" />
+            <End EntitySet="Users_Baskets" Role="Users_Baskets" />
           </AssociationSet>
           <AssociationSet Name="FK_Users_Baskets_Users" Association="Self.FK_Users_Baskets_Users">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="Users_Baskets" EntitySet="Users_Baskets" />
+            <End EntitySet="Users" Role="Users" />
+            <End EntitySet="Users_Baskets" Role="Users_Baskets" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Users_Block_Users" Association="Self.FK_Users_Block_Users">
+            <End EntitySet="Users" Role="Users" />
+            <End EntitySet="Users_Block" Role="Users_Block" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Users_Block_Users1" Association="Self.FK_Users_Block_Users1">
+            <End EntitySet="Users" Role="Users" />
+            <End EntitySet="Users_Block" Role="Users_Block" />
           </AssociationSet>
           <AssociationSet Name="FK_Users_Roles" Association="Self.FK_Users_Roles">
-            <End Role="Roles" EntitySet="Roles" />
-            <End Role="Users" EntitySet="Users" />
+            <End EntitySet="Roles" Role="Roles" />
+            <End EntitySet="Users" Role="Users" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="candlesModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -399,7 +452,9 @@
           <NavigationProperty Name="Orders" Relationship="Self.FK_Orders_Users1" FromRole="Users" ToRole="Orders" />
           <NavigationProperty Name="Roles" Relationship="Self.FK_Users_Roles" FromRole="Users" ToRole="Roles" />
           <NavigationProperty Name="Users_Baskets" Relationship="Self.FK_Users_Baskets_Users" FromRole="Users" ToRole="Users_Baskets" />
-        </EntityType>
+          <NavigationProperty Name="Users_Block" Relationship="candlesModel.FK_Users_Block_Users" FromRole="Users" ToRole="Users_Block" />
+          <NavigationProperty Name="Users_Block1" Relationship="candlesModel.FK_Users_Block_Users1" FromRole="Users" ToRole="Users_Block" />
+          </EntityType>
         <EntityType Name="Users_Baskets">
           <Key>
             <PropertyRef Name="Id" />
@@ -583,7 +638,54 @@
             <End Role="Users" EntitySet="Users" />
             <End Role="Users_Baskets" EntitySet="Users_Baskets" />
           </AssociationSet>
-        </EntityContainer>
+          <EntitySet Name="Users_Block" EntityType="candlesModel.Users_Block" />
+          <AssociationSet Name="FK_Users_Block_Users" Association="candlesModel.FK_Users_Block_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Users_Block" EntitySet="Users_Block" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Users_Block_Users1" Association="candlesModel.FK_Users_Block_Users1">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Users_Block" EntitySet="Users_Block" />
+          </AssociationSet>
+          </EntityContainer>
+        <EntityType Name="Users_Block">
+          <Key>
+            <PropertyRef Name="Id_Users" />
+            <PropertyRef Name="DateStart" />
+            <PropertyRef Name="Id_Admin" />
+            <PropertyRef Name="Reason" />
+          </Key>
+          <Property Name="Id_Users" Type="Int32" Nullable="false" />
+          <Property Name="DateStart" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Id_Admin" Type="Int32" Nullable="false" />
+          <Property Name="Reason" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Users" Relationship="candlesModel.FK_Users_Block_Users" FromRole="Users_Block" ToRole="Users" />
+          <NavigationProperty Name="Users1" Relationship="candlesModel.FK_Users_Block_Users1" FromRole="Users_Block" ToRole="Users" />
+        </EntityType>
+        <Association Name="FK_Users_Block_Users">
+          <End Type="candlesModel.Users" Role="Users" Multiplicity="1" />
+          <End Type="candlesModel.Users_Block" Role="Users_Block" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Users_Block">
+              <PropertyRef Name="Id_Users" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Users_Block_Users1">
+          <End Type="candlesModel.Users" Role="Users" Multiplicity="1" />
+          <End Type="candlesModel.Users_Block" Role="Users_Block" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Users_Block">
+              <PropertyRef Name="Id_Admin" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -702,6 +804,16 @@
                 <ScalarProperty Name="Id_User" ColumnName="Id_User" />
                 <ScalarProperty Name="Id_Candles" ColumnName="Id_Candles" />
                 <ScalarProperty Name="Count" ColumnName="Count" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users_Block">
+            <EntityTypeMapping TypeName="candlesModel.Users_Block">
+              <MappingFragment StoreEntitySet="Users_Block">
+                <ScalarProperty Name="Reason" ColumnName="Reason" />
+                <ScalarProperty Name="Id_Admin" ColumnName="Id_Admin" />
+                <ScalarProperty Name="DateStart" ColumnName="DateStart" />
+                <ScalarProperty Name="Id_Users" ColumnName="Id_Users" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

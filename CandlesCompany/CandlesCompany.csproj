@@ -130,8 +130,17 @@
     <Compile Include="UI\Custom\Basket\SummaryInformation.xaml.cs">
       <DependentUpon>SummaryInformation.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UI\Custom\Orders\OrderDetails.xaml.cs">
+      <DependentUpon>OrderDetails.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Custom\Orders\OrderDetailsWindow.xaml.cs">
+      <DependentUpon>OrderDetailsWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\Custom\Orders\OrderList.xaml.cs">
       <DependentUpon>OrderList.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Custom\Users\ManagementUsersBlockWindow.xaml.cs">
+      <DependentUpon>ManagementUsersBlockWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\Employee\EmployeeAddWindow.xaml.cs">
       <DependentUpon>EmployeeAddWindow.xaml</DependentUpon>
@@ -158,6 +167,11 @@
     <Compile Include="Users_Baskets.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Users_Block.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Utils\ValidationRules\EmailValidationRule.cs" />
+    <Compile Include="Utils\ValidationRules\NotEmptyValidationRule.cs" />
     <Compile Include="Utils\Utils.cs" />
     <Page Include="UI\Custom\Basket\BasketItem.xaml">
       <SubType>Designer</SubType>
@@ -171,7 +185,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="UI\Custom\Orders\OrderDetails.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Custom\Orders\OrderDetailsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UI\Custom\Orders\OrderList.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Custom\Users\ManagementUsersBlockWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

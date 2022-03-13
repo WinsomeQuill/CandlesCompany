@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:utilsRules="clr-namespace:CandlesCompany.Utils.ValidationRules"
         xmlns:local="clr-namespace:CandlesCompany.UI.Auth"
         mc:Ignorable="d"
         Title="Candles Company | Login"
@@ -38,7 +39,15 @@
                  Grid.Column="0"
                  Grid.Row="1"
                  Margin="10"
-                 Cursor="IBeam"/>
+                 Cursor="IBeam">
+            <TextBox.Text>
+                <Binding Path="Name" ElementName="TextBoxSignInEmail" UpdateSourceTrigger="PropertyChanged">
+                    <Binding.ValidationRules>
+                        <utilsRules:EmailValidationRule ValidatesOnTargetUpdated="True"/>
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+        </TextBox>
 
         <PasswordBox x:Name="PasswordBoxSignIn"
                      Style="{StaticResource MaterialDesignFloatingHintPasswordBox}"

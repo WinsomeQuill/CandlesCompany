@@ -1,0 +1,53 @@
+﻿<Window x:Class="CandlesCompany.UI.Custom.Users.ManagementUsersBlockWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CandlesCompany.UI.Custom.Users"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        mc:Ignorable="d"
+        Title="Блокировка пользователя"
+        Height="350"
+        Width="600"
+        ResizeMode="CanMinimize">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="5*"/>
+            <RowDefinition Height="10*"/>
+            <RowDefinition Height="5*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock x:Name="TextBlockManagementUsersBlockName"
+                   Text="%USER NAME%"
+                   Grid.Row="0"
+                   Style="{StaticResource MaterialDesignHeadline4TextBlock}"
+                   HorizontalAlignment="Center"
+                   Margin="0,20,0,0"/>
+
+        <TextBox x:Name="TextBoxManagementUsersBlockReason"
+                 Grid.Row="1"
+                 Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                 materialDesign:HintAssist.Hint="Причина блокировки"
+                 materialDesign:HintAssist.FloatingScale="1"
+                 Margin="20"/>
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+
+            <Button x:Name="ButtonManagementUsersBlockConfirm"
+                    Grid.Column="0"
+                    Content="_Заблокировать"
+                    Width="200"
+                    Click="ButtonManagementUsersBlockConfirm_Click"/>
+
+            <Button x:Name="ButtonManagementUsersBlockCancel"
+                    Grid.Column="1"
+                    Content="_Отмена"
+                    Width="200"
+                    Click="ButtonManagementUsersBlockCancel_Click"/>
+        </Grid>
+    </Grid>
+</Window>

@@ -268,5 +268,30 @@ namespace CandlesCompany
             db.Order_Address.Remove(order_address);
             await db.SaveChangesAsync();
         }
+        public async static Task AddBan(int id_user, int id_admin, string reason)
+        {
+            Users_Block users_Block = new Users_Block
+            {
+                DateStart = DateTime.Now,
+                Id_Admin = id_admin,
+                Id_Users = id_user,
+                Reason = reason,
+                Users1 = await db.Users.Where(x => x.Id == id_admin).Select(x => x).SingleAsync(),
+                Users = await db.Users.Where(x => x.Id == id_user).Select(x => x).SingleAsync()
+            };
+
+            db.Users_Block.Add(users_Block);
+            await db.SaveChangesAsync();
+        }
+        public async static Task<bool> IsBanned(int id_user)
+        {
+            Users_Block result = await db.Users_Block.Where(x => x.Id_Users == id_user).Select(x => x).SingleOrDefaultAsync();
+            return result !=  null;
+        }
+        public async static Task RemoveBan(int id_user)
+        {
+            db.Users_Block.Remove(await db.Users_Block.Where(x => x.Id_Users == id_user).Select(x => x).SingleOrDefaultAsync());
+            await db.SaveChangesAsync();
+        }
     }
 }

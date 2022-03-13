@@ -25,6 +25,7 @@ namespace CandlesCompany.UI.Auth
         public SignInWindow()
         {
             InitializeComponent();
+            TextBoxSignInEmail.Text = "";
         }
         private void ButtonSignInRegistered_Click(object sender, RoutedEventArgs e)
         {

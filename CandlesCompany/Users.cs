@@ -19,6 +19,8 @@ namespace CandlesCompany
         {
             this.Orders = new HashSet<Orders>();
             this.Users_Baskets = new HashSet<Users_Baskets>();
+            this.Users_Block = new HashSet<Users_Block>();
+            this.Users_Block1 = new HashSet<Users_Block>();
         }
     
         public int Id { get; set; }
@@ -36,5 +38,9 @@ namespace CandlesCompany
         public virtual Roles Roles { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Users_Baskets> Users_Baskets { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Users_Block> Users_Block { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Users_Block> Users_Block1 { get; set; }
     }
 }

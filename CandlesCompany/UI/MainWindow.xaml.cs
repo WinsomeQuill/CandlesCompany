@@ -54,6 +54,11 @@ namespace CandlesCompany.UI
             ProfileInit();
             SelectedItemInit();
 
+            if(Cache.UserCache._role.Id == 4 || Cache.UserCache._role.Id == 5)
+            {
+                TabItemAdmin.Visibility = Visibility.Visible;
+            }
+
             new Task(async () =>
             {
                 await Dispatcher.InvokeAsync(async () =>
@@ -362,6 +367,15 @@ namespace CandlesCompany.UI
         {
             await ReloadWindowManagementEmployeesList();
         }
+        private void ButtonManagementUsersListBlock_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button button)
+            {
+                Users user = button.Tag as Users;
+                string format_name = $"{user.Last_Name} {user.First_Name} {user.Middle_Name}";
+                new UI.Custom.Users.ManagementUsersBlockWindow(format_name, user.Id).Show();
+            }
+        }
 
 
         public async Task ReloadWindowManagementUsersList()
@@ -625,8 +639,33 @@ namespace CandlesCompany.UI
         {
             await ReloadOrdersList();
         }
+        private void ButtonOrderDetails_Click(object sender, RoutedEventArgs e)
+        {
+            new Task(async () =>
+            {
+                await Dispatcher.InvokeAsync(async () =>
+                {
+                    Button button = (Button)sender;
+                    if (button.Tag is Orders order)
+                    {
+                        MessageBoxResult result = MessageBox.Show("Вы действительно хотите отменить заказа?", "Подтверждение",
+                                                    MessageBoxButton.YesNo, MessageBoxImage.Question);
 
-        
+                        if (result == MessageBoxResult.No)
+                        {
+                            return;
+                        }
+
+
+                        await DBManager.ChangeOrderStatus(order.Id, "Отменён");
+                        await ReloadOrdersList();
+                        MessageBox.Show($"Вы отменили заказ товара \"{order.Candles_Order.Candles.Name}\"!", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                });
+            }).Start();
+        }
+
+
         private void SetPagesOrdersList(int countOrders)
         {
             ButtonManagementOrdersPageBack.IsEnabled = ButtonManagementOrdersPageNext.IsEnabled = true;

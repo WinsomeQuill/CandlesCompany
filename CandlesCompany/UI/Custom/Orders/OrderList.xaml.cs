@@ -38,6 +38,7 @@ namespace CandlesCompany.UI.Custom.Orders
         public int UserID { get; set; } //ID заказчика
         public List<string> OrderStatuses { get; set; }
         public CandlesCompany.Orders Order { get; set; }
+        public bool ButtonCancelEnabled { get; set; }
         public OrderList(CandlesCompany.Orders order)
         {
             InitializeComponent();
@@ -51,6 +52,7 @@ namespace CandlesCompany.UI.Custom.Orders
             FormatOrderID = $"№{OrderID}";
             Address = order.Order_Address == null ? "Адрес удален" : order.Order_Address.Address;
             Status = order.Order_Status == null ? "Новый" : order.Order_Status.Name;
+            ButtonCancelEnabled = true;
 
             switch (order.Order_Status == null ? 1 : order.Order_Status.Id)
             {
@@ -72,17 +74,17 @@ namespace CandlesCompany.UI.Custom.Orders
                     break;
                 case 5: //Заказ забран
                     ProgressBarForeground = "#5bc746";
-                    ProgressBarAnimation = false;
+                    ProgressBarAnimation = ButtonCancelEnabled = false;
                     ProgressBarValue = 100;
                     break;
                 case 6: //Заказ отменен
                     ProgressBarForeground = "#c43f3f";
-                    ProgressBarAnimation = false;
+                    ProgressBarAnimation = ButtonCancelEnabled = false;
                     ProgressBarValue = 100;
                     break;
             }
         }
-        public OrderList(CandlesCompany.Orders order, Users user, List<string> order_Statuses)
+        public OrderList(CandlesCompany.Orders order, CandlesCompany.Users user, List<string> order_Statuses)
         {
             InitializeComponent();
             Order = order;
@@ -98,6 +100,7 @@ namespace CandlesCompany.UI.Custom.Orders
             OrderStatuses = order_Statuses;
             UserEmail = user.Email;
             Status = order.Order_Status == null ? "Новый" : order.Order_Status.Name;
+            ButtonCancelEnabled = true;
 
             UserName = $"{user.Last_Name} {user.First_Name} {user.Middle_Name}";
 
@@ -128,7 +131,7 @@ namespace CandlesCompany.UI.Custom.Orders
                     break;
                 case 6: //Заказ отменен
                     ProgressBarForeground = "#c43f3f";
-                    ProgressBarAnimation = false;
+                    ProgressBarAnimation = ButtonCancelEnabled = false;
                     ProgressBarValue = 100;
                     break;
             }

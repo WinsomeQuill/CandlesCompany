@@ -3,7 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:CandlesCompany.UI" xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:local="clr-namespace:CandlesCompany.UI"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
         Title="Candle Company"
         MinHeight="400"
@@ -197,16 +198,20 @@
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
                             <DataGridTextColumn Header="Адрес доставки" Binding="{Binding Address}"/>
-                            <DataGridTemplateColumn Header="Подробнее">
+                            <DataGridTemplateColumn Header="">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <Grid>
-                                            <Button Grid.Column="0"
+                                            <Button x:Name="ButtonOrderDetails"
+                                                    Grid.Column="0"
                                                     Grid.Row="0"
                                                     Margin="10,0,10,0"
                                                     Height="25"
                                                     FontSize="12"
-                                                    Content="_Подробнее"/>
+                                                    Content="_Отменить"
+                                                    IsEnabled="{Binding ButtonCancelEnabled}"
+                                                    Tag="{Binding Order}"
+                                                    Click="ButtonOrderDetails_Click"/>
                                         </Grid>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
@@ -325,7 +330,8 @@
 
                 </Grid>
             </TabItem>
-            <TabItem>
+            <TabItem x:Name="TabItemAdmin"
+                     Visibility="Collapsed">
                 <TabItem.Header>
                     <StackPanel
                         Height="auto"
@@ -650,7 +656,7 @@
                                     <DataGrid.ContextMenu>
                                         <ContextMenu>
                                             <MenuItem x:Name="DataGridManagementUsersListMenuRefresh"
-                                                      Header="Обновить из базы данных"
+                                                      Header="Обновить"
                                                       Click="DataGridManagementUsersListMenuRefresh_Click"/>
                                         </ContextMenu>
                                     </DataGrid.ContextMenu>
@@ -696,7 +702,7 @@
                                                 <DataTemplate>
                                                     <Grid Tag="{Binding User}">
                                                         <ComboBox x:Name="ComboBoxManagementUsersListSetRole"
-                                                                  Grid.Column="1"
+                                                                  Grid.Column="0"
                                                                   ItemsSource="{Binding Roles}"
                                                                   Margin="10,0,10,0"
                                                                   SelectionChanged="ComboBoxManagementUsersListSetRole_SelectionChanged"/>
@@ -704,6 +710,20 @@
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
                                         </DataGridTemplateColumn>
+                                        <!--<DataGridTemplateColumn Header="">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Grid>
+                                                        <Button x:Name="ButtonManagementUsersListBlock"
+                                                                Grid.Column="0"
+                                                                Tag="{Binding User}"
+                                                                Margin="10,0,10,0"
+                                                                Content="_Заблокировать"
+                                                                Click="ButtonManagementUsersListBlock_Click"/>
+                                                    </Grid>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>-->
                                     </DataGrid.Columns>
                                 </DataGrid>
 
