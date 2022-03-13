@@ -173,6 +173,7 @@
     <Compile Include="Utils\ValidationRules\EmailValidationRule.cs" />
     <Compile Include="Utils\ValidationRules\NotEmptyValidationRule.cs" />
     <Compile Include="Utils\Utils.cs" />
+    <Compile Include="Utils\ValidationRules\PasswordMinLength.cs" />
     <Page Include="UI\Custom\Basket\BasketItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

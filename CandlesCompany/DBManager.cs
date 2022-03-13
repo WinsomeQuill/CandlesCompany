@@ -31,7 +31,7 @@ namespace CandlesCompany
                 First_Name = first_name,
                 Last_Name = last_name,
                 Middle_Name = middle_name,
-                Id_Role = 5
+                Id_Role = await db.Roles.Where(x => x.Name == "Пользователь").Select(x => x.Id).SingleOrDefaultAsync(),
             };
 
             db.Users.Add(user);
@@ -39,7 +39,11 @@ namespace CandlesCompany
         }
         public async static Task<Users> UserInfo(string email)
         {
-            return await db.Users.Where(x => x.Email == email).Select(x => x).FirstOrDefaultAsync();
+            return await db.Users.Where(x => x.Email == email).Select(x => x).SingleOrDefaultAsync();
+        }
+        public async static Task<Roles> GetRole(string email)
+        {
+            return await db.Users.Where(x => x.Email == email).Select(x => x.Roles).SingleOrDefaultAsync();
         }
         public async static Task<Users> UserInfo(int id)
         {

@@ -25,7 +25,7 @@ namespace CandlesCompany.UI.Auth
         public SignInWindow()
         {
             InitializeComponent();
-            TextBoxSignInEmail.Text = "";
+            TextBoxSignInEmail.Text = null;
         }
         private void ButtonSignInRegistered_Click(object sender, RoutedEventArgs e)
         {
@@ -36,6 +36,12 @@ namespace CandlesCompany.UI.Auth
         {
             string email = TextBoxSignInEmail.Text;
             string pass = PasswordBoxSignIn.Password;
+
+            if (email.Length == 0 || pass.Length == 0)
+            {
+                MessageBox.Show("Не все поля заполнены!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
 
             ButtonSignInJoin.IsEnabled = PasswordBoxSignIn.IsEnabled = TextBoxSignInEmail.IsEnabled = ButtonSignInRegistered.IsEnabled = false;
             ProgressBarSignInLoading.Visibility = Visibility.Visible;
@@ -50,16 +56,7 @@ namespace CandlesCompany.UI.Auth
             ProgressBarSignInLoading.Visibility = Visibility.Collapsed;
             Utils.Utils._defaultAvatar = new BitmapImage(new Uri(@"pack://application:,,,/CandlesCompany;component/Resources/Images/Users/default_avatar.png"));
             Users user = await DBManager.UserInfo(email);
-
-            BitmapImage avatar = null;
-            if (user.Avatar == null)
-            {
-                avatar = Utils.Utils._defaultAvatar;
-            }
-            else
-            {
-                avatar = Utils.Utils.BinaryToImage(user.Avatar);
-            }
+            Roles role = await DBManager.GetRole(email);
 
             UserCache._id = user.Id;
             UserCache._first_name = user.First_Name;
@@ -67,8 +64,8 @@ namespace CandlesCompany.UI.Auth
             UserCache._middle_name = user.Middle_Name;
             UserCache._phone = user.Phone;
             UserCache._email = user.Email;
-            UserCache._role = user.Roles;
-            UserCache._avatar = avatar;
+            UserCache._role = role;
+            UserCache._avatar = user.Avatar == null ? Utils.Utils._defaultAvatar : Utils.Utils.BinaryToImage(user.Avatar);
 
             new MainWindow().Show();
             Close();

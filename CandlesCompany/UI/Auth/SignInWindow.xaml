@@ -39,11 +39,14 @@
                  Grid.Column="0"
                  Grid.Row="1"
                  Margin="10"
+                 MaxLines="64"
                  Cursor="IBeam">
             <TextBox.Text>
-                <Binding Path="Name" ElementName="TextBoxSignInEmail" UpdateSourceTrigger="PropertyChanged">
+                <Binding Path="Name"
+                         ElementName="TextBoxSignInEmail"
+                         UpdateSourceTrigger="PropertyChanged">
                     <Binding.ValidationRules>
-                        <utilsRules:EmailValidationRule ValidatesOnTargetUpdated="True"/>
+                        <utilsRules:NotEmptyValidationRule ValidatesOnTargetUpdated="True"/>
                     </Binding.ValidationRules>
                 </Binding>
             </TextBox.Text>
@@ -54,11 +57,11 @@
                      materialDesign:HintAssist.Hint="Ваш пароль"
                      materialDesign:TextFieldAssist.HasClearButton="True"
                      materialDesign:TextFieldAssist.TextBoxViewMargin="1 0 1 0"
-                     materialDesign:HintAssist.HelperText="Минимум 8 символов"
                      FontSize="20"
                      Grid.Column="0"
                      Grid.Row="2"
                      Margin="10"
+                     MaxLength="32"
                      Cursor="IBeam"/>
 
         <Button x:Name="ButtonSignInJoin"
