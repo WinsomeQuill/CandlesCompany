@@ -297,5 +297,11 @@ namespace CandlesCompany
             db.Users_Block.Remove(await db.Users_Block.Where(x => x.Id_Users == id_user).Select(x => x).SingleOrDefaultAsync());
             await db.SaveChangesAsync();
         }
+        public async static Task ChangePhone(int id_user, string number)
+        {
+            Users user = await db.Users.Where(x => x.Id == id_user).Select(x => x).SingleOrDefaultAsync();
+            user.Phone = number;
+            await db.SaveChangesAsync();
+        }
     }
 }

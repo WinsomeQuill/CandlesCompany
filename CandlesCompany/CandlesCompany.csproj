@@ -142,6 +142,9 @@
     <Compile Include="UI\Custom\Users\ManagementUsersBlockWindow.xaml.cs">
       <DependentUpon>ManagementUsersBlockWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UI\Dialogs\Profile\ChangePhoneWindow.xaml.cs">
+      <DependentUpon>ChangePhoneWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\Employee\EmployeeAddWindow.xaml.cs">
       <DependentUpon>EmployeeAddWindow.xaml</DependentUpon>
     </Compile>
@@ -199,6 +202,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UI\Custom\Users\ManagementUsersBlockWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Dialogs\Profile\ChangePhoneWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

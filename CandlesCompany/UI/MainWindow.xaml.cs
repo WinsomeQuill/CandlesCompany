@@ -18,6 +18,7 @@ using CandlesCompany.UI.Custom.Basket;
 using CandlesCompany.UI.Custom.Catalog;
 using System.Text.RegularExpressions;
 using System.Windows.Threading;
+using MaterialDesignThemes.Wpf;
 
 namespace CandlesCompany.UI
 {
@@ -97,7 +98,7 @@ namespace CandlesCompany.UI
         private void ProfileInit()
         {
             TextBlockProfileName.Text = $"ФИО: {UserCache._last_name} {UserCache._first_name} {UserCache._middle_name}";
-            TextBlockProfilePhone.Text = $"Телефон: {UserCache._phone}";
+            TextBlockProfilePhone.Text = UserCache._phone == null ? "Телефон: Не указан" : $"Телефон: +{UserCache._phone}";
             TextBlockProfileEmail.Text = $"Эл. почта: {UserCache._email}";
             TextBlockProfileRole.Text = $"Должность: {UserCache._role.Name}";
             ImageBrushProfileAvatar.ImageSource = UserCache._avatar;
@@ -134,19 +135,7 @@ namespace CandlesCompany.UI
             });
         }
 
-
-        private void ButtonManagementAddItem_Click(object sender, RoutedEventArgs e)
-        {
-            new Item.ItemAddWindow().Show();
-        }
-        private void ButtonManagementChangeItem_Click(object sender, RoutedEventArgs e)
-        {
-            new Item.ItemChangeWindow().Show();
-        }
-        private void ButtonManagementRemoveItem_Click(object sender, RoutedEventArgs e)
-        {
-            new Item.ItemRemoveWindow().Show();
-        }
+        // Profile
         private async void ButtonProfileSetAvatar_Click(object sender, RoutedEventArgs e)
         {
             BitmapImage image = Utils.Utils.GetImageWindowsDialog();
@@ -167,8 +156,26 @@ namespace CandlesCompany.UI
             ImageBrushProfileAvatar.ImageSource = Utils.Utils._defaultAvatar;
             await DBManager.RemoveAvatarUser();
         }
+        private void ButtonProfileChangePhone_Click(object sender, RoutedEventArgs e)
+        {
+            new UI.Dialogs.Profile.ChangePhoneWindow().ShowDialog();
+        }
 
+        // Items Management
+        private void ButtonManagementAddItem_Click(object sender, RoutedEventArgs e)
+        {
+            new Item.ItemAddWindow().Show();
+        }
+        private void ButtonManagementChangeItem_Click(object sender, RoutedEventArgs e)
+        {
+            new Item.ItemChangeWindow().Show();
+        }
+        private void ButtonManagementRemoveItem_Click(object sender, RoutedEventArgs e)
+        {
+            new Item.ItemRemoveWindow().Show();
+        }
 
+        // Employees Management
         private async Task ReloadWindowManagementEmployeesList()
         {
             ProgressBarManagementEmployeesList.Visibility = Visibility.Visible;
@@ -377,7 +384,7 @@ namespace CandlesCompany.UI
             }
         }
 
-
+        // Users Management
         public async Task ReloadWindowManagementUsersList()
         {
             ProgressBarManagementUsersList.Visibility = Visibility.Visible;
@@ -525,7 +532,7 @@ namespace CandlesCompany.UI
             await ReloadWindowManagementUsersList();
         }
 
-
+        // Addresses Management
         private async Task ReloadWindowManagementAddressesList()
         {
             ProgressBarManagementAddressesList.Visibility = Visibility.Visible;
@@ -621,7 +628,7 @@ namespace CandlesCompany.UI
             ButtonManagementAddressesListSearch.IsEnabled = true;
         }
 
-
+        // Orders Profile
         private async Task ReloadOrdersList()
         {
             if (DataGridOrdersList.Items.Count != 0)
@@ -665,7 +672,7 @@ namespace CandlesCompany.UI
             }).Start();
         }
 
-
+        // Orders Management
         private void SetPagesOrdersList(int countOrders)
         {
             ButtonManagementOrdersPageBack.IsEnabled = ButtonManagementOrdersPageNext.IsEnabled = true;
