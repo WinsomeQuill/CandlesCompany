@@ -346,8 +346,7 @@
 
                 </Grid>
             </TabItem>
-            <TabItem x:Name="TabItemAdmin"
-                     Visibility="Collapsed">
+            <TabItem x:Name="TabItemAdmin">
                 <TabItem.Header>
                     <StackPanel
                         Height="auto"
@@ -367,7 +366,8 @@
                     <TabControl Style="{StaticResource MaterialDesignNavigatilRailTabControl}"
                                 TabStripPlacement="Top"
                                 HorizontalContentAlignment="Center">
-                        <TabItem Width="100">
+                        <TabItem x:Name="TabItemAdminEmployees"
+                                 Width="100">
                             <TabItem.Header>
                                 <StackPanel Height="auto"
                                             Width="auto">
@@ -612,7 +612,8 @@
 
                             </Grid>
                         </TabItem>
-                        <TabItem Width="100"
+                        <TabItem x:Name="TabItemAdminUsers"
+                                 Width="100"
                                  Style="{StaticResource MaterialDesignNavigationRailTabItem}">
                             <TabItem.Header>
                                 <StackPanel Height="auto"
@@ -719,6 +720,8 @@
                                                     <Grid Tag="{Binding User}">
                                                         <ComboBox x:Name="ComboBoxManagementUsersListSetRole"
                                                                   Grid.Column="0"
+                                                                  IsEditable="False"
+                                                                  IsReadOnly="True"
                                                                   ItemsSource="{Binding Roles}"
                                                                   Margin="10,0,10,0"
                                                                   SelectionChanged="ComboBoxManagementUsersListSetRole_SelectionChanged"/>
@@ -791,7 +794,8 @@
                                 </Grid>
                             </Grid>
                         </TabItem>
-                        <TabItem Style="{StaticResource MaterialDesignNavigationRailTabItem}"
+                        <TabItem x:Name="TabItemAdminAddresses"
+                                 Style="{StaticResource MaterialDesignNavigationRailTabItem}"
                                  Width="100">
                             <TabItem.Header>
                                 <StackPanel Height="auto"
@@ -949,7 +953,8 @@
                                 </Grid>
                             </Grid>
                         </TabItem>
-                        <TabItem Width="100">
+                        <TabItem x:Name="TabItemAdminOrders"
+                                 Width="100">
                             <TabItem.Header>
                                 <StackPanel Height="auto"
                                             Width="auto">

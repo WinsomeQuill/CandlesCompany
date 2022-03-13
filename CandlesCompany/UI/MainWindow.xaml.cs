@@ -55,29 +55,53 @@ namespace CandlesCompany.UI
             ProfileInit();
             SelectedItemInit();
 
-            if(Cache.UserCache._role.Id == 4 || Cache.UserCache._role.Id == 5)
+            if(Cache.UserCache._role.Id != 4 && Cache.UserCache._role.Id != 5)
             {
-                TabItemAdmin.Visibility = Visibility.Visible;
+                TabItemAdmin.Visibility = Visibility.Collapsed;
             }
 
-            new Task(async () =>
+            Parallel.Invoke(async () =>
             {
                 await Dispatcher.InvokeAsync(async () =>
                 {
                     Utils.Utils._roles = await DBManager.GetRoles();
-
                     await SummaryInformationInit();
                     await BasketInit();
                     await CatalogInit();
                     await ReloadOrdersList();
-
-                    await ReloadWindowManagementUsersList();
-                    await ReloadWindowManagementEmployeesList();
-                    await ReloadWindowManagementAddressesList();
-                    await ReloadWindowManagementOrdersList();
-
                 });
-            }).Start();
+            });
+
+            Parallel.Invoke(
+                async () =>
+                {
+                    await Dispatcher.InvokeAsync(async () =>
+                    {
+                        await ReloadWindowManagementEmployeesList();
+                    });
+                },
+                async () =>
+                {
+                    await Dispatcher.InvokeAsync(async () =>
+                    {
+                        await ReloadWindowManagementUsersList();
+                    });
+                },
+                async () =>
+                {
+                    await Dispatcher.InvokeAsync(async () =>
+                    {
+                        await ReloadWindowManagementAddressesList();
+                    });
+                },
+                async () =>
+                {
+                    await Dispatcher.InvokeAsync(async () =>
+                    {
+                        await ReloadWindowManagementOrdersList();
+                    });
+                }
+            );
         }
         private async Task SummaryInformationInit()
         {
