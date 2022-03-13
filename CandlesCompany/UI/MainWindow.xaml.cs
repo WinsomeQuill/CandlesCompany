@@ -55,12 +55,28 @@ namespace CandlesCompany.UI
             ProfileInit();
             SelectedItemInit();
 
-            if(Cache.UserCache._role.Id != 4 && Cache.UserCache._role.Id != 5)
+            if(Cache.UserCache._role.Id != 4 && Cache.UserCache._role.Id != 5) // if user not admin/manager
             {
                 TabItemAdmin.Visibility = Visibility.Collapsed;
-            }
 
-            Parallel.Invoke(
+                Parallel.Invoke(
+                () =>
+                {
+                    new Thread(async () =>
+                    {
+                        await Dispatcher.InvokeAsync(async () =>
+                        {
+                            await SummaryInformationInit();
+                            await BasketInit();
+                            await CatalogInit();
+                            await ReloadOrdersList();
+                        });
+                    }).Start();
+                });
+            }
+            else // if user is admin/manager
+            {
+                Parallel.Invoke(
                 () =>
                 {
                     new Thread(async () =>
@@ -85,7 +101,7 @@ namespace CandlesCompany.UI
                     }).Start();
                 });
 
-            Parallel.Invoke(
+                Parallel.Invoke(
                 async () =>
                 {
                     await Dispatcher.InvokeAsync(async () =>
@@ -113,8 +129,8 @@ namespace CandlesCompany.UI
                     {
                         await ReloadWindowManagementOrdersList();
                     });
-                }
-            );
+                });
+            }
         }
         private async Task SummaryInformationInit()
         {
