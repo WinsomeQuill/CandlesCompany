@@ -90,31 +90,43 @@ namespace CandlesCompany.UI.Auth
                 return;
             }
 
-            if (await DBManager.ExistUser(email))
-            {
-                MessageBox.Show("Данный Email уже зарегестрирован!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-
             if (middle_name.Length == 0)
             {
                 middle_name = null;
             }
 
-            ProgressBarSignUpLoading.Visibility = Visibility.Visible;
-            ButtonSignUpAlreadyRegistered.IsEnabled = ButtonSignUpRegister.IsEnabled = 
-                TextBoxSignUpEmail.IsEnabled = TextBoxSignUpFirstName.IsEnabled = TextBoxSignUpLastName.IsEnabled =
-                TextBoxSignUpMiddleName.IsEnabled = false;
+            Loading();
+            if (await DBManager.ExistUser(email))
+            {
+                MessageBox.Show("Данный Email уже зарегестрирован!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                Loading(false);
+                return;
+            }
 
             await DBManager.Registration(email, pass, first_name, last_name, middle_name);
             MessageBox.Show("Вы зарегистрировались! Спасибо!", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
-            ProgressBarSignUpLoading.Visibility = Visibility.Collapsed;
-            ButtonSignUpAlreadyRegistered.IsEnabled = ButtonSignUpRegister.IsEnabled =
-                TextBoxSignUpEmail.IsEnabled = TextBoxSignUpFirstName.IsEnabled = TextBoxSignUpLastName.IsEnabled =
-                TextBoxSignUpMiddleName.IsEnabled = true;
+            Loading(false);
 
             new SignInWindow().Show();
             Close();
+        }
+        private void Loading(bool enabled = true)
+        {
+            if (enabled)
+            {
+                ProgressBarSignUpLoading.Visibility = Visibility.Visible;
+                ButtonSignUpAlreadyRegistered.IsEnabled = ButtonSignUpRegister.IsEnabled =
+                    TextBoxSignUpEmail.IsEnabled = TextBoxSignUpFirstName.IsEnabled = 
+                    TextBoxSignUpLastName.IsEnabled = TextBoxSignUpMiddleName.IsEnabled = 
+                    PasswordBoxSignUp.IsEnabled = false;
+                return;
+            }
+
+            ProgressBarSignUpLoading.Visibility = Visibility.Collapsed;
+            ButtonSignUpAlreadyRegistered.IsEnabled = ButtonSignUpRegister.IsEnabled =
+                TextBoxSignUpEmail.IsEnabled = TextBoxSignUpFirstName.IsEnabled = 
+                TextBoxSignUpLastName.IsEnabled = TextBoxSignUpMiddleName.IsEnabled = 
+                PasswordBoxSignUp.IsEnabled = true;
         }
     }
 }

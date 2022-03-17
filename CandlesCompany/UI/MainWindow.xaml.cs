@@ -54,53 +54,37 @@ namespace CandlesCompany.UI
             Utils.Utils._dataGridOrdersList = DataGridOrdersList;
             ProfileInit();
             SelectedItemInit();
+            CatalogInit();
 
-            if(Cache.UserCache._role.Id != 4 && Cache.UserCache._role.Id != 5) // if user not admin/manager
+            Parallel.Invoke(
+                async () =>
+                {
+                    await Dispatcher.InvokeAsync(async () =>
+                    {
+                        await SummaryInformationInit();
+                    });
+                },
+                async () =>
+                {
+                    await Dispatcher.InvokeAsync(async () =>
+                    {
+                        await BasketInit();
+                    });
+                },
+                async () =>
+                {
+                    await Dispatcher.InvokeAsync(async () =>
+                    {
+                        await ReloadOrdersList();
+                    });
+                });
+
+            if (Cache.UserCache._role.Id != 4 && Cache.UserCache._role.Id != 5) // if user not admin/manager
             {
                 TabItemAdmin.Visibility = Visibility.Collapsed;
-
-                Parallel.Invoke(
-                () =>
-                {
-                    new Thread(async () =>
-                    {
-                        await Dispatcher.InvokeAsync(async () =>
-                        {
-                            await SummaryInformationInit();
-                            await BasketInit();
-                            await CatalogInit();
-                            await ReloadOrdersList();
-                        });
-                    }).Start();
-                });
             }
             else // if user is admin/manager
             {
-                Parallel.Invoke(
-                () =>
-                {
-                    new Thread(async () =>
-                    {
-                        await Dispatcher.InvokeAsync(async () =>
-                        {
-                            Utils.Utils._roles = await DBManager.GetRoles();
-                        });
-                    }).Start();
-                },
-                () =>
-                {
-                    new Thread(async () =>
-                    {
-                        await Dispatcher.InvokeAsync(async () =>
-                        {
-                            await SummaryInformationInit();
-                            await BasketInit();
-                            await CatalogInit();
-                            await ReloadOrdersList();
-                        });
-                    }).Start();
-                });
-
                 Parallel.Invoke(
                 async () =>
                 {
@@ -179,12 +163,18 @@ namespace CandlesCompany.UI
                 Utils.Utils._summaryInformation.AddPrice((double)candle.Price * item.Value);
             }
         }
-        private async Task CatalogInit()
+        private void CatalogInit()
         {
-            List<Candles> candles = await DBManager.GetCandles();
-            candles.ForEach(candle =>
+            Task.Run(() =>
             {
-                ListViewCatalog.Items.Add(new Custom.Catalog.ListItem(candle.Name, candle.Description, candle));
+                Dispatcher.InvokeAsync(async () =>
+                {
+                    List<Candles> candles = await DBManager.GetCandles();
+                    candles.ForEach(candle =>
+                    {
+                        ListViewCatalog.Items.Add(new Custom.Catalog.ListItem(candle.Name, candle.Description, candle));
+                    });
+                });
             });
         }
 
