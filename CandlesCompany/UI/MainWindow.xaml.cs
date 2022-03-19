@@ -32,7 +32,6 @@ namespace CandlesCompany.UI
         private int _usersListCurrentPage { get; set; } = 1;
         private int _employeesListCurrentPage { get; set; } = 1;
         private int _ordersListCurrentPage { get; set; } = 1;
-
         private int _usersListTotalPages { get; set; }
         private int _employeesListTotalPages { get; set; }
         private int _ordersListTotalPages { get; set; }

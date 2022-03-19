@@ -45,6 +45,7 @@ namespace CandlesCompany
         {
             return await db.Users.Where(x => x.Email == email).Select(x => x.Roles).SingleOrDefaultAsync();
         }
+        [ObsoleteAttribute]
         public async static Task<Users> UserInfo(int id)
         {
             return await db.Users.Where(x => x.Id == id).Select(x => x).FirstOrDefaultAsync();
@@ -60,6 +61,7 @@ namespace CandlesCompany
             user.Id_Role = await db.Roles.Where(x => x.Name == role).Select(x => x.Id).FirstOrDefaultAsync();
             await db.SaveChangesAsync();
         }
+        [ObsoleteAttribute]
         public async static Task ChangeRoleById(string email, string role)
         {
             Users user = await db.Users.SingleOrDefaultAsync(x => x.Email == email);
@@ -77,17 +79,20 @@ namespace CandlesCompany
         public async static Task<List<Users>> FindUsers(string value)
         {
             List<Users> users = new List<Users>();
-            users.AddRange(await db.Users.Where(x => x.First_Name.Contains(value) || x.First_Name.Contains(value) || x.Middle_Name.Contains(value)).Select(x => x).Distinct().Take(500).ToListAsync());
+            users.AddRange(await db.Users.Where(x => x.First_Name.Contains(value) || x.Last_Name.Contains(value) || x.Middle_Name.Contains(value)).Select(x => x).Distinct().Take(500).ToListAsync());
             return users;
         }
+        [ObsoleteAttribute]
         public async static Task<List<Users>> GetUsersByRoleDelivery()
         {
             return await db.Users.Where(x => x.Id_Role == 3).Select(x => x).ToListAsync();
         }
+        [ObsoleteAttribute]
         public async static Task<List<Users>> GetUsersByRoleManager()
         {
             return await db.Users.Where(x => x.Id_Role == 4).Select(x => x).ToListAsync();
         }
+        [ObsoleteAttribute]
         public async static Task<List<Users>> GetUsersByRoleAdministrator()
         {
             return await db.Users.Where(x => x.Id_Role == 5).Select(x => x).ToListAsync();
@@ -99,7 +104,8 @@ namespace CandlesCompany
         public async static Task<List<Users>> FindEmployees(string value)
         {
             List<Users> users = new List<Users>();
-            users.AddRange(await db.Users.Where(x => (x.Roles.Id > 1 && x.Roles.Id < 6) && (x.First_Name.Contains(value) || x.First_Name.Contains(value) || x.Middle_Name.Contains(value)))
+            users.AddRange(await db.Users.Where(
+                x => (x.Roles.Id > 1 && x.Roles.Id < 6) && (x.First_Name.Contains(value) || x.Last_Name.Contains(value) || x.Middle_Name.Contains(value)))
                 .Select(x => x).Distinct().Take(500).ToListAsync());
             return users;
         }
@@ -107,6 +113,7 @@ namespace CandlesCompany
         {
             return await db.Users.Where(x => x.Id_Role > start_id_role && x.Id_Role < end_id_role).CountAsync();
         }
+        [ObsoleteAttribute]
         public async static Task<byte[]> GetImageItem(int id)
         {
             return await db.Candles.Where(x => x.Id == id).Select(x => x.Image).FirstOrDefaultAsync();
@@ -287,11 +294,13 @@ namespace CandlesCompany
             db.Users_Block.Add(users_Block);
             await db.SaveChangesAsync();
         }
+        [ObsoleteAttribute]
         public async static Task<bool> IsBanned(int id_user)
         {
             Users_Block result = await db.Users_Block.Where(x => x.Id_Users == id_user).Select(x => x).SingleOrDefaultAsync();
             return result !=  null;
         }
+        [ObsoleteAttribute]
         public async static Task RemoveBan(int id_user)
         {
             db.Users_Block.Remove(await db.Users_Block.Where(x => x.Id_Users == id_user).Select(x => x).SingleOrDefaultAsync());

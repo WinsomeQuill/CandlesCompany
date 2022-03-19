@@ -145,15 +145,6 @@
     <Compile Include="UI\Dialogs\Profile\ChangePhoneWindow.xaml.cs">
       <DependentUpon>ChangePhoneWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\Employee\EmployeeAddWindow.xaml.cs">
-      <DependentUpon>EmployeeAddWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="UI\Employee\EmployeeChangeWindow.xaml.cs">
-      <DependentUpon>EmployeeChangeWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="UI\Employee\EmployeeRemoveWindow.xaml.cs">
-      <DependentUpon>EmployeeRemoveWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="UI\Item\ItemAddWindow.xaml.cs">
       <DependentUpon>ItemAddWindow.xaml</DependentUpon>
     </Compile>
@@ -206,18 +197,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UI\Dialogs\Profile\ChangePhoneWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UI\Employee\EmployeeAddWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UI\Employee\EmployeeChangeWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UI\Employee\EmployeeRemoveWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
