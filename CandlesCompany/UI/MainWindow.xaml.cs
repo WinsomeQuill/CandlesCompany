@@ -47,73 +47,36 @@ namespace CandlesCompany.UI
         public MainWindow()
         {
             InitializeComponent();
-            Utils.Utils._mainWindow = this;
-            Utils.Utils._defaultImage = new BitmapImage(new Uri(@"pack://application:,,,/CandlesCompany;component/Resources/Images/Items/notfound.png"));
-            Utils.Utils._listViewBasket = ListViewBasket;
-            Utils.Utils._dataGridOrdersList = DataGridOrdersList;
-            ProfileInit();
-            SelectedItemInit();
-            CatalogInit();
+        }
 
-            Parallel.Invoke(
-                async () =>
-                {
-                    await Dispatcher.InvokeAsync(async () =>
-                    {
-                        await SummaryInformationInit();
-                    });
-                },
-                async () =>
-                {
-                    await Dispatcher.InvokeAsync(async () =>
-                    {
-                        await BasketInit();
-                    });
-                },
-                async () =>
-                {
-                    await Dispatcher.InvokeAsync(async () =>
-                    {
-                        await ReloadOrdersList();
-                    });
-                });
+        public async Task Init()
+        {
+            await App.Current.Dispatcher.Invoke(async () =>
+            {
+                Utils.Utils._mainWindow = this;
+                Utils.Utils._defaultImage = new BitmapImage(new Uri(@"pack://application:,,,/CandlesCompany;component/Resources/Images/Items/notfound.png"));
+                Utils.Utils._listViewBasket = ListViewBasket;
+                Utils.Utils._dataGridOrdersList = DataGridOrdersList;
+                ProfileInit();
+                SelectedItemInit();
 
-            if (Cache.UserCache._role.Id != 4 && Cache.UserCache._role.Id != 5) // if user not admin/manager
-            {
-                TabItemAdmin.Visibility = Visibility.Collapsed;
-            }
-            else // if user is admin/manager
-            {
-                Parallel.Invoke(
-                async () =>
+                await ReloadOrdersList();
+                await CatalogInit();
+                await SummaryInformationInit();
+                await BasketInit();
+
+                if (UserCache._role.Id != 4 && UserCache._role.Id != 5) // if user not admin/manager
                 {
-                    await Dispatcher.InvokeAsync(async () =>
-                    {
-                        await ReloadWindowManagementEmployeesList();
-                    });
-                },
-                async () =>
+                    TabItemAdmin.Visibility = Visibility.Collapsed;
+                }
+                else // if user is admin/manager
                 {
-                    await Dispatcher.InvokeAsync(async () =>
-                    {
-                        await ReloadWindowManagementUsersList();
-                    });
-                },
-                async () =>
-                {
-                    await Dispatcher.InvokeAsync(async () =>
-                    {
-                        await ReloadWindowManagementAddressesList();
-                    });
-                },
-                async () =>
-                {
-                    await Dispatcher.InvokeAsync(async () =>
-                    {
-                        await ReloadWindowManagementOrdersList();
-                    });
-                });
-            }
+                    await ReloadWindowManagementEmployeesList();
+                    await ReloadWindowManagementUsersList();
+                    await ReloadWindowManagementOrdersList();
+                    await ReloadWindowManagementAddressesList();
+                }
+            });
         }
         private async Task SummaryInformationInit()
         {
@@ -141,38 +104,38 @@ namespace CandlesCompany.UI
         }
         private async Task BasketInit()
         {
-            Dictionary<Candles, int> basket = await DBManager.GetCandlesBasket(UserCache._id);
-
-            if (basket.Count() == 0)
+            await App.Current.Dispatcher.Invoke(async () =>
             {
-                TextBlockBasket.Visibility = Visibility.Visible;
-                ListViewBasket.Visibility = Visibility.Collapsed;
-                return;
-            }
+                Dictionary<Candles, int> basket = await DBManager.GetCandlesBasket(UserCache._id);
 
-            TextBlockBasket.Visibility = Visibility.Collapsed;
-            ListViewBasket.Visibility = Visibility.Visible;
-
-            foreach (KeyValuePair<Candles, int> item in basket)
-            {
-                Candles candle = item.Key;
-                UserCache.Basket.Add(candle, item.Value);
-                ListViewBasket.Items.Add(new BasketItem(candle, item.Value));
-                Utils.Utils._summaryInformation.AddCount(item.Value);
-                Utils.Utils._summaryInformation.AddPrice((double)candle.Price * item.Value);
-            }
-        }
-        private void CatalogInit()
-        {
-            Task.Run(() =>
-            {
-                Dispatcher.InvokeAsync(async () =>
+                if (basket.Count() == 0)
                 {
-                    List<Candles> candles = await DBManager.GetCandles();
-                    candles.ForEach(candle =>
-                    {
-                        ListViewCatalog.Items.Add(new Custom.Catalog.ListItem(candle.Name, candle.Description, candle));
-                    });
+                    TextBlockBasket.Visibility = Visibility.Visible;
+                    ListViewBasket.Visibility = Visibility.Collapsed;
+                    return;
+                }
+
+                TextBlockBasket.Visibility = Visibility.Collapsed;
+                ListViewBasket.Visibility = Visibility.Visible;
+
+                foreach (KeyValuePair<Candles, int> item in basket)
+                {
+                    Candles candle = item.Key;
+                    UserCache.Basket.Add(candle, item.Value);
+                    ListViewBasket.Items.Add(new BasketItem(candle, item.Value));
+                    Utils.Utils._summaryInformation.AddCount(item.Value);
+                    Utils.Utils._summaryInformation.AddPrice((double)candle.Price * item.Value);
+                }
+            });            
+        }
+        private async Task CatalogInit()
+        {
+            await App.Current.Dispatcher.Invoke(async () =>
+            {
+                List<Candles> candles = await DBManager.GetCandles();
+                candles.ForEach(candle =>
+                {
+                    ListViewCatalog.Items.Add(new Custom.Catalog.ListItem(candle.Name, candle.Description, candle));
                 });
             });
         }
@@ -220,50 +183,53 @@ namespace CandlesCompany.UI
         // Employees Management
         private async Task ReloadWindowManagementEmployeesList()
         {
-            ProgressBarManagementEmployeesList.Visibility = Visibility.Visible;
-            DataGridManagementEmployeesList.Visibility = Visibility.Collapsed;
-
-            DataGridManagementEmployeesList.Items.Clear();
-            if (!_isSearchEmployeesList)
+            await App.Current.Dispatcher.Invoke(async () =>
             {
-                _employeesList = await DBManager.GetEmployees(_employeesListCurrentPage, 1, 6, _listPageSize);
-                _employeesList.ForEach(user =>
+                ProgressBarManagementEmployeesList.Visibility = Visibility.Visible;
+                DataGridManagementEmployeesList.Visibility = Visibility.Collapsed;
+
+                DataGridManagementEmployeesList.Items.Clear();
+                if (!_isSearchEmployeesList)
                 {
-                    BitmapImage avatar = null;
-                    if (user.Avatar == null)
+                    _employeesList = await DBManager.GetEmployees(_employeesListCurrentPage, 1, 6, _listPageSize);
+                    _employeesList.ForEach(user =>
                     {
-                        avatar = Utils.Utils._defaultAvatar;
-                    }
-                    else
-                    {
-                        avatar = Utils.Utils.BinaryToImage(user.Avatar);
-                    }
+                        BitmapImage avatar = null;
+                        if (user.Avatar == null)
+                        {
+                            avatar = Utils.Utils._defaultAvatar;
+                        }
+                        else
+                        {
+                            avatar = Utils.Utils.BinaryToImage(user.Avatar);
+                        }
 
-                    DataGridManagementEmployeesList.Items.Add(new UI.UsersList(user, avatar, Utils.Utils._roles));
-                });
-                SetPagesEmployeesList(await DBManager.GetEmployeesCount());
-            }
-            else
-            {
-                _employeesList.Skip(_listPageSize * (_employeesListCurrentPage - 1)).Take(_listPageSize).ToList().ForEach(user =>
+                        DataGridManagementEmployeesList.Items.Add(new UI.UsersList(user, avatar, Utils.Utils._roles));
+                    });
+                    SetPagesEmployeesList(await DBManager.GetEmployeesCount());
+                }
+                else
                 {
-                    BitmapImage avatar = null;
-                    if (user.Avatar == null)
+                    _employeesList.Skip(_listPageSize * (_employeesListCurrentPage - 1)).Take(_listPageSize).ToList().ForEach(user =>
                     {
-                        avatar = Utils.Utils._defaultAvatar;
-                    }
-                    else
-                    {
-                        avatar = Utils.Utils.BinaryToImage(user.Avatar);
-                    }
+                        BitmapImage avatar = null;
+                        if (user.Avatar == null)
+                        {
+                            avatar = Utils.Utils._defaultAvatar;
+                        }
+                        else
+                        {
+                            avatar = Utils.Utils.BinaryToImage(user.Avatar);
+                        }
 
-                    DataGridManagementEmployeesList.Items.Add(new UI.UsersList(user, avatar, Utils.Utils._roles));
-                });
-                SetPagesEmployeesList(_employeesList.Count() - 1);
-            }
+                        DataGridManagementEmployeesList.Items.Add(new UI.UsersList(user, avatar, Utils.Utils._roles));
+                    });
+                    SetPagesEmployeesList(_employeesList.Count() - 1);
+                }
 
-            ProgressBarManagementEmployeesList.Visibility = Visibility.Collapsed;
-            DataGridManagementEmployeesList.Visibility = Visibility.Visible;
+                ProgressBarManagementEmployeesList.Visibility = Visibility.Collapsed;
+                DataGridManagementEmployeesList.Visibility = Visibility.Visible;
+            });
         }
         private void SetPagesEmployeesList(int countEmployees)
         {
@@ -429,50 +395,53 @@ namespace CandlesCompany.UI
         // Users Management
         public async Task ReloadWindowManagementUsersList()
         {
-            ProgressBarManagementUsersList.Visibility = Visibility.Visible;
-            DataGridManagementUsersList.Visibility = Visibility.Collapsed;
-
-            DataGridManagementUsersList.Items.Clear();
-            if (!_isSearchUsersList)
+            await App.Current.Dispatcher.Invoke(async () =>
             {
-                _usersList = await DBManager.GetUsersForPage(_usersListCurrentPage, _listPageSize);
-                _usersList.ForEach(user =>
+                ProgressBarManagementUsersList.Visibility = Visibility.Visible;
+                DataGridManagementUsersList.Visibility = Visibility.Collapsed;
+
+                DataGridManagementUsersList.Items.Clear();
+                if (!_isSearchUsersList)
                 {
-                    BitmapImage avatar = null;
-                    if (user.Avatar == null)
+                    _usersList = await DBManager.GetUsersForPage(_usersListCurrentPage, _listPageSize);
+                    _usersList.ForEach(user =>
                     {
-                        avatar = Utils.Utils._defaultAvatar;
-                    }
-                    else
-                    {
-                        avatar = Utils.Utils.BinaryToImage(user.Avatar);
-                    }
+                        BitmapImage avatar = null;
+                        if (user.Avatar == null)
+                        {
+                            avatar = Utils.Utils._defaultAvatar;
+                        }
+                        else
+                        {
+                            avatar = Utils.Utils.BinaryToImage(user.Avatar);
+                        }
 
-                    DataGridManagementUsersList.Items.Add(new UI.UsersList(user, avatar, Utils.Utils._roles));
-                });
-                SetPagesUsersList(await DBManager.GetUsersCount());
-            }
-            else
-            {
-                _usersList.Skip(_listPageSize * (_usersListCurrentPage - 1)).Take(_listPageSize).ToList().ForEach(user =>
+                        DataGridManagementUsersList.Items.Add(new UI.UsersList(user, avatar, Utils.Utils._roles));
+                    });
+                    SetPagesUsersList(await DBManager.GetUsersCount());
+                }
+                else
                 {
-                    BitmapImage avatar = null;
-                    if (user.Avatar == null)
+                    _usersList.Skip(_listPageSize * (_usersListCurrentPage - 1)).Take(_listPageSize).ToList().ForEach(user =>
                     {
-                        avatar = Utils.Utils._defaultAvatar;
-                    }
-                    else
-                    {
-                        avatar = Utils.Utils.BinaryToImage(user.Avatar);
-                    }
+                        BitmapImage avatar = null;
+                        if (user.Avatar == null)
+                        {
+                            avatar = Utils.Utils._defaultAvatar;
+                        }
+                        else
+                        {
+                            avatar = Utils.Utils.BinaryToImage(user.Avatar);
+                        }
 
-                    DataGridManagementUsersList.Items.Add(new UI.UsersList(user, avatar, Utils.Utils._roles));
-                });
-                SetPagesUsersList(_usersList.Count() - 1);
-            }
+                        DataGridManagementUsersList.Items.Add(new UI.UsersList(user, avatar, Utils.Utils._roles));
+                    });
+                    SetPagesUsersList(_usersList.Count() - 1);
+                }
 
-            ProgressBarManagementUsersList.Visibility = Visibility.Collapsed;
-            DataGridManagementUsersList.Visibility = Visibility.Visible;
+                ProgressBarManagementUsersList.Visibility = Visibility.Collapsed;
+                DataGridManagementUsersList.Visibility = Visibility.Visible;
+            });
         }
         private void SetPagesUsersList(int countUsers)
         {
@@ -577,46 +546,52 @@ namespace CandlesCompany.UI
         // Addresses Management
         private async Task ReloadWindowManagementAddressesList()
         {
-            ProgressBarManagementAddressesList.Visibility = Visibility.Visible;
-            DataGridManagementAddressesList.Visibility = Visibility.Collapsed;
+            await App.Current.Dispatcher.Invoke(async () =>
+            {
+                ProgressBarManagementAddressesList.Visibility = Visibility.Visible;
+                DataGridManagementAddressesList.Visibility = Visibility.Collapsed;
 
-            DataGridManagementAddressesList.Items.Clear();
-            if (!_isSearchAddressesList)
-            {
-                Utils.Utils._addresses = await DBManager.GetAddresses();
-                Utils.Utils._addresses.ForEach(address =>
+                DataGridManagementAddressesList.Items.Clear();
+                if (!_isSearchAddressesList)
                 {
-                    DataGridManagementAddressesList.Items.Add(address);
-                });
-            }
-            else
-            {
-                Utils.Utils._addresses.ForEach(address =>
-                {
-                    if (address.Address.Contains(TextBoxManagementAddressesListSearch.Text))
+                    Utils.Utils._addresses = await DBManager.GetAddresses();
+                    Utils.Utils._addresses.ForEach(address =>
                     {
                         DataGridManagementAddressesList.Items.Add(address);
-                    }
-                });
-            }
+                    });
+                }
+                else
+                {
+                    Utils.Utils._addresses.ForEach(address =>
+                    {
+                        if (address.Address.Contains(TextBoxManagementAddressesListSearch.Text))
+                        {
+                            DataGridManagementAddressesList.Items.Add(address);
+                        }
+                    });
+                }
 
-            ProgressBarManagementAddressesList.Visibility = Visibility.Collapsed;
-            DataGridManagementAddressesList.Visibility = Visibility.Visible;
+                ProgressBarManagementAddressesList.Visibility = Visibility.Collapsed;
+                DataGridManagementAddressesList.Visibility = Visibility.Visible;
+            });
         }
         private async Task ReloadComboBoxSummaryInformationAddress()
         {
-            if (Utils.Utils._summaryInformation.ComboBoxSummaryInformationAddress.Items.Count != 0)
+            await App.Current.Dispatcher.Invoke(async () =>
             {
-                Utils.Utils._summaryInformation.ComboBoxSummaryInformationAddress.Items.Clear();
-            }
-
-            Utils.Utils._addresses = await DBManager.GetAddresses();
-            Utils.Utils._addresses.ForEach(address =>
-            {
-                Utils.Utils._summaryInformation.ComboBoxSummaryInformationAddress.Items.Add(new ComboBoxItem
+                if (Utils.Utils._summaryInformation.ComboBoxSummaryInformationAddress.Items.Count != 0)
                 {
-                    Content = $"{address.Address}",
-                    Tag = address
+                    Utils.Utils._summaryInformation.ComboBoxSummaryInformationAddress.Items.Clear();
+                }
+
+                Utils.Utils._addresses = await DBManager.GetAddresses();
+                Utils.Utils._addresses.ForEach(address =>
+                {
+                    Utils.Utils._summaryInformation.ComboBoxSummaryInformationAddress.Items.Add(new ComboBoxItem
+                    {
+                        Content = $"{address.Address}",
+                        Tag = address
+                    });
                 });
             });
         }
@@ -673,15 +648,18 @@ namespace CandlesCompany.UI
         // Orders Profile
         private async Task ReloadOrdersList()
         {
-            if (DataGridOrdersList.Items.Count != 0)
+            await App.Current.Dispatcher.Invoke(async () =>
             {
-                DataGridOrdersList.Items.Clear();
-            }
+                if (DataGridOrdersList.Items.Count != 0)
+                {
+                    DataGridOrdersList.Items.Clear();
+                }
 
-            List<Orders> orders = await DBManager.GetOrders(UserCache._id);
-            orders.ForEach(o =>
-            {
-                DataGridOrdersList.Items.Add(new Custom.Orders.OrderList(o));
+                List<Orders> orders = await DBManager.GetOrders(UserCache._id);
+                orders.ForEach(o =>
+                {
+                    DataGridOrdersList.Items.Add(new Custom.Orders.OrderList(o));
+                });
             });
         }
         private async void DatGridOrdersListRefresh_Click(object sender, RoutedEventArgs e)
@@ -746,34 +724,37 @@ namespace CandlesCompany.UI
         }
         private async Task ReloadWindowManagementOrdersList()
         {
-            ProgressBarManagementOrdersList.Visibility = Visibility.Visible;
-            DataGridManagementOrdersList.Visibility = Visibility.Collapsed;
-
-            DataGridManagementOrdersList.Items.Clear();
-            List<string> orders_statutes = await DBManager.GetStatusList();
-            if (!_isSearchOrdersList)
+            await App.Current.Dispatcher.Invoke(async () =>
             {
+                ProgressBarManagementOrdersList.Visibility = Visibility.Visible;
+                DataGridManagementOrdersList.Visibility = Visibility.Collapsed;
 
-                _ordersList.Clear();
-                _ordersList = await DBManager.GetOrdersForPage(_ordersListCurrentPage, _listPageSize);
-                _ordersList.ForEach(o =>
+                DataGridManagementOrdersList.Items.Clear();
+                List<string> orders_statutes = await DBManager.GetStatusList();
+                if (!_isSearchOrdersList)
                 {
-                    DataGridManagementOrdersList.Items.Add(new UI.Custom.Orders.OrderList(o, o.Users, orders_statutes));
-                });
-                SetPagesOrdersList(await DBManager.GetOrdersCount());
-            }
-            else
-            {
-                _ordersList.Skip(_listPageSize * (_ordersListCurrentPage - 1)).Take(_listPageSize).ToList().ForEach(o =>
-                {
-                    DataGridManagementOrdersList.Items.Add(new UI.Custom.Orders.OrderList(o, o.Users, orders_statutes));
-                });
-                SetPagesOrdersList(_ordersList.Count() - 1);
-            }
 
-            ProgressBarManagementOrdersList.Visibility = Visibility.Collapsed;
-            DataGridManagementOrdersList.Visibility = Visibility.Visible;
-            GC.Collect();
+                    _ordersList.Clear();
+                    _ordersList = await DBManager.GetOrdersForPage(_ordersListCurrentPage, _listPageSize);
+                    _ordersList.ForEach(o =>
+                    {
+                        DataGridManagementOrdersList.Items.Add(new UI.Custom.Orders.OrderList(o, o.Users, orders_statutes));
+                    });
+                    SetPagesOrdersList(await DBManager.GetOrdersCount());
+                }
+                else
+                {
+                    _ordersList.Skip(_listPageSize * (_ordersListCurrentPage - 1)).Take(_listPageSize).ToList().ForEach(o =>
+                    {
+                        DataGridManagementOrdersList.Items.Add(new UI.Custom.Orders.OrderList(o, o.Users, orders_statutes));
+                    });
+                    SetPagesOrdersList(_ordersList.Count() - 1);
+                }
+
+                ProgressBarManagementOrdersList.Visibility = Visibility.Collapsed;
+                DataGridManagementOrdersList.Visibility = Visibility.Visible;
+                GC.Collect();
+            });
         }
         private async void DataGridManagementOrdersListRefresh_Click(object sender, RoutedEventArgs e)
         {

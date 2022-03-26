@@ -85,6 +85,10 @@ namespace CandlesCompany.UI.Item
         private void UpdateInfo()
         {
             ComboBoxItem item = ComboBoxItemChangeSelectItem.SelectedItem as ComboBoxItem;
+            if (item == null)
+            {
+                return;
+            }
             Candles candle = item.Tag as Candles;
 
             TextBoxItemChangeCount.Text = candle.Count.ToString();

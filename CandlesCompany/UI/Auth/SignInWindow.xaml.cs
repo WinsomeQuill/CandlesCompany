@@ -73,7 +73,9 @@ namespace CandlesCompany.UI.Auth
                 UserCache._role = role;
                 UserCache._avatar = user.Avatar == null ? Utils.Utils._defaultAvatar : Utils.Utils.BinaryToImage(user.Avatar);
 
-                new MainWindow().Show();
+                MainWindow mainWindow = new MainWindow();
+                await mainWindow.Init();
+                mainWindow.Show();
                 Close();
             }
             //catch (EntityException)

@@ -45,11 +45,6 @@ namespace CandlesCompany
         {
             return await db.Users.Where(x => x.Email == email).Select(x => x.Roles).SingleOrDefaultAsync();
         }
-        [ObsoleteAttribute]
-        public async static Task<Users> UserInfo(int id)
-        {
-            return await db.Users.Where(x => x.Id == id).Select(x => x).FirstOrDefaultAsync();
-        }
         public async static Task<List<string>> GetRoles()
         {
             return await db.Roles.Where(x => x.Id != 1 && x.Id != 6).Select(x => x.Name).ToListAsync();
@@ -58,13 +53,6 @@ namespace CandlesCompany
         {
             Users user = await db.Users.SingleOrDefaultAsync(x => x.Id == id);
             if (user.Roles.Name == role) { return; }
-            user.Id_Role = await db.Roles.Where(x => x.Name == role).Select(x => x.Id).FirstOrDefaultAsync();
-            await db.SaveChangesAsync();
-        }
-        [ObsoleteAttribute]
-        public async static Task ChangeRoleById(string email, string role)
-        {
-            Users user = await db.Users.SingleOrDefaultAsync(x => x.Email == email);
             user.Id_Role = await db.Roles.Where(x => x.Name == role).Select(x => x.Id).FirstOrDefaultAsync();
             await db.SaveChangesAsync();
         }
@@ -87,16 +75,6 @@ namespace CandlesCompany
         {
             return await db.Users.Where(x => x.Id_Role == 3).Select(x => x).ToListAsync();
         }
-        [ObsoleteAttribute]
-        public async static Task<List<Users>> GetUsersByRoleManager()
-        {
-            return await db.Users.Where(x => x.Id_Role == 4).Select(x => x).ToListAsync();
-        }
-        [ObsoleteAttribute]
-        public async static Task<List<Users>> GetUsersByRoleAdministrator()
-        {
-            return await db.Users.Where(x => x.Id_Role == 5).Select(x => x).ToListAsync();
-        }
         public async static Task<List<Users>> GetEmployees(int page, int start_id_role = 1, int end_id_role = 6, int count = 50)
         {
             return await db.Users.Where(x => x.Id_Role > start_id_role && x.Id_Role < end_id_role).OrderBy(x => x.Id).Skip(count * (page - 1)).Take(count).ToListAsync();
@@ -112,11 +90,6 @@ namespace CandlesCompany
         public async static Task<int> GetEmployeesCount(int start_id_role = 1, int end_id_role = 6)
         {
             return await db.Users.Where(x => x.Id_Role > start_id_role && x.Id_Role < end_id_role).CountAsync();
-        }
-        [ObsoleteAttribute]
-        public async static Task<byte[]> GetImageItem(int id)
-        {
-            return await db.Candles.Where(x => x.Id == id).Select(x => x.Image).FirstOrDefaultAsync();
         }
         public async static Task<List<Candles>> GetCandles()
         {
