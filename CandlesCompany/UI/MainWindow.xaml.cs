@@ -65,7 +65,7 @@ namespace CandlesCompany.UI
                 await SummaryInformationInit();
                 await BasketInit();
 
-                if (UserCache._role.Id != 4 && UserCache._role.Id != 5) // if user not admin/manager
+                if (UserCache._role.Id != 1 && UserCache._role.Id != 2) // if user not admin/manager
                 {
                     TabItemAdmin.Visibility = Visibility.Collapsed;
                 }

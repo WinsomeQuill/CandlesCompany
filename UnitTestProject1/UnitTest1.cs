@@ -15,11 +15,11 @@ namespace UnitTestProject1
         [TestMethod]
         public void ConvertImage()
         {
-            BitmapImage a = Utils.GetImageWindowsDialog();
-            if (a == null) return;
-            byte[] b = Utils.ImageToBinary(a);
-            BitmapImage c = Utils.BinaryToImage(b);
+            BitmapImage a = Utils.GetImageWindowsDialog(); // Вызов диалога
+            if (a == null) return; // Если файл не выбран
+            byte[] b = Utils.ImageToBinary(a); // Конвертация файла в массив байтов
             Assert.IsTrue(b is byte[]);
+            BitmapImage c = Utils.BinaryToImage(b); // Конвертация массив байтов в объект
             Assert.IsTrue(c is BitmapImage);
         }
 
@@ -35,15 +35,13 @@ namespace UnitTestProject1
                 Image = null,
                 Name = "Арома свеча",
                 Price = (decimal)100.0,
-            };
+            }; // Создание объекта свечи
 
-            UserCache.Basket.Add(candle, 1);
-            MessageBox.Show($"Товар \"{candle.Name}\" добавлен!\nОписание товара: \"{candle.Description}\".");
-            Assert.IsTrue(Utils.IsInBasket(candle));
+            UserCache.Basket.Add(candle, 1); // Добавляем свечу в кэш-корзину
+            Assert.IsTrue(Utils.IsInBasket(candle)); // Проверяем, находится ли свеча в корзине?
 
-            UserCache.Basket.Remove(candle);
-            MessageBox.Show($"Товар \"{candle.Name}\" удален!");
-            Assert.IsFalse(Utils.IsInBasket(candle));
+            UserCache.Basket.Remove(candle); // Удалять свечу из корзины
+            Assert.IsFalse(Utils.IsInBasket(candle)); // Проверяем, находится ли свеча в корзине?
         }
     }
 }
