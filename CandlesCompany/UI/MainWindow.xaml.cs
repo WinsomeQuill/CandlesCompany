@@ -149,7 +149,8 @@ namespace CandlesCompany.UI
                 return;
             }
             ImageBrushProfileAvatar.ImageSource = image;
-            await DBManager.SetAvatarUser(Utils.Utils.ImageToBinary(image));
+            UserCache._avatar = image;
+            await DBManager.SetAvatarUser(UserCache._id, Utils.Utils.ImageToBinary(image));
         }
         private async void ButtonProfileRemoveAvatar_Click(object sender, RoutedEventArgs e)
         {
@@ -159,7 +160,8 @@ namespace CandlesCompany.UI
                 return;
             }
             ImageBrushProfileAvatar.ImageSource = Utils.Utils._defaultAvatar;
-            await DBManager.RemoveAvatarUser();
+            UserCache._avatar = null;
+            await DBManager.RemoveAvatarUser(UserCache._id);
         }
         private void ButtonProfileChangePhone_Click(object sender, RoutedEventArgs e)
         {

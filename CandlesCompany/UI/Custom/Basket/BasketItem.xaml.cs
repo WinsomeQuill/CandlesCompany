@@ -48,6 +48,8 @@ namespace CandlesCompany.UI.Custom.Basket
                 SetPriceFormat(_count);
                 AddItem();
                 await DBManager.UpdateCandlesBasket(Cache.UserCache._id, _candle, _count);
+                Cache.UserCache.Basket.Remove(_candle);
+                Cache.UserCache.Basket.Add(_candle, count);
                 CountCheck();
             }
             catch (FormatException)
@@ -65,6 +67,8 @@ namespace CandlesCompany.UI.Custom.Basket
                 _count = count;
                 TakeItem();
                 await DBManager.UpdateCandlesBasket(Cache.UserCache._id, _candle, _count);
+                Cache.UserCache.Basket.Remove(_candle);
+                Cache.UserCache.Basket.Add(_candle, count);
                 SetPriceFormat(_count);
                 CountCheck();
             }
@@ -76,6 +80,7 @@ namespace CandlesCompany.UI.Custom.Basket
         private async void ButtonBasketItemRemove_Click(object sender, RoutedEventArgs e)
         {
             await DBManager.RemoveCandlesBasket(Cache.UserCache._id, _candle);
+            Cache.UserCache.Basket.Remove(_candle);
             Utils.Utils.ReloadWindowBasket();
         }
         private void CountCheck()
@@ -142,6 +147,8 @@ namespace CandlesCompany.UI.Custom.Basket
                 _count = count;
                 AddItem(_count);
                 await DBManager.UpdateCandlesBasket(Cache.UserCache._id, _candle, _count);
+                Cache.UserCache.Basket.Remove(_candle);
+                Cache.UserCache.Basket.Add(_candle, count);
                 SetPriceFormat(_count);
                 CountCheck();
             }

@@ -89,6 +89,7 @@ namespace CandlesCompany.Utils
             {
                 Orders order = await DBManager.AddOrder(Cache.UserCache._id, item._candle.Id, item._count, (double)item._candle.Price * item._count, _summaryInformation._address);
                 _dataGridOrdersList.Items.Add(new UI.Custom.Orders.OrderList(order));
+                Cache.UserCache.Basket.Remove(item._candle);
                 await DBManager.RemoveCandlesBasket(Cache.UserCache._id, item._candle);
             }
             _listViewBasket.Items.Clear();
@@ -105,6 +106,7 @@ namespace CandlesCompany.Utils
             _mainWindow.TextBlockBasket.Visibility = System.Windows.Visibility.Collapsed;
             _mainWindow.ListViewBasket.Items.Add(new UI.Custom.Basket.BasketItem(candle));
             await DBManager.AddCandlesBasket(Cache.UserCache._id, candle);
+            Cache.UserCache.Basket.Add(candle, 1);
             _summaryInformation.AddCount(1);
             _summaryInformation.AddPrice((double)candle.Price);
         }

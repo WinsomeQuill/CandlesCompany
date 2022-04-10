@@ -11,6 +11,7 @@ using System.Windows;
 
 namespace CandlesCompany
 {
+    [ObsoleteAttribute]
     public static class DBManager
     {
         public static candlesEntities db { get; } = new candlesEntities();
@@ -138,21 +139,17 @@ namespace CandlesCompany
         {
             db.Users_Baskets.Add(new Users_Baskets { Id_Candles = candle.Id, Id_User = id_user, Count = 1 });
             await db.SaveChangesAsync();
-            UserCache.Basket.Add(candle, 1);
         }
         public async static Task UpdateCandlesBasket(int id_user, Candles candle, int count)
         {
             Users_Baskets basket = await db.Users_Baskets.Where(x => x.Id_User == id_user && x.Id_Candles == candle.Id).SingleOrDefaultAsync();
             basket.Count = count;
             await db.SaveChangesAsync();
-            UserCache.Basket.Remove(candle);
-            UserCache.Basket.Add(candle, count);
         }
         public async static Task RemoveCandlesBasket(int id_user, Candles candle)
         {
             Users_Baskets basket = await db.Users_Baskets.Where(x => x.Id_User == id_user && x.Id_Candles == candle.Id).SingleOrDefaultAsync();
             db.Users_Baskets.Remove(basket);
-            UserCache.Basket.Remove(candle);
             await db.SaveChangesAsync();
         }
         public async static Task<List<Orders>> GetOrders(int id_user)
@@ -210,17 +207,15 @@ namespace CandlesCompany
             await db.SaveChangesAsync();
             return order;
         }
-        public async static Task RemoveAvatarUser()
+        public async static Task RemoveAvatarUser(int id_user)
         {
-            Users user = await db.Users.Where(x => x.Id == UserCache._id).SingleOrDefaultAsync();
-            UserCache._avatar = null;
+            Users user = await db.Users.Where(x => x.Id == id_user).SingleOrDefaultAsync();
             user.Avatar = null;
             await db.SaveChangesAsync();
         }
-        public async static Task SetAvatarUser(byte[] image)
+        public async static Task SetAvatarUser(int id_user, byte[] image)
         {
-            Users user = await db.Users.Where(x => x.Id == UserCache._id).SingleOrDefaultAsync();
-            UserCache._avatar = Utils.Utils.BinaryToImage(image);
+            Users user = await db.Users.Where(x => x.Id == id_user).SingleOrDefaultAsync();
             user.Avatar = image;
             await db.SaveChangesAsync();
         }
