@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mail;
@@ -96,14 +97,18 @@ namespace CandlesCompany.UI.Auth
             }
 
             Loading();
-            if (await DBManager.ExistUser(email))
+            JObject result = await Api.Registration(email, pass, first_name, last_name, middle_name);
+            if (result["Error"].ToString() != "None")
             {
-                MessageBox.Show("Данный Email уже зарегестрирован!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-                Loading(false);
-                return;
+                int errorCode = (int)result["ErrorCode"];
+                if (errorCode == 3)
+                {
+                    MessageBox.Show("Данный Email уже зарегестрирован!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    Loading(false);
+                    return;
+                }
             }
 
-            await DBManager.Registration(email, pass, first_name, last_name, middle_name);
             MessageBox.Show("Вы зарегистрировались! Спасибо!", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
             Loading(false);
 

@@ -65,7 +65,7 @@ namespace CandlesCompany.UI
                 await SummaryInformationInit();
                 await BasketInit();
 
-                if (UserCache._role.Id != 1 && UserCache._role.Id != 2) // if user not admin/manager
+                if (UserCache._role != 1 && UserCache._role != 2) // if user not admin/manager
                 {
                     TabItemAdmin.Visibility = Visibility.Collapsed;
                 }
@@ -97,9 +97,9 @@ namespace CandlesCompany.UI
         private void ProfileInit()
         {
             TextBlockProfileName.Text = $"ФИО: {UserCache._last_name} {UserCache._first_name} {UserCache._middle_name}";
-            TextBlockProfilePhone.Text = UserCache._phone == null ? "Телефон: Не указан" : $"Телефон: +{UserCache._phone}";
+            TextBlockProfilePhone.Text = UserCache._phone;
             TextBlockProfileEmail.Text = $"Эл. почта: {UserCache._email}";
-            TextBlockProfileRole.Text = $"Должность: {UserCache._role.Name}";
+            TextBlockProfileRole.Text = $"Должность: {UserCache._roleName}";
             ImageBrushProfileAvatar.ImageSource = UserCache._avatar;
         }
         private async Task BasketInit()
