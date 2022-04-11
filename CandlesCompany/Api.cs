@@ -311,7 +311,7 @@ namespace CandlesCompany
 
         public async static Task<JObject> AddOrder(int id_user, int id_candle, int count, double price, int id_address)
         {
-            RestRequest request = new RestRequest("orders/changeorderstatus", Method.Post)
+            RestRequest request = new RestRequest("orders/addorder", Method.Post)
                 .AddHeader("Content-Type", "application/json")
                 .AddHeader("User-Agent", _version)
                 .AddQueryParameter("id_user", id_user)
