@@ -581,35 +581,33 @@ namespace CandlesCompany.UI
         // Addresses Management
         private async Task ReloadWindowManagementAddressesList()
         {
-            await App.Current.Dispatcher.Invoke(async () =>
+            ProgressBarManagementAddressesList.Visibility = Visibility.Visible;
+            DataGridManagementAddressesList.Visibility = Visibility.Collapsed;
+            DataGridManagementAddressesList.Items.Clear();
+
+            if (!_isSearchAddressesList)
             {
-                ProgressBarManagementAddressesList.Visibility = Visibility.Visible;
-                DataGridManagementAddressesList.Visibility = Visibility.Collapsed;
-                DataGridManagementAddressesList.Items.Clear();
-
-                if (!_isSearchAddressesList)
+                Utils.Utils._addresses.Clear();
+                JObject result = await Api.GetAddresses();
+                result["Result"].ToList().ForEach(x =>
                 {
-                    JObject result = await Api.GetAddresses();
-                    result["Result"].ToList().ForEach(x =>
-                    {
-                        Utils.Utils._addresses.Add(x);
-                        DataGridManagementAddressesList.Items.Add(new UI.Custom.Address.AddressList(x));
-                    });
-                }
-                else
+                    Utils.Utils._addresses.Add(x);
+                    DataGridManagementAddressesList.Items.Add(new UI.Custom.Address.AddressList(x));
+                });
+            }
+            else
+            {
+                Utils.Utils._addresses.ForEach(address =>
                 {
-                    Utils.Utils._addresses.ForEach(address =>
+                    if (address["Address"].ToString().Contains(TextBoxManagementAddressesListSearch.Text))
                     {
-                        if (address["Address"].Contains(TextBoxManagementAddressesListSearch.Text))
-                        {
-                            DataGridManagementAddressesList.Items.Add(new UI.Custom.Address.AddressList(address));
-                        }
-                    });
-                }
+                        DataGridManagementAddressesList.Items.Add(new UI.Custom.Address.AddressList(address));
+                    }
+                });
+            }
 
-                ProgressBarManagementAddressesList.Visibility = Visibility.Collapsed;
-                DataGridManagementAddressesList.Visibility = Visibility.Visible;
-            });
+            ProgressBarManagementAddressesList.Visibility = Visibility.Collapsed;
+            DataGridManagementAddressesList.Visibility = Visibility.Visible;
         }
         private async Task ReloadComboBoxSummaryInformationAddress()
         {
@@ -666,6 +664,7 @@ namespace CandlesCompany.UI
         }
         private async void DataGridManagementAddressesListMenuRefresh_Click(object sender, RoutedEventArgs e)
         {
+            _isSearchAddressesList = false;
             await ReloadWindowManagementAddressesList();
         }
         private async void ButtonManagementAddressesListSearch_Click(object sender, RoutedEventArgs e)
