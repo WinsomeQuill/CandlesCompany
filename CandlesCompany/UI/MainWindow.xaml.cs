@@ -705,30 +705,24 @@ namespace CandlesCompany.UI
         {
             await ReloadOrdersList();
         }
-        private void ButtonOrderDetails_Click(object sender, RoutedEventArgs e)
+        private async void ButtonOrderRemove_Click(object sender, RoutedEventArgs e)
         {
-            new Task(async () =>
+            Button button = (Button)sender;
+            if (button.Tag is JToken order)
             {
-                await Dispatcher.InvokeAsync(async () =>
+                MessageBoxResult result = MessageBox.Show("Вы действительно хотите отменить заказа?", "Подтверждение",
+                                            MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+                if (result == MessageBoxResult.No)
                 {
-                    Button button = (Button)sender;
-                    if (button.Tag is JToken order)
-                    {
-                        MessageBoxResult result = MessageBox.Show("Вы действительно хотите отменить заказа?", "Подтверждение",
-                                                    MessageBoxButton.YesNo, MessageBoxImage.Question);
-
-                        if (result == MessageBoxResult.No)
-                        {
-                            return;
-                        }
+                    return;
+                }
 
 
-                        await Api.ChangeOrderStatus((int)order["Id"], "Отменён");
-                        await ReloadOrdersList();
-                        MessageBox.Show($"Вы отменили заказ товара \"{order["Candle"]["Name"]}\"!", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
-                    }
-                });
-            }).Start();
+                await Api.ChangeOrderStatus((int)order["Id"], "Заказ отменён");
+                await ReloadOrdersList();
+                MessageBox.Show($"Вы отменили заказ товара \"{order["Candle"]["Name"]}\"!", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
         }
 
         // Orders Management

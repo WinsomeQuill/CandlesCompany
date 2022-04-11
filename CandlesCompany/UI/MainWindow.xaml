@@ -218,7 +218,7 @@
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <Grid>
-                                            <Button x:Name="ButtonOrderDetails"
+                                            <Button x:Name="ButtonOrderRemove"
                                                     Grid.Column="0"
                                                     Grid.Row="0"
                                                     Margin="10,0,10,0"
@@ -227,7 +227,7 @@
                                                     Content="_Отменить"
                                                     IsEnabled="{Binding ButtonCancelEnabled}"
                                                     Tag="{Binding Order}"
-                                                    Click="ButtonOrderDetails_Click"/>
+                                                    Click="ButtonOrderRemove_Click"/>
                                         </Grid>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>

@@ -288,13 +288,13 @@ namespace CandlesCompany
             return jsonObject;
         }
 
-        public async static Task<JObject> ChangeOrderStatus(int id_order, string status)
+        public async static Task<JObject> ChangeOrderStatus(int id_order, string name_status)
         {
             RestRequest request = new RestRequest("orders/changeorderstatus", Method.Post)
                 .AddHeader("Content-Type", "application/json")
                 .AddHeader("User-Agent", _version)
                 .AddQueryParameter("id_order", id_order)
-                .AddQueryParameter("status", status);
+                .AddQueryParameter("name_status", name_status);
             RestResponse a = await _client.ExecuteAsync(request);
             JObject jsonObject = JObject.Parse(a.Content);
             return jsonObject;
