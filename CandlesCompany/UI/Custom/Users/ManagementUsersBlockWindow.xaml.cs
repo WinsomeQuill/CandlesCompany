@@ -45,7 +45,7 @@ namespace CandlesCompany.UI.Custom.Users
                 return;
             }
 
-            await DBManager.AddBan(_userId, Cache.UserCache._id, TextBoxManagementUsersBlockReason.Text);
+            //await DBManager.AddBan(_userId, Cache.UserCache._id, TextBoxManagementUsersBlockReason.Text);
             MessageBox.Show("Вы заблокировали пользователя!", _formatName, MessageBoxButton.OK, MessageBoxImage.Information);
         }
     }

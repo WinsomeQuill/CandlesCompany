@@ -14,7 +14,7 @@ namespace CandlesCompany
     [ObsoleteAttribute]
     public static class DBManager
     {
-        public static candlesEntities db { get; } = new candlesEntities();
+        /*public static candlesEntities db { get; } = new candlesEntities();
         public async static Task<bool> Join(string email, string pass)
         {
             return await db.Users.Where(x => x.Email == email && x.Password == pass).Select(x => x.Id).SingleOrDefaultAsync() != 0;
@@ -76,7 +76,7 @@ namespace CandlesCompany
         {
             return await db.Users.Where(x => x.Id_Role == 3).Select(x => x).ToListAsync();
         }
-        public async static Task<List<Users>> GetEmployees(int page, int start_id_role = 1, int end_id_role = 6, int count = 50)
+        public async static Task<List<Users>> GetEmployeesForPage(int page, int start_id_role = 1, int end_id_role = 6, int count = 50)
         {
             return await db.Users.Where(x => x.Id_Role > start_id_role && x.Id_Role < end_id_role).OrderBy(x => x.Id).Skip(count * (page - 1)).Take(count).ToListAsync();
         }
@@ -279,6 +279,6 @@ namespace CandlesCompany
             Users user = await db.Users.Where(x => x.Id == id_user).Select(x => x).SingleOrDefaultAsync();
             user.Phone = number;
             await db.SaveChangesAsync();
-        }
+        }*/
     }
 }

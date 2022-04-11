@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,25 +16,25 @@ namespace CandlesCompany.UI
         public string UserName { get; set; }
         public string UserEmail { get; set; }
         public BitmapImage UserAvatar { get; set; }
-        public Users User { get; set; }
+        public JToken User { get; set; }
         public List<string> Roles { get; set; }
         public string RoleName { get; set; }
-        public UsersList(Users user, BitmapImage avatar, List<string> roles)
+        public UsersList(JToken user, BitmapImage avatar, List<string> roles)
         {
             User = user;
-            UserID = user.Id;
-            UserName = $"{user.Last_Name} {user.First_Name} {user.Middle_Name}";
-            UserEmail = user.Email;
+            UserID = (int)user["Id"];
+            UserName = $"{user["Last_Name"]} {user["First_Name"]} {user["Middle_Name"]}";
+            UserEmail = (string)user["Email"];
             UserAvatar = avatar;
-            RoleName = User.Roles.Name;
+            RoleName = (string)user["Role"]["Name"];
             Roles = roles;
         }
-        public UsersList(Users user, BitmapImage avatar)
+        public UsersList(JToken user, BitmapImage avatar)
         {
             User = user;
-            UserID = user.Id;
-            UserName = $"{user.Last_Name} {user.First_Name} {user.Middle_Name}";
-            UserEmail = user.Email;
+            UserID = (int)user["Id"];
+            UserName = $"{user["Last_Name"]} {user["First_Name"]} {user["Middle_Name"]}";
+            UserEmail = (string)user["Email"];
             UserAvatar = avatar;
             Roles = new List<string>();
             Roles.Add("NULL");

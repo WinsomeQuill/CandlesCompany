@@ -875,7 +875,7 @@
                                         </ContextMenu>
                                     </DataGrid.ContextMenu>
                                     <DataGrid.Columns>
-                                        <DataGridTextColumn Header="Номер" Binding="{Binding Id}"/>
+                                        <DataGridTextColumn Header="Номер" Binding="{Binding ID}"/>
                                         <DataGridTemplateColumn Header="Адрес пункта доставки">
                                             <DataGridTemplateColumn.CellTemplate>
                                                 <DataTemplate>
@@ -885,7 +885,7 @@
                                                             <ColumnDefinition Width="1*"/>
                                                         </Grid.ColumnDefinitions>
 
-                                                        <TextBlock Text="{Binding Address}"
+                                                        <TextBlock Text="{Binding Name}"
                                                                    Grid.Column="0"
                                                                    Style="{StaticResource MaterialDesignDataGridTextColumnStyle}"
                                                                    VerticalAlignment="Center"/>
@@ -893,7 +893,7 @@
                                                         <Button x:Name="ButtonManagementAddressesListRemove"
                                                                 Content="Удалить"
                                                                 Grid.Column="1"
-                                                                Tag="{Binding Id}"
+                                                                Tag="{Binding Address}"
                                                                 Width="100"
                                                                 Click="ButtonManagementAddressesListRemove_Click"/>
                                                     </Grid>

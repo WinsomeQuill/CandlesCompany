@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,10 +34,10 @@ namespace CandlesCompany.UI.Item
             {
                 Dispatcher.Invoke(async () =>
                 {
-                    List<Type_Candle> types = await DBManager.GetTypeCandles();
-                    types.ForEach(c =>
+                    JObject result = await Api.GetTypeCandles();
+                    result["Result"].ToList().ForEach(c =>
                     {
-                        ComboBoxItemAddType.Items.Add(new ComboBoxItem { Content = c.Name, Tag = c });
+                        ComboBoxItemAddType.Items.Add(new ComboBoxItem { Content = (string)c["Name"], Tag = c });
                     });
                     ComboBoxItemAddType.SelectedIndex = 0;
                 });
@@ -91,7 +92,7 @@ namespace CandlesCompany.UI.Item
                     }
 
                     ComboBoxItem item = ComboBoxItemAddType.SelectedItem as ComboBoxItem;
-                    Type_Candle type_Candle = item.Tag as Type_Candle;
+                    JToken type_Candle = item.Tag as JToken;
 
                     string name = TextBoxItemAddName.Text;
                     string description = TextBoxItemAddDescription.Text;
@@ -122,7 +123,7 @@ namespace CandlesCompany.UI.Item
                     }
 
 
-                    await DBManager.AddItem(type_Candle.Id, name, description, count, price, image);
+                    await Api.AddItem((int)type_Candle["Id"], name, description, count, price, image);
                     MessageBox.Show($"Вы добавили товар \"{name}\"!", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
                 });
             }).Start();

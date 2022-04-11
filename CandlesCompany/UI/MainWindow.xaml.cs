@@ -19,6 +19,7 @@ using CandlesCompany.UI.Custom.Catalog;
 using System.Text.RegularExpressions;
 using System.Windows.Threading;
 using MaterialDesignThemes.Wpf;
+using Newtonsoft.Json.Linq;
 
 namespace CandlesCompany.UI
 {
@@ -36,9 +37,9 @@ namespace CandlesCompany.UI
         private int _employeesListTotalPages { get; set; }
         private int _ordersListTotalPages { get; set; }
 
-        private List<Users> _usersList { get; set; } = new List<Users>();
-        private List<Users> _employeesList { get; set; } = new List<Users>();
-        private List<Orders> _ordersList { get; set; } = new List<Orders>();
+        private List<JToken> _usersList { get; set; } = new List<JToken>();
+        private List<JToken> _employeesList { get; set; } = new List<JToken>();
+        private List<JToken> _ordersList { get; set; } = new List<JToken>();
 
         private bool _isSearchUsersList = false;
         private bool _isSearchEmployeesList = false;
@@ -106,9 +107,9 @@ namespace CandlesCompany.UI
         {
             await App.Current.Dispatcher.Invoke(async () =>
             {
-                Dictionary<Candles, int> basket = await DBManager.GetCandlesBasket(UserCache._id);
+                JObject result = await Api.GetCandlesBasket(UserCache._id);
 
-                if (basket.Count() == 0)
+                if ((int)result["Count"] == 0)
                 {
                     TextBlockBasket.Visibility = Visibility.Visible;
                     ListViewBasket.Visibility = Visibility.Collapsed;
@@ -118,24 +119,24 @@ namespace CandlesCompany.UI
                 TextBlockBasket.Visibility = Visibility.Collapsed;
                 ListViewBasket.Visibility = Visibility.Visible;
 
-                foreach (KeyValuePair<Candles, int> item in basket)
+                result["Result"].ToList().ForEach(item =>
                 {
-                    Candles candle = item.Key;
-                    UserCache.Basket.Add(candle, item.Value);
-                    ListViewBasket.Items.Add(new BasketItem(candle, item.Value));
-                    Utils.Utils._summaryInformation.AddCount(item.Value);
-                    Utils.Utils._summaryInformation.AddPrice((double)candle.Price * item.Value);
-                }
+                    int count = (int)item["Count"];
+                    UserCache.Basket.Add(item["Candle"], count);
+                    ListViewBasket.Items.Add(new BasketItem(item["Candle"], count));
+                    Utils.Utils._summaryInformation.AddCount(count);
+                    Utils.Utils._summaryInformation.AddPrice((double)item["Candle"]["Price"] * count);
+                });
             });            
         }
         private async Task CatalogInit()
         {
             await App.Current.Dispatcher.Invoke(async () =>
             {
-                List<Candles> candles = await DBManager.GetCandles();
-                candles.ForEach(candle =>
+                JObject result = await Api.GetCandles();
+                result["Result"].ToList().ForEach(x =>
                 {
-                    ListViewCatalog.Items.Add(new Custom.Catalog.ListItem(candle.Name, candle.Description, candle));
+                    ListViewCatalog.Items.Add(new Custom.Catalog.ListItem(x));
                 });
             });
         }
@@ -150,7 +151,7 @@ namespace CandlesCompany.UI
             }
             ImageBrushProfileAvatar.ImageSource = image;
             UserCache._avatar = image;
-            await DBManager.SetAvatarUser(UserCache._id, Utils.Utils.ImageToBinary(image));
+            await Api.SetAvatarUser(UserCache._id, Utils.Utils.ImageToBinary(image));
         }
         private async void ButtonProfileRemoveAvatar_Click(object sender, RoutedEventArgs e)
         {
@@ -161,7 +162,7 @@ namespace CandlesCompany.UI
             }
             ImageBrushProfileAvatar.ImageSource = Utils.Utils._defaultAvatar;
             UserCache._avatar = null;
-            await DBManager.RemoveAvatarUser(UserCache._id);
+            await Api.RemoveAvatarUser(UserCache._id);
         }
         private void ButtonProfileChangePhone_Click(object sender, RoutedEventArgs e)
         {
@@ -193,35 +194,44 @@ namespace CandlesCompany.UI
                 DataGridManagementEmployeesList.Items.Clear();
                 if (!_isSearchEmployeesList)
                 {
-                    _employeesList = await DBManager.GetEmployees(_employeesListCurrentPage, 1, 6, _listPageSize);
+                    JObject employees = await Api.GetEmployeesForPage(_employeesListCurrentPage);
+
+                    if ((int)employees["Count"] == 0) return;
+
+                    employees["Result"].ToList().ForEach(x =>
+                    {
+                        _employeesList.Add(x);
+                    });
+
                     _employeesList.ForEach(user =>
                     {
                         BitmapImage avatar = null;
-                        if (user.Avatar == null)
+                        if (string.IsNullOrEmpty((string)user["Avatar"]))
                         {
                             avatar = Utils.Utils._defaultAvatar;
                         }
                         else
                         {
-                            avatar = Utils.Utils.BinaryToImage(user.Avatar);
+                            avatar = Utils.Utils.BinaryToImage((byte[])user["Avatar"]);
                         }
 
                         DataGridManagementEmployeesList.Items.Add(new UI.UsersList(user, avatar, Utils.Utils._roles));
                     });
-                    SetPagesEmployeesList(await DBManager.GetEmployeesCount());
+                    JObject result = await Api.GetEmployeesCount();
+                    SetPagesEmployeesList((int)result["Result"]);
                 }
                 else
                 {
                     _employeesList.Skip(_listPageSize * (_employeesListCurrentPage - 1)).Take(_listPageSize).ToList().ForEach(user =>
                     {
                         BitmapImage avatar = null;
-                        if (user.Avatar == null)
+                        if (string.IsNullOrEmpty((string)user["Avatar"]))
                         {
                             avatar = Utils.Utils._defaultAvatar;
                         }
                         else
                         {
-                            avatar = Utils.Utils.BinaryToImage(user.Avatar);
+                            avatar = Utils.Utils.BinaryToImage((byte[])user["Avatar"]);
                         }
 
                         DataGridManagementEmployeesList.Items.Add(new UI.UsersList(user, avatar, Utils.Utils._roles));
@@ -269,31 +279,37 @@ namespace CandlesCompany.UI
             if (button != null)
             {
                 Grid grid = button.Parent as Grid;
-                Users user = grid.Tag as Users;
+                JToken user = grid.Tag as JToken;
 
-                MessageBoxResult result = MessageBox.Show($"Вы действительно хотите снять с должности \"{user.Roles.Name}\" сотрудника \"{user.Last_Name} {user.First_Name}\"", "Подтверждение",
+                MessageBoxResult result = MessageBox.Show($"Вы действительно хотите снять с должности \"{user["Roles"]["Name"]}\" " +
+                    $"сотрудника \"{user["Last_Name"]} {user["First_Name"]}\"", "Подтверждение",
                     MessageBoxButton.YesNo, MessageBoxImage.Question);
 
                 if (result == MessageBoxResult.No) { return; }
 
-                MessageBox.Show($"Вы сняли с должности \"{user.Roles.Name}\" сотрудника \"{user.Last_Name} {user.First_Name}\"!", "Успешно",
+                MessageBox.Show($"Вы сняли с должности \"{user["Roles"]["Name"]}\" сотрудника \"{user["Last_Name"]} {user["First_Name"]}\"!", "Успешно",
                     MessageBoxButton.OK, MessageBoxImage.Information);
 
-                await DBManager.ChangeRoleById(user.Id, "Пользователь");
+                await Api.ChangeRoleById((int)user["Id"], "Пользователь");
 
                 DataGridManagementEmployeesList.Items.Clear();
 
-                _employeesList = await DBManager.GetEmployees(_employeesListCurrentPage, 1, 6, _listPageSize);
+                JObject employees = await Api.GetEmployeesForPage(_employeesListCurrentPage);
+                employees["Result"].ToList().ForEach(x =>
+                {
+                    _employeesList.Add(x);
+                });
+
                 _employeesList.ForEach(employee =>
                 {
                     BitmapImage avatar = null;
-                    if (employee.Avatar == null)
+                    if (employee["Avatar"] == null)
                     {
                         avatar = Utils.Utils._defaultAvatar;
                     }
                     else
                     {
-                        avatar = Utils.Utils.BinaryToImage(employee.Avatar);
+                        avatar = Utils.Utils.BinaryToImage((byte[])employee["Avatar"]);
                     }
 
                     DataGridManagementEmployeesList.Items.Add(new UI.UsersList(employee, avatar, Utils.Utils._roles));
@@ -339,7 +355,14 @@ namespace CandlesCompany.UI
 
             ButtonManagementEmployeesSearch.IsEnabled = false;
             _employeesList.Clear();
-            _employeesList = await DBManager.FindEmployees(search);
+            JObject employees = await Api.FindEmployees(search);
+
+            if ((int)employees["Count"] == 0) return;
+
+            employees["Result"].ToList().ForEach(x =>
+            {
+                _employeesList.Add(x);
+            });
             await ReloadWindowManagementEmployeesList();
             ButtonManagementEmployeesSearch.IsEnabled = true;
         }
@@ -348,8 +371,8 @@ namespace CandlesCompany.UI
             if (sender is ComboBox comboBox)
             {
                 Grid grid = comboBox.Parent as Grid;
-                Users user = grid.Tag as Users;
-                await DBManager.ChangeRoleById(user.Id, comboBox.SelectedItem.ToString());
+                JToken user = grid.Tag as JToken;
+                await Api.ChangeRoleById((int)user["Id"], comboBox.SelectedItem.ToString());
                 await ReloadWindowManagementEmployeesList();
             }
         }
@@ -388,9 +411,9 @@ namespace CandlesCompany.UI
         {
             if (sender is Button button)
             {
-                Users user = button.Tag as Users;
-                string format_name = $"{user.Last_Name} {user.First_Name} {user.Middle_Name}";
-                new UI.Custom.Users.ManagementUsersBlockWindow(format_name, user.Id).Show();
+                JToken user = button.Tag as JToken;
+                string format_name = $"{user["Last_Name"]} {user["First_Name"]} {user["Middle_Name"]}";
+                new UI.Custom.Users.ManagementUsersBlockWindow(format_name, (int)user["Id"]).Show();
             }
         }
 
@@ -405,35 +428,41 @@ namespace CandlesCompany.UI
                 DataGridManagementUsersList.Items.Clear();
                 if (!_isSearchUsersList)
                 {
-                    _usersList = await DBManager.GetUsersForPage(_usersListCurrentPage, _listPageSize);
+                    JObject users = await Api.GetUsersForPage(_usersListCurrentPage);
+                    if ((int)users["Count"] == 0) return;
+                    users["Result"].ToList().ForEach(x =>
+                    {
+                        _usersList.Add(x);
+                    });
                     _usersList.ForEach(user =>
                     {
                         BitmapImage avatar = null;
-                        if (user.Avatar == null)
+                        if (string.IsNullOrEmpty((string)user["Avatar"]))
                         {
                             avatar = Utils.Utils._defaultAvatar;
                         }
                         else
                         {
-                            avatar = Utils.Utils.BinaryToImage(user.Avatar);
+                            avatar = Utils.Utils.BinaryToImage((byte[])user["Avatar"]);
                         }
 
                         DataGridManagementUsersList.Items.Add(new UI.UsersList(user, avatar, Utils.Utils._roles));
                     });
-                    SetPagesUsersList(await DBManager.GetUsersCount());
+                    JObject result = await Api.GetUsersCount();
+                    SetPagesUsersList((int)result["Result"]);
                 }
                 else
                 {
                     _usersList.Skip(_listPageSize * (_usersListCurrentPage - 1)).Take(_listPageSize).ToList().ForEach(user =>
                     {
                         BitmapImage avatar = null;
-                        if (user.Avatar == null)
+                        if (string.IsNullOrEmpty((string)user["Avatar"]))
                         {
                             avatar = Utils.Utils._defaultAvatar;
                         }
                         else
                         {
-                            avatar = Utils.Utils.BinaryToImage(user.Avatar);
+                            avatar = Utils.Utils.BinaryToImage((byte[])user["Avatar"]);
                         }
 
                         DataGridManagementUsersList.Items.Add(new UI.UsersList(user, avatar, Utils.Utils._roles));
@@ -499,7 +528,11 @@ namespace CandlesCompany.UI
 
             ButtonManagementUsersSearch.IsEnabled = false;
             _usersList.Clear();
-            _usersList = await DBManager.FindUsers(search);
+            JObject result = await Api.FindUsers(search);
+            result["Result"].ToList().ForEach(x =>
+            {
+                _usersList.Add(x);
+            });
             await ReloadWindowManagementUsersList();
             ButtonManagementUsersSearch.IsEnabled = true;
         }
@@ -508,8 +541,8 @@ namespace CandlesCompany.UI
             if (sender is ComboBox comboBox)
             {
                 Grid grid = comboBox.Parent as Grid;
-                Users user = grid.Tag as Users;
-                await DBManager.ChangeRoleById(user.Id, comboBox.SelectedItem.ToString());
+                JToken user = grid.Tag as JToken;
+                await Api.ChangeRoleById((int)user["Id"], comboBox.SelectedItem.ToString());
                 await ReloadWindowManagementUsersList();
             }
         }
@@ -552,23 +585,24 @@ namespace CandlesCompany.UI
             {
                 ProgressBarManagementAddressesList.Visibility = Visibility.Visible;
                 DataGridManagementAddressesList.Visibility = Visibility.Collapsed;
-
                 DataGridManagementAddressesList.Items.Clear();
+
                 if (!_isSearchAddressesList)
                 {
-                    Utils.Utils._addresses = await DBManager.GetAddresses();
-                    Utils.Utils._addresses.ForEach(address =>
+                    JObject result = await Api.GetAddresses();
+                    result["Result"].ToList().ForEach(x =>
                     {
-                        DataGridManagementAddressesList.Items.Add(address);
+                        Utils.Utils._addresses.Add(x);
+                        DataGridManagementAddressesList.Items.Add(new UI.Custom.Address.AddressList(x));
                     });
                 }
                 else
                 {
                     Utils.Utils._addresses.ForEach(address =>
                     {
-                        if (address.Address.Contains(TextBoxManagementAddressesListSearch.Text))
+                        if (address["Address"].Contains(TextBoxManagementAddressesListSearch.Text))
                         {
-                            DataGridManagementAddressesList.Items.Add(address);
+                            DataGridManagementAddressesList.Items.Add(new UI.Custom.Address.AddressList(address));
                         }
                     });
                 }
@@ -586,13 +620,15 @@ namespace CandlesCompany.UI
                     Utils.Utils._summaryInformation.ComboBoxSummaryInformationAddress.Items.Clear();
                 }
 
-                Utils.Utils._addresses = await DBManager.GetAddresses();
-                Utils.Utils._addresses.ForEach(address =>
+                JObject result = await Api.GetAddresses();
+                result["Result"].ToList().ForEach(x =>
                 {
-                    Utils.Utils._summaryInformation.ComboBoxSummaryInformationAddress.Items.Add(new ComboBoxItem
+                    Utils.Utils._addresses.Add(x);
+                    Utils.Utils._summaryInformation.ComboBoxSummaryInformationAddress
+                    .Items.Add(new ComboBoxItem
                     {
-                        Content = $"{address.Address}",
-                        Tag = address
+                        Content = (string)x["Address"],
+                        Tag = x
                     });
                 });
             });
@@ -600,7 +636,8 @@ namespace CandlesCompany.UI
         private async void ButtonManagementAddressesListRemove_Click(object sender, RoutedEventArgs e)
         {
             Button button = (Button)sender;
-            await DBManager.RemoveAddress((int)button.Tag);
+            JToken address = button.Tag as JToken;
+            await Api.RemoveAddress((int)address["Id"]);
             await ReloadWindowManagementAddressesList();
             await ReloadComboBoxSummaryInformationAddress();
         }
@@ -620,7 +657,7 @@ namespace CandlesCompany.UI
                 return;
             }
 
-            Order_Address result = await DBManager.AddAddresses(address);
+            JObject result = await Api.AddAddresses(address);
             Utils.Utils._addresses.Add(result);
             await ReloadWindowManagementAddressesList();
             await ReloadComboBoxSummaryInformationAddress();
@@ -657,8 +694,8 @@ namespace CandlesCompany.UI
                     DataGridOrdersList.Items.Clear();
                 }
 
-                List<Orders> orders = await DBManager.GetOrders(UserCache._id);
-                orders.ForEach(o =>
+                JObject result = await Api.GetOrders(UserCache._id);
+                result["Result"].ToList().ForEach(o =>
                 {
                     DataGridOrdersList.Items.Add(new Custom.Orders.OrderList(o));
                 });
@@ -675,7 +712,7 @@ namespace CandlesCompany.UI
                 await Dispatcher.InvokeAsync(async () =>
                 {
                     Button button = (Button)sender;
-                    if (button.Tag is Orders order)
+                    if (button.Tag is JToken order)
                     {
                         MessageBoxResult result = MessageBox.Show("Вы действительно хотите отменить заказа?", "Подтверждение",
                                                     MessageBoxButton.YesNo, MessageBoxImage.Question);
@@ -686,9 +723,9 @@ namespace CandlesCompany.UI
                         }
 
 
-                        await DBManager.ChangeOrderStatus(order.Id, "Отменён");
+                        await Api.ChangeOrderStatus((int)order["Id"], "Отменён");
                         await ReloadOrdersList();
-                        MessageBox.Show($"Вы отменили заказ товара \"{order.Candles_Order.Candles.Name}\"!", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
+                        MessageBox.Show($"Вы отменили заказ товара \"{order["Candle"]["Name"]}\"!", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
                 });
             }).Start();
@@ -732,23 +769,30 @@ namespace CandlesCompany.UI
                 DataGridManagementOrdersList.Visibility = Visibility.Collapsed;
 
                 DataGridManagementOrdersList.Items.Clear();
-                List<string> orders_statutes = await DBManager.GetStatusList();
+                List<string> orders_statutes = new List<string>();
+                JObject status = await Api.GetStatusList();
+                status["Result"].ToList().ForEach(x =>
+                {
+                    orders_statutes.Add((string)x);
+                });
                 if (!_isSearchOrdersList)
                 {
 
                     _ordersList.Clear();
-                    _ordersList = await DBManager.GetOrdersForPage(_ordersListCurrentPage, _listPageSize);
+                    JObject result = await Api.GetOrdersForPage(_ordersListCurrentPage);
+                    _ordersList = result["Result"].ToList();
                     _ordersList.ForEach(o =>
                     {
-                        DataGridManagementOrdersList.Items.Add(new UI.Custom.Orders.OrderList(o, o.Users, orders_statutes));
+                        DataGridManagementOrdersList.Items.Add(new UI.Custom.Orders.OrderList(o, o["User"], orders_statutes));
                     });
-                    SetPagesOrdersList(await DBManager.GetOrdersCount());
+                    JObject count = await Api.GetOrdersCount();
+                    SetPagesOrdersList((int)count["Result"]);
                 }
                 else
                 {
                     _ordersList.Skip(_listPageSize * (_ordersListCurrentPage - 1)).Take(_listPageSize).ToList().ForEach(o =>
                     {
-                        DataGridManagementOrdersList.Items.Add(new UI.Custom.Orders.OrderList(o, o.Users, orders_statutes));
+                        DataGridManagementOrdersList.Items.Add(new UI.Custom.Orders.OrderList(o, o["User"], orders_statutes));
                     });
                     SetPagesOrdersList(_ordersList.Count() - 1);
                 }
@@ -767,8 +811,8 @@ namespace CandlesCompany.UI
             if (sender is ComboBox comboBox)
             {
                 Grid grid = comboBox.Parent as Grid;
-                Orders order = grid.Tag as Orders;
-                await DBManager.ChangeOrderStatus(order.Id, comboBox.SelectedItem.ToString());
+                JToken order = grid.Tag as JToken;
+                await Api.ChangeOrderStatus((int)order["Id"], comboBox.SelectedItem.ToString());
                 await ReloadWindowManagementOrdersList();
             }
         }
@@ -824,7 +868,8 @@ namespace CandlesCompany.UI
 
             ButtonManagementOrdersSearch.IsEnabled = false;
             _ordersList.Clear();
-            _ordersList = await DBManager.FindOrders(search);
+            JObject result = await Api.FindOrders(search);
+            _ordersList = result["Result"].ToList();
             await ReloadWindowManagementOrdersList();
             ButtonManagementOrdersSearch.IsEnabled = true;
         }

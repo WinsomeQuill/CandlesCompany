@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -36,10 +37,10 @@ namespace CandlesCompany.UI.Item
                         ComboBoxItemRemoveSelectItem.Items.Clear();
                     }
 
-                    List<Candles> candles = await DBManager.GetCandles();
-                    candles.ForEach(c =>
+                    JObject candles = await Api.GetCandles();
+                    candles["Result"].ToList().ForEach(c =>
                     {
-                        ComboBoxItemRemoveSelectItem.Items.Add(new ComboBoxItem { Content = c.Name, Tag = c });
+                        ComboBoxItemRemoveSelectItem.Items.Add(new ComboBoxItem { Content = (string)c["Name"], Tag = c });
                     });
 
                     ComboBoxItemRemoveSelectItem.SelectedIndex = 0;
@@ -53,14 +54,14 @@ namespace CandlesCompany.UI.Item
         private async void ButtonItemRemoveSave_Click(object sender, RoutedEventArgs e)
         {
             ComboBoxItem item = ComboBoxItemRemoveSelectItem.SelectedItem as ComboBoxItem;
-            Candles candle = item.Tag as Candles;
-            MessageBoxResult result =  MessageBox.Show($"Вы действительно хотите удалить товар \"{candle.Name}\"", "Подтверждени",
+            JToken candle = item.Tag as JToken;
+            MessageBoxResult result =  MessageBox.Show($"Вы действительно хотите удалить товар \"{candle["Name"]}\"", "Подтверждени",
                 MessageBoxButton.YesNo, MessageBoxImage.Question);
 
             if (result == MessageBoxResult.No) { return; }
 
-            MessageBox.Show($"Вы удалили товар \"{candle.Name}\"!", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
-            await DBManager.RemoveItem(candle.Id);
+            MessageBox.Show($"Вы удалили товар \"{candle["Name"]}\"!", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
+            await Api.RemoveItem((int)candle["Id"]);
             Init();
         }
     }

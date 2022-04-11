@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,10 +35,10 @@ namespace CandlesCompany.UI.Item
                 ComboBoxItemChangeSelectItem.Items.Clear();
             }
 
-            List<Candles> candles = await DBManager.GetCandles();
-            candles.ForEach(c =>
+            JObject result = await Api.GetCandles();
+            result["Result"].ToList().ForEach(x =>
             {
-                ComboBoxItemChangeSelectItem.Items.Add(new ComboBoxItem { Content = c.Name, Tag = c });
+                ComboBoxItemChangeSelectItem.Items.Add(new ComboBoxItem { Content = (string)x["Name"], Tag = x });
             });
 
             ComboBoxItemChangeSelectItem.SelectedIndex = 0;
@@ -52,10 +53,10 @@ namespace CandlesCompany.UI.Item
                 ComboBoxItemChangeType.Items.Clear();
             }
 
-            List<Type_Candle> types = await DBManager.GetTypeCandles();
-            types.ForEach(c =>
+            JObject types = await Api.GetTypeCandles();
+            types["Result"].ToList().ForEach(c =>
             {
-                ComboBoxItemChangeType.Items.Add(new ComboBoxItem { Content = c.Name, Tag = c });
+                ComboBoxItemChangeType.Items.Add(new ComboBoxItem { Content = (string)c["Name"], Tag = c });
             });
 
             ComboBoxItemChangeType.SelectedIndex = 0;
@@ -71,16 +72,16 @@ namespace CandlesCompany.UI.Item
             {
                 return;
             }
-            Candles candle = item.Tag as Candles;
+            JToken candle = item.Tag as JToken;
 
-            TextBoxItemChangeCount.Text = candle.Count.ToString();
-            TextBoxItemChangeName.Text = candle.Name.ToString();
-            TextBoxItemChangePrice.Text = candle.Price.ToString();
-            TextBoxItemChangeDescription.Text = candle.Description.ToString();
+            TextBoxItemChangeCount.Text = candle["Count"].ToString();
+            TextBoxItemChangeName.Text = candle["Name"].ToString();
+            TextBoxItemChangePrice.Text = candle["Price"].ToString();
+            TextBoxItemChangeDescription.Text = candle["Description"].ToString();
 
-            if (candle.Image != null)
+            if (candle["Image"] != null)
             {
-                ImageItemChangePreview.Source = Utils.Utils.BinaryToImage(candle.Image);
+                ImageItemChangePreview.Source = Utils.Utils.BinaryToImage((byte[])candle["Image"]);
                 return;
             }
 
@@ -126,12 +127,12 @@ namespace CandlesCompany.UI.Item
             }
 
             ComboBoxItem item = ComboBoxItemChangeSelectItem.SelectedItem as ComboBoxItem;
-            Candles candle = item.Tag as Candles;
+            JToken candle = item.Tag as JToken;
 
             item = ComboBoxItemChangeType.SelectedItem as ComboBoxItem;
-            Type_Candle type_Candle = item.Tag as Type_Candle;
+            JToken type_Candle = item.Tag as JToken;
 
-            int id = candle.Id;
+            int id = (int)candle["Id"];
             int count = Convert.ToInt32(TextBoxItemChangeCount.Text);
             double price = Convert.ToDouble(TextBoxItemChangePrice.Text);
 
@@ -169,8 +170,8 @@ namespace CandlesCompany.UI.Item
                 return;
             }
 
-            await DBManager.UpdateItem(id, type_Candle.Id, name, description, count, price, image);
-            MessageBox.Show($"Вы обновили товар \"{candle.Name}\"!", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
+            await Api.UpdateItem(id, (int)type_Candle["Id"], name, description, count, price, image);
+            MessageBox.Show($"Вы обновили товар \"{candle["Name"]}\"!", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
             Init();
         }
     }

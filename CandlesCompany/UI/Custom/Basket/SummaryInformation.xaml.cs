@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,7 +25,7 @@ namespace CandlesCompany.UI.Custom.Basket
         public double _price { get; set; }
         public int _salePercent { get; set; }
         public double _amount { get; set; }
-        public Order_Address _address { get; set; }
+        public JToken _address { get; set; }
         public SummaryInformation()
         {
             InitializeComponent();
@@ -96,7 +97,7 @@ namespace CandlesCompany.UI.Custom.Basket
             {
                 return;
             }
-            _address = item.Tag as Order_Address;
+            _address = item.Tag as JToken;
         }
     }
 }

@@ -41,7 +41,7 @@ namespace CandlesCompany.UI.Dialogs.Profile
 
             Utils.Utils._mainWindow.TextBlockProfilePhone.Text = $"Телефон: +{phone}";
             Cache.UserCache._phone = phone;
-            await DBManager.ChangePhone(Cache.UserCache._id, phone);
+            await Api.ChangePhone(Cache.UserCache._id, phone);
 
             Loading(false);
             Close();

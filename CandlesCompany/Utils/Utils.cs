@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -19,7 +20,7 @@ namespace CandlesCompany.Utils
         public static DataGrid _dataGridOrdersList { get; set; }
         public static BitmapImage _defaultImage { get; set; }
         public static BitmapImage _defaultAvatar { get; set; }
-        public static List<Order_Address> _addresses { get; set; }
+        public static List<JToken> _addresses { get; set; } = new List<JToken>();
         public static List<string> _roles { get; set; } = new List<string>();
         public static byte[] ImageToBinary(Image image)
         {
@@ -73,7 +74,7 @@ namespace CandlesCompany.Utils
             {
                 _mainWindow.ListViewBasket.Items.Add(new UI.Custom.Basket.BasketItem(item.Key, item.Value));
                 _summaryInformation.AddCount(item.Value);
-                _summaryInformation.AddPrice((double)item.Key.Price);
+                _summaryInformation.AddPrice((double)item.Key["Candle"]["Price"]);
             }
         }
         public async static Task<bool> BasketToOrders()
@@ -87,28 +88,36 @@ namespace CandlesCompany.Utils
             _mainWindow.TextBlockBasket.Visibility = System.Windows.Visibility.Visible;
             foreach (UI.Custom.Basket.BasketItem item in _listViewBasket.Items)
             {
-                Orders order = await DBManager.AddOrder(Cache.UserCache._id, item._candle.Id, item._count, (double)item._candle.Price * item._count, _summaryInformation._address);
-                _dataGridOrdersList.Items.Add(new UI.Custom.Orders.OrderList(order));
+                JObject result = await Api.AddOrder(Cache.UserCache._id, (int)item._candle["Id"], item._count, 
+                    (double)item._candle["Price"] * item._count, (int)_summaryInformation._address["Id"]);
+                _dataGridOrdersList.Items.Add(new UI.Custom.Orders.OrderList(result["Result"]));
                 Cache.UserCache.Basket.Remove(item._candle);
-                await DBManager.RemoveCandlesBasket(Cache.UserCache._id, item._candle);
+                await Api.RemoveCandlesBasket(Cache.UserCache._id, (int)item._candle["Id"]);
             }
             _listViewBasket.Items.Clear();
 
             return true;
         }
-        public static bool IsInBasket(Candles candle)
+        public static bool IsInBasket(int id_candle)
         {
-            return Cache.UserCache.Basket.ContainsKey(candle);
+            foreach (var item in Cache.UserCache.Basket)
+            {
+                if ((int)item.Key["Id"] == id_candle)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
-        public async static Task AddItemInBasket(Candles candle)
+        public async static Task AddItemInBasket(JToken candle)
         {
             _mainWindow.ListViewBasket.Visibility = System.Windows.Visibility.Visible;
             _mainWindow.TextBlockBasket.Visibility = System.Windows.Visibility.Collapsed;
             _mainWindow.ListViewBasket.Items.Add(new UI.Custom.Basket.BasketItem(candle));
-            await DBManager.AddCandlesBasket(Cache.UserCache._id, candle);
+            await Api.AddCandlesBasket(Cache.UserCache._id, (int)candle["Id"]);
             Cache.UserCache.Basket.Add(candle, 1);
             _summaryInformation.AddCount(1);
-            _summaryInformation.AddPrice((double)candle.Price);
+            _summaryInformation.AddPrice((double)candle["Price"]);
         }
         public static BitmapImage GetImageWindowsDialog()
         {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -37,24 +38,24 @@ namespace CandlesCompany.UI.Custom.Orders
         public BitmapImage UserAvatar { get; set; } //аватарка заказчика
         public int UserID { get; set; } //ID заказчика
         public List<string> OrderStatuses { get; set; }
-        public CandlesCompany.Orders Order { get; set; }
         public bool ButtonCancelEnabled { get; set; }
-        public OrderList(CandlesCompany.Orders order)
+        public JToken Order { get; set; }
+        public OrderList(JToken order)
         {
             InitializeComponent();
             Order = order;
-            OrderID = order.Id;
-            DateCreated = order.Date;
-            NameItem = order.Candles_Order.Candles.Name;
-            TotalPrice = (double)order.Price;
-            Count = order.Candles_Order.Count;
+            OrderID = (int)order["Id"];
+            DateCreated = (DateTime)order["Date"];
+            NameItem = (string)order["Candle"]["Name"];
+            TotalPrice = (double)order["Price"];
+            Count = (int)order["Count"];
             CountPrice = TotalPrice / Count;
             FormatOrderID = $"№{OrderID}";
-            Address = order.Order_Address == null ? "Адрес удален" : order.Order_Address.Address;
-            Status = order.Order_Status == null ? "Новый" : order.Order_Status.Name;
+            Address = (string)order["Address"] ?? "Адрес удален";
+            Status = (string)order["Status"]["Name"] ?? "Новый";
             ButtonCancelEnabled = true;
 
-            switch (order.Order_Status == null ? 1 : order.Order_Status.Id)
+            switch (string.IsNullOrEmpty((string)order["Status"]["Name"]) ? 1 : (int)order["Status"]["Id"])
             {
                 case 1: //Новый заказ
                     ProgressBarForeground = "#0096ff";
@@ -84,29 +85,28 @@ namespace CandlesCompany.UI.Custom.Orders
                     break;
             }
         }
-        public OrderList(CandlesCompany.Orders order, CandlesCompany.Users user, List<string> order_Statuses)
+        public OrderList(JToken order, JToken user, List<string> order_Statuses)
         {
             InitializeComponent();
             Order = order;
-            OrderID = order.Id;
-            DateCreated = order.Date;
-            NameItem = order.Candles_Order.Candles.Name;
-            TotalPrice = (double)order.Price;
-            Count = order.Candles_Order.Count;
+            OrderID = (int)order["Id"];
+            DateCreated = (DateTime)order["Date"];
+            NameItem = (string)order["Candle"]["Name"];
+            TotalPrice = (double)order["Price"];
+            Count = (int)order["Count"];
             CountPrice = TotalPrice / Count;
             FormatOrderID = $"№{OrderID}";
-            Address = order.Order_Address == null ? "Адрес удален" : order.Order_Address.Address;
-            UserID = user.Id;
+            Address = (string)order["Address"] ?? "Адрес удален";
+            Status = (string)order["Status"]["Name"] ?? "Новый";
+            UserID = (int)user["Id"];
             OrderStatuses = order_Statuses;
-            UserEmail = user.Email;
-            Status = order.Order_Status == null ? "Новый" : order.Order_Status.Name;
+            UserEmail = (string)user["Email"];
+            UserName = $"{user["Last_Name"]} {user["First_Name"]} {user["Middle_Name"]}";
+            _ = string.IsNullOrEmpty((string)user["Avatar"]) ? UserAvatar = Utils.Utils._defaultAvatar : UserAvatar = Utils.Utils.BinaryToImage((byte[])user["Avatar"]);
             ButtonCancelEnabled = true;
 
-            UserName = $"{user.Last_Name} {user.First_Name} {user.Middle_Name}";
 
-            _ = user.Avatar == null ? UserAvatar = Utils.Utils._defaultAvatar : UserAvatar = Utils.Utils.BinaryToImage(user.Avatar);
-
-            switch (order.Order_Status == null ? 1 : order.Order_Status.Id)
+            switch (string.IsNullOrEmpty((string)order["Status"]["Name"]) ? 1 : (int)order["Status"]["Id"])
             {
                 case 1: //Новый заказ
                     ProgressBarForeground = "#0096ff";

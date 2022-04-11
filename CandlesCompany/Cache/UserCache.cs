@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,7 @@ namespace CandlesCompany.Cache
     public static class UserCache
     {
         //public static List<Candles> Basket = new List<Candles>();
-        public static Dictionary<Candles, int> Basket { get; set; } = new Dictionary<Candles, int>(); 
+        public static Dictionary<JToken, int> Basket { get; set; } = new Dictionary<JToken, int>(); 
         public static int _id { get; set; }
         public static string _last_name { get; set; }
         public static string _first_name { get; set; }

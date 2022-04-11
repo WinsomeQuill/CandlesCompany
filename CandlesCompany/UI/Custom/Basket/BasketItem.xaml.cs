@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,18 +23,18 @@ namespace CandlesCompany.UI.Custom.Basket
     /// </summary>
     public partial class BasketItem : UserControl
     {
-        public Candles _candle { get; set; }
+        public JToken _candle { get; set; }
         public int _count { get; set; }
-        public BasketItem(Candles candles, int count = 1)
+        public BasketItem(JToken candle, int count = 1)
         {
             InitializeComponent();
-            _candle = candles;
-            TextBlockBasketItemName.Text = _candle.Name;
-            TextBlockBasketItemDescription.Text = _candle.Description;
-            ImageBasketItemImage.Source = Utils.Utils.BinaryToImage(_candle.Image);
-            TextBoxBasketItemCount.Text = $"{count}";
+            _candle = candle;
             _count = count;
-            SetPriceFormat(_count);
+            TextBlockBasketItemName.Text = (string)_candle["Name"];
+            TextBlockBasketItemDescription.Text = (string)_candle["Description"];
+            ImageBasketItemImage.Source = Utils.Utils.BinaryToImage((byte[])_candle["Image"]);
+            TextBoxBasketItemCount.Text = $"{_count}";
+            SetPriceFormat();
             CountCheck();
         }
         private async void ButtonBasketItemCountPlus_Click(object sender, RoutedEventArgs e)
@@ -45,9 +46,9 @@ namespace CandlesCompany.UI.Custom.Basket
                 TextBoxBasketItemCount.Text = $"{count}";
                 _count = count;
                 
-                SetPriceFormat(_count);
+                SetPriceFormat();
                 AddItem();
-                await DBManager.UpdateCandlesBasket(Cache.UserCache._id, _candle, _count);
+                await Api.UpdateCandlesBasket(Cache.UserCache._id, (int)_candle["Id"], _count);
                 Cache.UserCache.Basket.Remove(_candle);
                 Cache.UserCache.Basket.Add(_candle, count);
                 CountCheck();
@@ -66,10 +67,10 @@ namespace CandlesCompany.UI.Custom.Basket
                 TextBoxBasketItemCount.Text = $"{count}";
                 _count = count;
                 TakeItem();
-                await DBManager.UpdateCandlesBasket(Cache.UserCache._id, _candle, _count);
+                await Api.UpdateCandlesBasket(Cache.UserCache._id, (int)_candle["Id"], _count);
                 Cache.UserCache.Basket.Remove(_candle);
                 Cache.UserCache.Basket.Add(_candle, count);
-                SetPriceFormat(_count);
+                SetPriceFormat();
                 CountCheck();
             }
             catch (FormatException)
@@ -79,7 +80,7 @@ namespace CandlesCompany.UI.Custom.Basket
         }
         private async void ButtonBasketItemRemove_Click(object sender, RoutedEventArgs e)
         {
-            await DBManager.RemoveCandlesBasket(Cache.UserCache._id, _candle);
+            await Api.RemoveCandlesBasket(Cache.UserCache._id, (int)_candle["Id"]);
             Cache.UserCache.Basket.Remove(_candle);
             Utils.Utils.ReloadWindowBasket();
         }
@@ -97,10 +98,10 @@ namespace CandlesCompany.UI.Custom.Basket
             }
             finally
             {
-                if (count >= _candle.Count)
+                if (count >= (int)_candle["Count"])
                 {
                     ButtonBasketItemCountPlus.IsEnabled = false;
-                    TextBoxBasketItemCount.Text = _candle.Count.ToString();
+                    TextBoxBasketItemCount.Text = _candle["Count"].ToString();
                 }
                 else
                 {
@@ -118,9 +119,9 @@ namespace CandlesCompany.UI.Custom.Basket
                 }
             }
         }
-        private void SetPriceFormat(int count)
-        {
-            TextBlockBasketItemPrice.Text = $"Цена в рублях: {_candle.Price * count}";
+        private void SetPriceFormat()
+        {            
+            TextBlockBasketItemPrice.Text = $"Цена в рублях: {(double)_candle["Price"] * _count}";
         }
         private async void TextBoxBasketItemCount_KeyDown(object sender, KeyEventArgs e)
         {
@@ -138,30 +139,30 @@ namespace CandlesCompany.UI.Custom.Basket
                     count = 1;
                 }
 
-                if (count > _candle.Count)
+                if (count > (int)_candle["Count"])
                 {
-                    count = _candle.Count;
+                    count = (int)_candle["Count"];
                 }
 
                 TakeItem(_count);
                 _count = count;
                 AddItem(_count);
-                await DBManager.UpdateCandlesBasket(Cache.UserCache._id, _candle, _count);
+                await Api.UpdateCandlesBasket(Cache.UserCache._id, (int)_candle["Id"], _count);
                 Cache.UserCache.Basket.Remove(_candle);
                 Cache.UserCache.Basket.Add(_candle, count);
-                SetPriceFormat(_count);
+                SetPriceFormat();
                 CountCheck();
             }
         }
         private void AddItem(int count = 1)
         {
             Utils.Utils._summaryInformation.AddCount(count);
-            Utils.Utils._summaryInformation.AddPrice((double)_candle.Price * count);
+            Utils.Utils._summaryInformation.AddPrice((double)_candle["Price"] * count);
         }
         private void TakeItem(int count = 1)
         {
             Utils.Utils._summaryInformation.TakeCount(count);
-            Utils.Utils._summaryInformation.TakePrice((double)_candle.Price * count);
+            Utils.Utils._summaryInformation.TakePrice((double)_candle["Price"] * count);
         }
     }
 }

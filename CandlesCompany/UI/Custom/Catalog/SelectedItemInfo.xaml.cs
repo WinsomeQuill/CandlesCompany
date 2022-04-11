@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using CandlesCompany.UI.Custom.Basket;
+using Newtonsoft.Json.Linq;
 
 namespace CandlesCompany.UI.Custom.Catalog
 {
@@ -21,7 +22,7 @@ namespace CandlesCompany.UI.Custom.Catalog
     /// </summary>
     public partial class SelectedItemInfo : UserControl
     {
-        public Candles _candle { get; set; }
+        public JToken _candle { get; set; }
         public SelectedItemInfo()
         {
             InitializeComponent();
@@ -34,7 +35,7 @@ namespace CandlesCompany.UI.Custom.Catalog
                 return;
             }
 
-            if (Utils.Utils.IsInBasket(_candle))
+            if (Utils.Utils.IsInBasket((int)_candle["Id"]))
             {
                 MessageBox.Show("Вы уже добавили этот товар в корзину!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
