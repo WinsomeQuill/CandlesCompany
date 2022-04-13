@@ -65,7 +65,7 @@ namespace CandlesCompany.UI.Auth
             JObject roles = await Api.GetRoles();
             roles["Result"].ToList().ForEach(x =>
             {
-                Utils.Utils._roles.Add(x.ToString());
+                if ((string)x != "Пользователь") Utils.Utils._roles.Add(x.ToString());
             });
 
             JObject role = await Api.GetRole(email);

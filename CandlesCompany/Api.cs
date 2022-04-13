@@ -67,8 +67,8 @@ namespace CandlesCompany
             RestRequest request = new RestRequest("users/setrole", Method.Post)
                 .AddHeader("Content-Type", "application/json")
                 .AddHeader("User-Agent", _version)
-                .AddQueryParameter("email", id_user)
-                .AddQueryParameter("pass", role_name);
+                .AddQueryParameter("id_user", id_user)
+                .AddQueryParameter("role_name", role_name);
             RestResponse a = await _client.ExecuteAsync(request);
             JObject jsonObject = JObject.Parse(a.Content);
             return jsonObject;

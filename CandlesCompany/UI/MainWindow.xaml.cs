@@ -33,6 +33,7 @@ namespace CandlesCompany.UI
         private int _usersListCurrentPage { get; set; } = 1;
         private int _employeesListCurrentPage { get; set; } = 1;
         private int _ordersListCurrentPage { get; set; } = 1;
+
         private int _usersListTotalPages { get; set; }
         private int _employeesListTotalPages { get; set; }
         private int _ordersListTotalPages { get; set; }
@@ -45,6 +46,7 @@ namespace CandlesCompany.UI
         private bool _isSearchEmployeesList = false;
         private bool _isSearchAddressesList = false;
         private bool _isSearchOrdersList = false;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -52,32 +54,29 @@ namespace CandlesCompany.UI
 
         public async Task Init()
         {
-            await App.Current.Dispatcher.Invoke(async () =>
+            Utils.Utils._mainWindow = this;
+            Utils.Utils._defaultImage = new BitmapImage(new Uri(@"pack://application:,,,/CandlesCompany;component/Resources/Images/Items/notfound.png"));
+            Utils.Utils._listViewBasket = ListViewBasket;
+            Utils.Utils._dataGridOrdersList = DataGridOrdersList;
+            ProfileInit();
+            SelectedItemInit();
+
+            await ReloadOrdersList();
+            await CatalogInit();
+            await SummaryInformationInit();
+            await BasketInit();
+
+            if (UserCache._role != 1 && UserCache._role != 2) // if user not admin/manager
             {
-                Utils.Utils._mainWindow = this;
-                Utils.Utils._defaultImage = new BitmapImage(new Uri(@"pack://application:,,,/CandlesCompany;component/Resources/Images/Items/notfound.png"));
-                Utils.Utils._listViewBasket = ListViewBasket;
-                Utils.Utils._dataGridOrdersList = DataGridOrdersList;
-                ProfileInit();
-                SelectedItemInit();
-
-                await ReloadOrdersList();
-                await CatalogInit();
-                await SummaryInformationInit();
-                await BasketInit();
-
-                if (UserCache._role != 1 && UserCache._role != 2) // if user not admin/manager
-                {
-                    TabItemAdmin.Visibility = Visibility.Collapsed;
-                }
-                else // if user is admin/manager
-                {
-                    await ReloadWindowManagementEmployeesList();
-                    await ReloadWindowManagementUsersList();
-                    await ReloadWindowManagementOrdersList();
-                    await ReloadWindowManagementAddressesList();
-                }
-            });
+                TabItemAdmin.Visibility = Visibility.Collapsed;
+            }
+            else // if user is admin/manager
+            {
+                await ReloadWindowManagementEmployeesList();
+                await ReloadWindowManagementUsersList();
+                await ReloadWindowManagementOrdersList();
+                await ReloadWindowManagementAddressesList();
+            }
         }
         private async Task SummaryInformationInit()
         {
@@ -105,39 +104,33 @@ namespace CandlesCompany.UI
         }
         private async Task BasketInit()
         {
-            await App.Current.Dispatcher.Invoke(async () =>
+            JObject result = await Api.GetCandlesBasket(UserCache._id);
+
+            if ((int)result["Count"] == 0)
             {
-                JObject result = await Api.GetCandlesBasket(UserCache._id);
+                TextBlockBasket.Visibility = Visibility.Visible;
+                ListViewBasket.Visibility = Visibility.Collapsed;
+                return;
+            }
 
-                if ((int)result["Count"] == 0)
-                {
-                    TextBlockBasket.Visibility = Visibility.Visible;
-                    ListViewBasket.Visibility = Visibility.Collapsed;
-                    return;
-                }
+            TextBlockBasket.Visibility = Visibility.Collapsed;
+            ListViewBasket.Visibility = Visibility.Visible;
 
-                TextBlockBasket.Visibility = Visibility.Collapsed;
-                ListViewBasket.Visibility = Visibility.Visible;
-
-                result["Result"].ToList().ForEach(item =>
-                {
-                    int count = (int)item["Count"];
-                    UserCache.Basket.Add(item["Candle"], count);
-                    ListViewBasket.Items.Add(new BasketItem(item["Candle"], count));
-                    Utils.Utils._summaryInformation.AddCount(count);
-                    Utils.Utils._summaryInformation.AddPrice((double)item["Candle"]["Price"] * count);
-                });
-            });            
+            result["Result"].ToList().ForEach(item =>
+            {
+                int count = (int)item["Count"];
+                UserCache.Basket.Add(item["Candle"], count);
+                ListViewBasket.Items.Add(new BasketItem(item["Candle"], count));
+                Utils.Utils._summaryInformation.AddCount(count);
+                Utils.Utils._summaryInformation.AddPrice((double)item["Candle"]["Price"] * count);
+            });
         }
         private async Task CatalogInit()
         {
-            await App.Current.Dispatcher.Invoke(async () =>
+            JObject result = await Api.GetCandles();
+            result["Result"].ToList().ForEach(x =>
             {
-                JObject result = await Api.GetCandles();
-                result["Result"].ToList().ForEach(x =>
-                {
-                    ListViewCatalog.Items.Add(new Custom.Catalog.ListItem(x));
-                });
+                ListViewCatalog.Items.Add(new Custom.Catalog.ListItem(x));
             });
         }
 
@@ -186,62 +179,60 @@ namespace CandlesCompany.UI
         // Employees Management
         private async Task ReloadWindowManagementEmployeesList()
         {
-            await App.Current.Dispatcher.Invoke(async () =>
+            ProgressBarManagementEmployeesList.Visibility = Visibility.Visible;
+            DataGridManagementEmployeesList.Visibility = Visibility.Collapsed;
+
+            DataGridManagementEmployeesList.Items.Clear();
+            if (!_isSearchEmployeesList)
             {
-                ProgressBarManagementEmployeesList.Visibility = Visibility.Visible;
-                DataGridManagementEmployeesList.Visibility = Visibility.Collapsed;
+                JObject employees = await Api.GetEmployeesForPage(_employeesListCurrentPage);
 
-                DataGridManagementEmployeesList.Items.Clear();
-                if (!_isSearchEmployeesList)
+                if ((int)employees["Count"] == 0) return;
+
+                _employeesList.Clear();
+                employees["Result"].ToList().ForEach(x =>
                 {
-                    JObject employees = await Api.GetEmployeesForPage(_employeesListCurrentPage);
+                    _employeesList.Add(x);
+                });
 
-                    if ((int)employees["Count"] == 0) return;
-
-                    employees["Result"].ToList().ForEach(x =>
-                    {
-                        _employeesList.Add(x);
-                    });
-
-                    _employeesList.ForEach(user =>
-                    {
-                        BitmapImage avatar = null;
-                        if (string.IsNullOrEmpty((string)user["Avatar"]))
-                        {
-                            avatar = Utils.Utils._defaultAvatar;
-                        }
-                        else
-                        {
-                            avatar = Utils.Utils.BinaryToImage((byte[])user["Avatar"]);
-                        }
-
-                        DataGridManagementEmployeesList.Items.Add(new UI.UsersList(user, avatar, Utils.Utils._roles));
-                    });
-                    JObject result = await Api.GetEmployeesCount();
-                    SetPagesEmployeesList((int)result["Result"]);
-                }
-                else
+                _employeesList.ForEach(user =>
                 {
-                    _employeesList.Skip(_listPageSize * (_employeesListCurrentPage - 1)).Take(_listPageSize).ToList().ForEach(user =>
+                    BitmapImage avatar = null;
+                    if (string.IsNullOrEmpty((string)user["Avatar"]))
                     {
-                        BitmapImage avatar = null;
-                        if (string.IsNullOrEmpty((string)user["Avatar"]))
-                        {
-                            avatar = Utils.Utils._defaultAvatar;
-                        }
-                        else
-                        {
-                            avatar = Utils.Utils.BinaryToImage((byte[])user["Avatar"]);
-                        }
+                        avatar = Utils.Utils._defaultAvatar;
+                    }
+                    else
+                    {
+                        avatar = Utils.Utils.BinaryToImage((byte[])user["Avatar"]);
+                    }
 
-                        DataGridManagementEmployeesList.Items.Add(new UI.UsersList(user, avatar, Utils.Utils._roles));
-                    });
-                    SetPagesEmployeesList(_employeesList.Count() - 1);
-                }
+                    DataGridManagementEmployeesList.Items.Add(new UI.UsersList(user, avatar, Utils.Utils._roles));
+                });
+                JObject result = await Api.GetEmployeesCount();
+                SetPagesEmployeesList((int)result["Result"]);
+            }
+            else
+            {
+                _employeesList.Skip(_listPageSize * (_employeesListCurrentPage - 1)).Take(_listPageSize).ToList().ForEach(user =>
+                {
+                    BitmapImage avatar = null;
+                    if (string.IsNullOrEmpty((string)user["Avatar"]))
+                    {
+                        avatar = Utils.Utils._defaultAvatar;
+                    }
+                    else
+                    {
+                        avatar = Utils.Utils.BinaryToImage((byte[])user["Avatar"]);
+                    }
 
-                ProgressBarManagementEmployeesList.Visibility = Visibility.Collapsed;
-                DataGridManagementEmployeesList.Visibility = Visibility.Visible;
-            });
+                    DataGridManagementEmployeesList.Items.Add(new UI.UsersList(user, avatar, Utils.Utils._roles));
+                });
+                SetPagesEmployeesList(_employeesList.Count() - 1);
+            }
+
+            ProgressBarManagementEmployeesList.Visibility = Visibility.Collapsed;
+            DataGridManagementEmployeesList.Visibility = Visibility.Visible;
         }
         private void SetPagesEmployeesList(int countEmployees)
         {
@@ -281,29 +272,27 @@ namespace CandlesCompany.UI
                 Grid grid = button.Parent as Grid;
                 JToken user = grid.Tag as JToken;
 
-                MessageBoxResult result = MessageBox.Show($"Вы действительно хотите снять с должности \"{user["Roles"]["Name"]}\" " +
+                MessageBoxResult result = MessageBox.Show($"Вы действительно хотите снять с должности \"{user["Role"]["Name"]}\" " +
                     $"сотрудника \"{user["Last_Name"]} {user["First_Name"]}\"", "Подтверждение",
                     MessageBoxButton.YesNo, MessageBoxImage.Question);
 
                 if (result == MessageBoxResult.No) { return; }
 
-                MessageBox.Show($"Вы сняли с должности \"{user["Roles"]["Name"]}\" сотрудника \"{user["Last_Name"]} {user["First_Name"]}\"!", "Успешно",
-                    MessageBoxButton.OK, MessageBoxImage.Information);
-
                 await Api.ChangeRoleById((int)user["Id"], "Пользователь");
 
-                DataGridManagementEmployeesList.Items.Clear();
+                MessageBox.Show($"Вы сняли с должности \"{user["Role"]["Name"]}\" сотрудника \"{user["Last_Name"]} {user["First_Name"]}\"!", "Успешно",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
 
+
+                _employeesList.Clear();
                 JObject employees = await Api.GetEmployeesForPage(_employeesListCurrentPage);
-                employees["Result"].ToList().ForEach(x =>
-                {
-                    _employeesList.Add(x);
-                });
+                _employeesList = employees["Result"].ToList();
 
+                DataGridManagementEmployeesList.Items.Clear();
                 _employeesList.ForEach(employee =>
                 {
                     BitmapImage avatar = null;
-                    if (employee["Avatar"] == null)
+                    if (string.IsNullOrEmpty((string)employee["Avatar"]))
                     {
                         avatar = Utils.Utils._defaultAvatar;
                     }
@@ -420,59 +409,53 @@ namespace CandlesCompany.UI
         // Users Management
         public async Task ReloadWindowManagementUsersList()
         {
-            await App.Current.Dispatcher.Invoke(async () =>
+            ProgressBarManagementUsersList.Visibility = Visibility.Visible;
+            DataGridManagementUsersList.Visibility = Visibility.Collapsed;
+
+            DataGridManagementUsersList.Items.Clear();
+            if (!_isSearchUsersList)
             {
-                ProgressBarManagementUsersList.Visibility = Visibility.Visible;
-                DataGridManagementUsersList.Visibility = Visibility.Collapsed;
-
-                DataGridManagementUsersList.Items.Clear();
-                if (!_isSearchUsersList)
+                JObject users = await Api.GetUsersForPage(_usersListCurrentPage);
+                if ((int)users["Count"] == 0) return;
+                _usersList = users["Result"].ToList();
+                _usersList.ForEach(user =>
                 {
-                    JObject users = await Api.GetUsersForPage(_usersListCurrentPage);
-                    if ((int)users["Count"] == 0) return;
-                    users["Result"].ToList().ForEach(x =>
+                    BitmapImage avatar = null;
+                    if (string.IsNullOrEmpty((string)user["Avatar"]))
                     {
-                        _usersList.Add(x);
-                    });
-                    _usersList.ForEach(user =>
+                        avatar = Utils.Utils._defaultAvatar;
+                    }
+                    else
                     {
-                        BitmapImage avatar = null;
-                        if (string.IsNullOrEmpty((string)user["Avatar"]))
-                        {
-                            avatar = Utils.Utils._defaultAvatar;
-                        }
-                        else
-                        {
-                            avatar = Utils.Utils.BinaryToImage((byte[])user["Avatar"]);
-                        }
+                        avatar = Utils.Utils.BinaryToImage((byte[])user["Avatar"]);
+                    }
 
-                        DataGridManagementUsersList.Items.Add(new UI.UsersList(user, avatar, Utils.Utils._roles));
-                    });
-                    JObject result = await Api.GetUsersCount();
-                    SetPagesUsersList((int)result["Result"]);
-                }
-                else
+                    DataGridManagementUsersList.Items.Add(new UI.UsersList(user, avatar, Utils.Utils._roles));
+                });
+                JObject result = await Api.GetUsersCount();
+                SetPagesUsersList((int)result["Result"]);
+            }
+            else
+            {
+                _usersList.Skip(_listPageSize * (_usersListCurrentPage - 1)).Take(_listPageSize).ToList().ForEach(user =>
                 {
-                    _usersList.Skip(_listPageSize * (_usersListCurrentPage - 1)).Take(_listPageSize).ToList().ForEach(user =>
+                    BitmapImage avatar = null;
+                    if (string.IsNullOrEmpty((string)user["Avatar"]))
                     {
-                        BitmapImage avatar = null;
-                        if (string.IsNullOrEmpty((string)user["Avatar"]))
-                        {
-                            avatar = Utils.Utils._defaultAvatar;
-                        }
-                        else
-                        {
-                            avatar = Utils.Utils.BinaryToImage((byte[])user["Avatar"]);
-                        }
+                        avatar = Utils.Utils._defaultAvatar;
+                    }
+                    else
+                    {
+                        avatar = Utils.Utils.BinaryToImage((byte[])user["Avatar"]);
+                    }
 
-                        DataGridManagementUsersList.Items.Add(new UI.UsersList(user, avatar, Utils.Utils._roles));
-                    });
-                    SetPagesUsersList(_usersList.Count() - 1);
-                }
+                    DataGridManagementUsersList.Items.Add(new UI.UsersList(user, avatar, Utils.Utils._roles));
+                });
+                SetPagesUsersList(_usersList.Count() - 1);
+            }
 
-                ProgressBarManagementUsersList.Visibility = Visibility.Collapsed;
-                DataGridManagementUsersList.Visibility = Visibility.Visible;
-            });
+            ProgressBarManagementUsersList.Visibility = Visibility.Collapsed;
+            DataGridManagementUsersList.Visibility = Visibility.Visible;
         }
         private void SetPagesUsersList(int countUsers)
         {
@@ -529,10 +512,7 @@ namespace CandlesCompany.UI
             ButtonManagementUsersSearch.IsEnabled = false;
             _usersList.Clear();
             JObject result = await Api.FindUsers(search);
-            result["Result"].ToList().ForEach(x =>
-            {
-                _usersList.Add(x);
-            });
+            _usersList = result["Result"].ToList();
             await ReloadWindowManagementUsersList();
             ButtonManagementUsersSearch.IsEnabled = true;
         }
@@ -686,18 +666,15 @@ namespace CandlesCompany.UI
         // Orders Profile
         private async Task ReloadOrdersList()
         {
-            await App.Current.Dispatcher.Invoke(async () =>
+            if (DataGridOrdersList.Items.Count != 0)
             {
-                if (DataGridOrdersList.Items.Count != 0)
-                {
-                    DataGridOrdersList.Items.Clear();
-                }
+                DataGridOrdersList.Items.Clear();
+            }
 
-                JObject result = await Api.GetOrders(UserCache._id);
-                result["Result"].ToList().ForEach(o =>
-                {
-                    DataGridOrdersList.Items.Add(new Custom.Orders.OrderList(o));
-                });
+            JObject result = await Api.GetOrders(UserCache._id);
+            result["Result"].ToList().ForEach(o =>
+            {
+                DataGridOrdersList.Items.Add(new Custom.Orders.OrderList(o));
             });
         }
         private async void DatGridOrdersListRefresh_Click(object sender, RoutedEventArgs e)
@@ -756,44 +733,40 @@ namespace CandlesCompany.UI
         }
         private async Task ReloadWindowManagementOrdersList()
         {
-            await App.Current.Dispatcher.Invoke(async () =>
+            ProgressBarManagementOrdersList.Visibility = Visibility.Visible;
+            DataGridManagementOrdersList.Visibility = Visibility.Collapsed;
+
+            DataGridManagementOrdersList.Items.Clear();
+            List<string> orders_statutes = new List<string>();
+            JObject status = await Api.GetStatusList();
+            status["Result"].ToList().ForEach(x =>
             {
-                ProgressBarManagementOrdersList.Visibility = Visibility.Visible;
-                DataGridManagementOrdersList.Visibility = Visibility.Collapsed;
-
-                DataGridManagementOrdersList.Items.Clear();
-                List<string> orders_statutes = new List<string>();
-                JObject status = await Api.GetStatusList();
-                status["Result"].ToList().ForEach(x =>
-                {
-                    orders_statutes.Add((string)x);
-                });
-                if (!_isSearchOrdersList)
-                {
-
-                    _ordersList.Clear();
-                    JObject result = await Api.GetOrdersForPage(_ordersListCurrentPage);
-                    _ordersList = result["Result"].ToList();
-                    _ordersList.ForEach(o =>
-                    {
-                        DataGridManagementOrdersList.Items.Add(new UI.Custom.Orders.OrderList(o, o["User"], orders_statutes));
-                    });
-                    JObject count = await Api.GetOrdersCount();
-                    SetPagesOrdersList((int)count["Result"]);
-                }
-                else
-                {
-                    _ordersList.Skip(_listPageSize * (_ordersListCurrentPage - 1)).Take(_listPageSize).ToList().ForEach(o =>
-                    {
-                        DataGridManagementOrdersList.Items.Add(new UI.Custom.Orders.OrderList(o, o["User"], orders_statutes));
-                    });
-                    SetPagesOrdersList(_ordersList.Count() - 1);
-                }
-
-                ProgressBarManagementOrdersList.Visibility = Visibility.Collapsed;
-                DataGridManagementOrdersList.Visibility = Visibility.Visible;
-                GC.Collect();
+                orders_statutes.Add((string)x);
             });
+            if (!_isSearchOrdersList)
+            {
+
+                _ordersList.Clear();
+                JObject result = await Api.GetOrdersForPage(_ordersListCurrentPage);
+                _ordersList = result["Result"].ToList();
+                _ordersList.ForEach(o =>
+                {
+                    DataGridManagementOrdersList.Items.Add(new UI.Custom.Orders.OrderList(o, o["User"], orders_statutes));
+                });
+                JObject count = await Api.GetOrdersCount();
+                SetPagesOrdersList((int)count["Result"]);
+            }
+            else
+            {
+                _ordersList.Skip(_listPageSize * (_ordersListCurrentPage - 1)).Take(_listPageSize).ToList().ForEach(o =>
+                {
+                    DataGridManagementOrdersList.Items.Add(new UI.Custom.Orders.OrderList(o, o["User"], orders_statutes));
+                });
+                SetPagesOrdersList(_ordersList.Count() - 1);
+            }
+
+            ProgressBarManagementOrdersList.Visibility = Visibility.Collapsed;
+            DataGridManagementOrdersList.Visibility = Visibility.Visible;
         }
         private async void DataGridManagementOrdersListRefresh_Click(object sender, RoutedEventArgs e)
         {
