@@ -8,6 +8,6 @@
 ## Стек, технологии, фреймворки и прочее...
 Все написано на C# с ипользованием WPF
 
-.NET Framework 4.8
-EntityFramework
-Material Design
+- .NET Framework 4.8
+- EntityFramework
+- Material Design
